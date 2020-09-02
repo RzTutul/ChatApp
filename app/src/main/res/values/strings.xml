@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ChatApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="spinner_title">Select Area</string>
+    <string name="singupTopText">Create an account on to use all \nthe features</string>
+    <string name="let_s_get_started">Let\'s get Started!</string>
+    <string name="singupimage">singupImage</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="mobile">Mobile</string>
+    <string name="password">Password</string>
+    <string name="by_signing_up_you_agree_to_our_terms_and_policy">By signing up, you agree to our Terms and Policy</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="if_you_have_an_account">If you have an account?</string>
+    <string name="login_here">Login Here</string>
+</resources>

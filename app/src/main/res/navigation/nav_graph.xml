@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.rztechtunes.chatapp.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/groupFragment"
+        android:name="com.rztechtunes.chatapp.GroupFragment"
+        android:label="fragment_group"
+        tools:layout="@layout/fragment_group" />
+    <fragment
+        android:id="@+id/contractFragment"
+        android:name="com.rztechtunes.chatapp.ContractFragment"
+        android:label="fragment_contract"
+        tools:layout="@layout/fragment_contract" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.rztechtunes.chatapp.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.rztechtunes.chatapp.SignupFragment"
+        android:label="fragment_signup"
+        tools:layout="@layout/fragment_signup" />
+    <fragment
+        android:id="@+id/phoneVarifyFragment"
+        android:name="com.rztechtunes.chatapp.PhoneVarifyFragment"
+        android:label="fragment_phone_varify"
+        tools:layout="@layout/fragment_phone_varify" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.rztechtunes.chatapp.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+</navigation>

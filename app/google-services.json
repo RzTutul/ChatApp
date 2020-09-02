@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "634364255499",
+    "firebase_url": "https://chatapp-96e52.firebaseio.com",
+    "project_id": "chatapp-96e52",
+    "storage_bucket": "chatapp-96e52.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634364255499:android:3bc1e4f2fd71d89fcd560e",
+        "android_client_info": {
+          "package_name": "com.rztechtunes.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634364255499-cq31eq6pf459gpoghbgoojdt46lsp52g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0LlzNUotdxN5fSbFSRoKhh9CU4WOzctQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634364255499-cq31eq6pf459gpoghbgoojdt46lsp52g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

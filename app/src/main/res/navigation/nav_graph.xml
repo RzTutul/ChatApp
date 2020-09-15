@@ -34,10 +34,30 @@
         android:id="@+id/phoneVarifyFragment"
         android:name="com.rztechtunes.chatapp.PhoneVarifyFragment"
         android:label="fragment_phone_varify"
-        tools:layout="@layout/fragment_phone_varify" />
+        tools:layout="@layout/fragment_phone_varify" >
+        <action
+            android:id="@+id/action_phoneVarifyFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/enteranimation" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.rztechtunes.chatapp.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_phoneVarifyFragment"
+            app:destination="@id/phoneVarifyFragment"
+            app:enterAnim="@anim/enteranimation"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:launchSingleTop="false"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.rztechtunes.chatapp.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

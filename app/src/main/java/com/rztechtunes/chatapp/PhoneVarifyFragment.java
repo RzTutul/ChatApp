@@ -77,7 +77,10 @@ public class PhoneVarifyFragment extends Fragment {
         btnTimer = view.findViewById(R.id.btn_timer);
         btnReenter = view.findViewById(R.id.btn_reenter);
 
+        SignupFragment.phone = phoneNumber;
+
         noticeTV.setText("We have sent you an SMS on" + phoneNumber + "\n+with 6 digit verification code");
+
 
         sendVerificationCode(phoneNumber);
 
@@ -199,7 +202,7 @@ public class PhoneVarifyFragment extends Fragment {
 
                     Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
 
-                    Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                    Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.signupFragment);
                 }
                 else
                 {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
@@ -50,6 +51,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false);
@@ -77,10 +79,25 @@ public class LoginFragment extends Fragment {
 
                 PhoneVarifyFragment.phoneNumber = code+phone;
 
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.phoneVarifyFragment);
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.action_loginFragment_to_phoneVarifyFragment);
             }
         });
 
+
+        authViewModel.stateLiveData.observe(getActivity(), new Observer<AuthViewModel.AuthenticationState>() {
+            @Override
+            public void onChanged(AuthViewModel.AuthenticationState authenticationState) {
+                switch (authenticationState)
+                {
+                    case AUTHENTICATED:
+                        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                        break;
+                    case UNAUTHENTICATED:
+                        break;
+
+                }
+            }
+        });
 
     }
 

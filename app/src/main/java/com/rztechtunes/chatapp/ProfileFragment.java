@@ -7,29 +7,26 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.rztechtunes.chatapp.adapter.AllContractListAdaper;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
+import com.squareup.picasso.Picasso;
 
-import java.util.List;
+public class ProfileFragment extends Fragment {
 
-public class ContractFragment extends Fragment {
+    TextView nameTV,emailTV,phoneTV;
+    ImageView profileImage;
     AuthViewModel authViewModel;
 
-    RecyclerView contractRV ;
-    public ContractFragment() {
+    public ProfileFragment() {
         // Required empty public constructor
     }
-
-
 
 
     @Override
@@ -38,22 +35,25 @@ public class ContractFragment extends Fragment {
 
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contract, container, false);
+        return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        contractRV = view.findViewById(R.id.contractRV);
+        profileImage = view.findViewById(R.id.profile_image);
+        nameTV = view.findViewById(R.id.nameTV);
+        emailTV = view.findViewById(R.id.gmailTV);
+        phoneTV = view.findViewById(R.id.phoneTV);
 
-        authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
+        authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
             @Override
-            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
-                AllContractListAdaper allContractListAdaper = new AllContractListAdaper(alluserContractPojos,getActivity());
-                LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                contractRV.setLayoutManager(llm);
-                contractRV.setAdapter(allContractListAdaper);
+            public void onChanged(AuthPojo authPojo) {
+                Picasso.get().load(authPojo.getImage()).into(profileImage);
+                nameTV.setText(authPojo.getName());
+                emailTV.setText(authPojo.getEmail());
+                phoneTV.setText(authPojo.getPhone());
             }
         });
     }

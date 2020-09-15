@@ -39,11 +39,12 @@
                 android:textStyle="normal" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/picImageBtn"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/singupimage"
-                android:src="@drawable/ic_access_account" />
+                android:src="@drawable/ic_baseline_photo_camera_24" />
 
             <View
                 android:layout_width="match_parent"
@@ -99,43 +100,7 @@
                 </LinearLayout>
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_weight="3">
 
-                        <com.hbb20.CountryCodePicker
-                            android:background="@drawable/rounded_editetext"
-                            android:layout_weight="1"
-                            android:id="@+id/ccp"
-                            android:layout_width="0dp"
-                            android:layout_height="45dp"
-                           app:ccp_autoDetectCountry="true"
-                            app:ccp_showFlag="true"
-                            app:ccp_showFullName="false"
-                            app:ccp_showNameCode="false"
-
-                            />
-
-                    <View
-                        android:layout_width="5dp"
-                        android:layout_height="1dp" />
-
-                    <EditText
-                        android:autofillHints="@string/mobile"
-                        android:id="@+id/ed_phone"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:drawableStart="@drawable/ic_phone"
-                        android:background="@drawable/rounded_editetext"
-                        android:hint="@string/mobile"
-                        android:inputType="phone"
-                        android:padding="12dp"
-                        android:textColor="@color/colorGrey2"
-                        android:textColorHint="@color/colorGrey" />
-                </LinearLayout>
 
 
                 <LinearLayout
@@ -145,14 +110,14 @@
 
                     <EditText
                         android:autofillHints="no"
-                        android:id="@+id/ed_password"
+                        android:id="@+id/ed_about"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/rounded_editetext"
-                        android:drawableStart="@drawable/ic_lock"
+                        android:drawableStart="@drawable/ic_baseline_info_24"
                         android:drawablePadding="10dp"
-                        android:hint="@string/password"
-                        android:inputType="textPassword"
+                        android:hint="About"
+                        android:inputType="text"
                         android:padding="12dp"
                         android:textColor="@color/colorGrey2"
                         android:textColorHint="@color/colorGrey" />
@@ -201,37 +166,7 @@
                     android:layout_height="15dp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
-                android:elevation="10dp"
-                android:gravity="center"
-                android:orientation="horizontal">
 
-                <TextView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="@string/if_you_have_an_account"
-                    android:textColor="@color/colorGrey2" />
-
-                <TextView
-                    android:id="@+id/btn_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="5dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:gravity="center"
-                    android:text="@string/login_here"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold" />
-            </LinearLayout>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

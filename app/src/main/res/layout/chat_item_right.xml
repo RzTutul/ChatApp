@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginLeft="50dp"
+    android:padding="8dp"
+    android:layout_alignParentRight="true"
+    android:layout_height="wrap_content">
+<de.hdodenhof.circleimageview.CircleImageView
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:src="@drawable/myimage"
+    android:id="@+id/profile_image"
+    android:visibility="gone"
+    android:layout_alignParentRight="true"
+    />
+    <TextView
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:textSize="18sp"
+        android:id="@+id/showmsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/profile_image"
+        android:layout_marginStart="5dp"
+        android:padding="8dp"
+        android:text="Hello"
+        android:background="@drawable/background_right"
+        />
+
+    <TextView
+        android:padding="3dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/timeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_below="@id/showmsg"
+        android:text="12 sep 8.00 PM"
+        android:textSize="5sp" />
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/imageView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/myimage"
+        android:layout_below="@+id/timeTV"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:adjustViewBounds="true"
+        />
+
+</RelativeLayout>

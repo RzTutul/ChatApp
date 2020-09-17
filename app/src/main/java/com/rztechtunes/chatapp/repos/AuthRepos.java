@@ -45,6 +45,9 @@ public class AuthRepos {
     DatabaseReference  alluserRef;
     DatabaseReference userInfo;
 
+
+
+
     private MutableLiveData<AuthViewModel.AuthenticationState> stateLiveData;
     private MutableLiveData<AuthPojo> userInfoLD = new MutableLiveData<>();
     private MutableLiveData<List<AlluserContractPojo>> alluserInfoLD = new MutableLiveData<>();
@@ -55,6 +58,7 @@ public class AuthRepos {
        firebaseAuth = FirebaseAuth.getInstance();
        firebaseUser = firebaseAuth.getCurrentUser();
        this.stateLiveData = stateLiveData;
+
     }
 
 
@@ -65,7 +69,8 @@ public class AuthRepos {
         userRef = rootRef.child(firebaseUser.getUid());
         userInfo = userRef.child("Loginfo");
         alluserRef = rootRef.child("AlluserInfo");
-
+        userInfo.keepSynced(true);
+        alluserRef.keepSynced(true);
         String userId = firebaseUser.getUid();
         authPojo.setU_ID(userId);
 
@@ -79,18 +84,17 @@ public class AuthRepos {
 
         //Store All User in a tree
         String id = alluserRef.push().getKey();
-        AlluserContractPojo alluserContractPojo = new AlluserContractPojo(id,userId,authPojo.getName(),authPojo.getEmail(),authPojo.getPhone(),authPojo.getAbout(),authPojo.getImage());
-        alluserRef.child(id).setValue(alluserContractPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+        AlluserContractPojo alluserContractPojo = new AlluserContractPojo(id,userId,authPojo.getName(),authPojo.getEmail(),authPojo.getPhone(),authPojo.getAbout(),authPojo.getImage(),"Online");
+        alluserRef.child(userId).setValue(alluserContractPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
 
             }
         });
-
-
     }
 
-    public FirebaseUser getFirebaseUser() {
+
+    public FirebaseUser  getFirebaseUser() {
         return firebaseUser;
     }
 
@@ -145,6 +149,18 @@ public class AuthRepos {
         });
 
        return alluserInfoLD;
+    }
+
+    public void setUserSatus(String dateWithTime) {
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        alluserRef = rootRef.child("AlluserInfo");
+        alluserRef.child(firebaseUser.getUid()).child("status").setValue(dateWithTime).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+
     }
 }
 

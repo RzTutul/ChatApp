@@ -33,7 +33,7 @@
                     android:layout_width="50dp"
                     android:layout_height="506dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/myimage" />
+                     />
 
             </RelativeLayout>
 

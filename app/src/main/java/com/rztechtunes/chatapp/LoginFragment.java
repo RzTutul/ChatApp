@@ -1,6 +1,7 @@
 package com.rztechtunes.chatapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -58,7 +59,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         btnSing = view.findViewById(R.id.singBtn);
@@ -79,7 +80,7 @@ public class LoginFragment extends Fragment {
 
                 PhoneVarifyFragment.phoneNumber = code+phone;
 
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.action_loginFragment_to_phoneVarifyFragment);
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.phoneVarifyFragment);
             }
         });
 

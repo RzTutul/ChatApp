@@ -1,8 +1,6 @@
 package com.rztechtunes.chatapp;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -13,12 +11,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -26,154 +24,166 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.hbb20.CountryCodePicker;
+import com.rztechtunes.chatapp.adapter.MessageAdaper;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
-import com.rztechtunes.chatapp.repos.AuthRepos;
+import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
+import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
+import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 
-public class SignupFragment extends Fragment {
 
-    private static final int REQUEST_STORAGE_CODE = 123;
-    private static final int REQUEST_CAMERA_CODE = 123;
-    private static final int GALLERY_REQUEST_CODE = 456;
-    private EditText nameET,emailET,aboutET;
-    private TextView saveBtn;
-    private AuthViewModel authViewModel;
-    private AuthPojo authPojo;
-    private CountryCodePicker ccp;
-    String number;
-    ImageView picImageBtn;
+public class SendMessageFragment extends Fragment {
+
+    private static final int GALLERY_REQUEST_CODE = 123;
+    private static final int REQUEST_CAMERA_CODE = 321;
+    private static final int REQUEST_STORAGE_CODE = 456;
+    public static String reciverID;
+   public  static  String reciverImage;
+   public static  String reciverName;
+    ImageButton sendMsgBtn,imageButn;
+    EditText msgET;
+    RecyclerView msgRV;
+    MessageViewModel messageViewModel;
+    AuthViewModel authViewModel;
+    AuthPojo CurrentauthPojo;
+
+    ImageView prfileImage;
+    TextView nameTV,statusTV;
     private String currentPhotoPath;
     private File file;
-    public static String phone;
-    String uui;
 
-    public SignupFragment() {
+    public SendMessageFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
+
+        messageViewModel = ViewModelProviders.of(this).get(MessageViewModel.class);
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_signup, container, false);
+        return inflater.inflate(R.layout.fragment_send_message, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        nameET = view.findViewById(R.id.ed_username);
-        emailET = view.findViewById(R.id.ed_email);
-        aboutET = view.findViewById(R.id.ed_about);
-        saveBtn = view.findViewById(R.id.btn_sign);
-        ccp = view.findViewById(R.id.ccp);
-        picImageBtn = view.findViewById(R.id.picImageBtn);
-
-      picImageBtn.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              pictureSelected();
-          }
-      });
+        sendMsgBtn = view.findViewById(R.id.sentMsgBtn);
+        msgET = view.findViewById(R.id.messageET);
+        msgRV = view.findViewById(R.id.messageRV);
+        prfileImage = view.findViewById(R.id.profile_image);
+        nameTV = view.findViewById(R.id.nameTV);
+        statusTV = view.findViewById(R.id.statusTV);
+        imageButn = view.findViewById(R.id.imageButn);
 
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
+        nameTV.setText(reciverName);
+        Picasso.get().load(reciverImage).into(prfileImage);
+
+
+
+        authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
             @Override
-            public void onClick(View view) {
-                String name = nameET.getText().toString();
-                String email = emailET.getText().toString();
-                String about = aboutET.getText().toString();
-
-                authPojo = new AuthPojo("",name,email,phone,about,"");
-
-                if (file!=null)
-                {
-
-                    authViewModel.setUserInfo(getActivity(),file,authPojo);
-
-                }
-
-
-               //
+            public void onChanged(AuthPojo authPojo) {
+                CurrentauthPojo =authPojo;
             }
         });
-     /*   authViewModel.stateLiveData.observe(getActivity(), new Observer<AuthViewModel.AuthenticationState>() {
+
+        sendMsgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message= msgET.getText().toString().trim();
+                Log.i(TAG, "rec: "+reciverName);
+                Log.i(TAG, "current: "+CurrentauthPojo.getName());
+                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("",message,"",reciverID,reciverName,reciverImage,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
+                    messageViewModel.sendMessage(senderReciverPojo);
+
+                msgET.setText("");
+
+            }
+        });
+
+        authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
+            @Override
+            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
+                for (AlluserContractPojo contractPojo : alluserContractPojos)
+                {
+                    if (reciverID.equals(contractPojo.getU_ID()))
+                    {
+                        statusTV.setText(contractPojo.getStatus());
+                    }
+                }
+
+            }
+        });
+
+        imageButn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pictureSelected();
+            }
+        });
+
+
+
+        messageViewModel.getAllMessage(reciverID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
+            @Override
+            public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
+
+                Log.i(TAG, "size: "+senderReciverPojos.size());
+                MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos,getActivity());
+                LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                llm.setStackFromEnd(true);
+                msgRV.setLayoutManager(llm);
+                msgRV.setAdapter(messageAdaper);
+
+
+            }
+
+        });
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        authViewModel.stateLiveData.observe(this, new Observer<AuthViewModel.AuthenticationState>() {
             @Override
             public void onChanged(AuthViewModel.AuthenticationState authenticationState) {
                 switch (authenticationState)
                 {
                     case AUTHENTICATED:
-                        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                        authViewModel.setUserSatus("Online");
                         break;
                     case UNAUTHENTICATED:
                         break;
                 }
-
-            }
-        });*/
-
-        if (FirebaseAuth.getInstance().getCurrentUser() !=null) {
-            uui = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        }
-
-
-            authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
-            @Override
-            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
-
-               Log.i(TAG, "onChanged: "+alluserContractPojos.size());
-                Log.i(TAG, "uui: "+uui);
-                 if (alluserContractPojos.size()>0)
-                {
-                for (AlluserContractPojo contractPojo: alluserContractPojos)
-                {
-
-                      if ((contractPojo.getU_ID()).equals(uui))
-                        {
-                          Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
-                            break;
-                        }
-                    }
-
-                }
-                 else
-                 {
-
-                 }
             }
         });
-
-
     }
-
     private void pictureSelected() {
 
 
@@ -188,7 +198,7 @@ public class SignupFragment extends Fragment {
                 bottomSheetDialog.dismiss();
             }
         });
-           bottomSheetView.findViewById(R.id.gallaryLL).setOnClickListener(new View.OnClickListener() {
+        bottomSheetView.findViewById(R.id.gallaryLL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -289,7 +299,9 @@ public class SignupFragment extends Fragment {
             Uri fileUri = Uri.fromFile(file);
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
-                picImageBtn.setImageBitmap(bmp);
+              //  picImageBtn.setImageBitmap(bmp);
+                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("","","",reciverID,reciverName,reciverImage,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
+                messageViewModel.sendImage(senderReciverPojo,file,getActivity());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -308,7 +320,9 @@ public class SignupFragment extends Fragment {
             Uri fileUri = Uri.fromFile(file);
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
-                picImageBtn.setImageBitmap(bmp);
+               // picImageBtn.setImageBitmap(bmp);
+                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("","","",reciverID,reciverName,reciverImage,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
+                messageViewModel.sendImage(senderReciverPojo,file,getActivity());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -317,5 +331,5 @@ public class SignupFragment extends Fragment {
 
         }
     }
-}
 
+}

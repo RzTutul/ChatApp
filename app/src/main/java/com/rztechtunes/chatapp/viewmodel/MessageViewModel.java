@@ -5,81 +5,55 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
-import com.rztechtunes.chatapp.repos.AuthRepos;
+import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
+import com.rztechtunes.chatapp.repos.MessageRespos;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
+public class MessageViewModel extends ViewModel {
 
-public class AuthViewModel extends ViewModel {
-    private AuthRepos authRepos;
-    public MutableLiveData<AuthenticationState> stateLiveData;
-    public AuthViewModel() {
-        stateLiveData = new MutableLiveData<>();
-        authRepos = new AuthRepos(stateLiveData);
+    MessageRespos messageRespos ;
+    boolean isImageFitToScreen;
 
-       // errMsg = firebaseLoginRepository.getErrMsg();
-        if (authRepos.getFirebaseUser() != null)
-        {
-            stateLiveData.postValue(AuthenticationState.AUTHENTICATED);
+    public MessageViewModel() {
 
-        }
-        else
-        {
-            stateLiveData.postValue(AuthenticationState.UNAUTHENTICATED);
-        }
+        messageRespos = new MessageRespos();
+    }
+
+    public void sendMessage(SenderReciverPojo senderReciverPojo) {
+
+        messageRespos.sendMessage(senderReciverPojo);
 
     }
 
-    public MutableLiveData<AuthPojo> getUserInfo() {
-
-        return authRepos.getUserInfo();
-    }
-
-    public MutableLiveData<List<AlluserContractPojo>> getAllUser() {
-        return authRepos.getAllUserInfo();
-    }
-    public void setUserSatus(String dateWithTime) {
-
-        authRepos.setUserSatus(dateWithTime);
-    }
-
-    public enum AuthenticationState
+    public MutableLiveData<List<SenderReciverPojo>> getFrndContract()
     {
-        AUTHENTICATED,
-        UNAUTHENTICATED
+        return messageRespos.getFrndContract();
     }
 
-    public void getLogoutUser()
-    {
-        FirebaseAuth.getInstance().signOut();
-        stateLiveData.postValue(AuthenticationState.UNAUTHENTICATED);
+    public LiveData<List<SenderReciverPojo>> getAllMessage(String reciverID) {
+        return messageRespos.getallMessage(reciverID);
     }
 
-    public void setUserInfo(Context context, File file, final AuthPojo authPojo) {
+    public void sendImage(final SenderReciverPojo senderReciverPojo, File file, Context context) {
         final ProgressDialog pd = new ProgressDialog(context);
-        pd.setMessage("Wait Image Uploading...");
+        pd.setMessage("Wait Sending Image...");
         pd.show();
 
         StorageReference rootRef = FirebaseStorage.getInstance().getReference();
@@ -118,11 +92,11 @@ public class AuthViewModel extends ViewModel {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
-                   // Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
                     pd.dismiss();
                     Uri downloadUri = task.getResult();
-                    authPojo.setImage(downloadUri.toString());
-                    authRepos.addAuthUserInfo(authPojo);
+                    senderReciverPojo.setImage(downloadUri.toString());
+                    messageRespos.sendImages(senderReciverPojo);
                 } else {
                     // Handle failures
                     // ...
@@ -132,5 +106,3 @@ public class AuthViewModel extends ViewModel {
 
     }
 }
-
-

@@ -1,5 +1,6 @@
 package com.rztechtunes.chatapp;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,10 +25,15 @@ import android.widget.Toast;
 
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.adapter.ViewPagerAdapter;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
+import com.rztechtunes.chatapp.repos.AuthRepos;
+import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.squareup.picasso.Picasso;
+
+import static android.content.ContentValues.TAG;
 
 
 public class HomeFragment extends Fragment {
@@ -94,6 +101,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+
+
+
     }
 
     @Override
@@ -107,12 +118,44 @@ public class HomeFragment extends Fragment {
 
         switch (item.getItemId())
         {
-            case R.id.setting:
+            case R.id.setting_menu:
                 Toast.makeText(getActivity(), "OK", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.logout_menu:
+                authViewModel.getLogoutUser();
+                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.loginFragment);
                 break;
 
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        authViewModel.stateLiveData.observe(this, new Observer<AuthViewModel.AuthenticationState>() {
+            @Override
+            public void onChanged(AuthViewModel.AuthenticationState authenticationState) {
+                switch (authenticationState)
+                {
+                    case AUTHENTICATED:
+                        authViewModel.setUserSatus(HelperUtils.getDateWithTime());
+                        break;
+                    case UNAUTHENTICATED:
+                        break;
+                }
+            }
+        });
+
+    }
+
+
+
+
+
+
 }

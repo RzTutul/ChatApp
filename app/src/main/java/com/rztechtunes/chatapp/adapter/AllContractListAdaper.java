@@ -8,9 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rztechtunes.chatapp.R;
+import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
 import com.squareup.picasso.Picasso;
@@ -35,11 +37,23 @@ public class AllContractListAdaper extends RecyclerView.Adapter<AllContractListA
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ContractViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ContractViewHolder holder, final int position) {
 
         holder.nameTV.setText(list.get(position).getName());
         holder.aboutTV.setText(list.get(position).getAbout());
+
         Picasso.get().load(list.get(position).getImage()).into(holder.imageView);
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendMessageFragment.reciverID = list.get(position).getU_ID();
+                SendMessageFragment.reciverImage = list.get(position).getImage();
+                SendMessageFragment.reciverName = list.get(position).getName();
+                Navigation.findNavController(holder.itemView).navigate(R.id.sendMessageFragment);
+            }
+        });
 
     }
 

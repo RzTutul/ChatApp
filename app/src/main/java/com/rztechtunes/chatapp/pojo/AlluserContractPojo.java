@@ -8,12 +8,12 @@ public class AlluserContractPojo {
     String phone;
     String about;
     String image;
-
+    String status;
 
     public AlluserContractPojo() {
     }
 
-    public AlluserContractPojo(String id, String u_ID, String name, String email, String phone, String about, String image) {
+    public AlluserContractPojo(String id, String u_ID, String name, String email, String phone, String about, String image, String status) {
         this.id = id;
         this.u_ID = u_ID;
         this.name = name;
@@ -21,6 +21,15 @@ public class AlluserContractPojo {
         this.phone = phone;
         this.about = about;
         this.image = image;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getId() {

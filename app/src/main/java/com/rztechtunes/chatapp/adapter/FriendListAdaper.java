@@ -12,13 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.List;
 
@@ -52,11 +52,20 @@ public class FriendListAdaper extends RecyclerView.Adapter<FriendListAdaper.Cont
 
         if ((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getSenderID())) {
             holder.nameTV.setText(list.get(position).getReciverName());
-            Picasso.get().load(list.get(position).getReciverImage()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imageView);
+          //  Picasso.get().load(list.get(position).getReciverImage()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imageView);
+            Glide.with(context)
+                    .load(list.get(position).getReciverImage())
+                    .placeholder(R.drawable.ic_image_black_24dp)
+                    .into(holder.imageView);
         }
         else if ((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getReciverID())) {
             holder.nameTV.setText(list.get(position).getSenderName());
-            Picasso.get().load(list.get(position).getSenderImage()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imageView);
+           // Picasso.get().load(list.get(position).getSenderImage()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imageView);
+            Glide.with(context)
+                    .load(list.get(position).getSenderImage())
+                    .placeholder(R.drawable.ic_image_black_24dp)
+                    .into(holder.imageView);
+
         }
 
 

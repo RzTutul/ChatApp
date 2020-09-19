@@ -24,6 +24,7 @@ import com.google.firebase.auth.UserInfo;
 import com.rztechtunes.chatapp.adapter.FriendListAdaper;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
+import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
@@ -84,4 +85,8 @@ public class ChatFragment extends Fragment {
 
 
     }
+
+
+
+
 }

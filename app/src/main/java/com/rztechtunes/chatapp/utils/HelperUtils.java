@@ -10,5 +10,9 @@ public class HelperUtils {
         DateFormat dateFormat = new SimpleDateFormat("dd MMM hh:mm aa");
         Date date = new Date();
         return dateFormat.format(date);
+    }  public static String getDateYearTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd MM yyyy hh:mm aa");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }

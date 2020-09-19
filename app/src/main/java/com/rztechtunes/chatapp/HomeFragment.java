@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.adapter.ViewPagerAdapter;
@@ -31,7 +32,7 @@ import com.rztechtunes.chatapp.pojo.AuthPojo;
 import com.rztechtunes.chatapp.repos.AuthRepos;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
-import com.squareup.picasso.Picasso;
+
 
 import static android.content.ContentValues.TAG;
 
@@ -97,12 +98,15 @@ public class HomeFragment extends Fragment {
         authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
             @Override
             public void onChanged(AuthPojo authPojo) {
-                Picasso.get().load(authPojo.getImage()).into(profile_image);
+
+                Glide.with(getActivity())
+                        .load(authPojo.getImage())
+                        .centerInside()
+                        .placeholder(R.drawable.ic_perm_)
+                        .into(profile_image);
+                Log.i(TAG, "onChanged: "+authPojo.getImage());
             }
         });
-
-
-
 
 
     }
@@ -130,32 +134,4 @@ public class HomeFragment extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        authViewModel.stateLiveData.observe(this, new Observer<AuthViewModel.AuthenticationState>() {
-            @Override
-            public void onChanged(AuthViewModel.AuthenticationState authenticationState) {
-                switch (authenticationState)
-                {
-                    case AUTHENTICATED:
-                        authViewModel.setUserSatus(HelperUtils.getDateWithTime());
-                        break;
-                    case UNAUTHENTICATED:
-                        break;
-                }
-            }
-        });
-
-    }
-
-
-
-
-
-
 }

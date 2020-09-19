@@ -1,11 +1,10 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.auth_frag;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import android.os.CountDownTimer;
@@ -26,7 +25,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
+import com.rztechtunes.chatapp.R;
 
 import java.util.concurrent.TimeUnit;
 
@@ -198,7 +197,7 @@ public class PhoneVarifyFragment extends Fragment {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
 
-                    Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Successful Verified! ", Toast.LENGTH_SHORT).show();
 
                     Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.signupFragment);
                 }

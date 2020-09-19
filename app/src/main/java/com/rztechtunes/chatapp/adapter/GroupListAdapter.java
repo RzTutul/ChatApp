@@ -1,6 +1,7 @@
 package com.rztechtunes.chatapp.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,22 +9,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.rztechtunes.chatapp.R;
-import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
+import com.rztechtunes.chatapp.pojo.GroupPojo;
 
 import java.util.List;
 
-public class AllContractListAdaper extends RecyclerView.Adapter<AllContractListAdaper.ContractViewHolder> {
-    List<AlluserContractPojo> list;
+public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.ContractViewHolder> {
+    List<GroupPojo> list;
     Context context;
 
-    public AllContractListAdaper(List<AlluserContractPojo> list, Context context) {
+    public GroupListAdapter(List<GroupPojo> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -40,20 +39,19 @@ public class AllContractListAdaper extends RecyclerView.Adapter<AllContractListA
     public void onBindViewHolder(@NonNull final ContractViewHolder holder, final int position) {
 
         holder.nameTV.setText(list.get(position).getName());
-        holder.aboutTV.setText(list.get(position).getAbout());
+        holder.aboutTV.setText(list.get(position).getDescription());
 
         Glide.with(context)
-                .load(list.get(position).getImage())
+                .load(list.get(position).getImages())
                 .placeholder(R.drawable.ic_perm_)
                 .into(holder.imageView);
+
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SendMessageFragment.reciverID = list.get(position).getU_ID();
-                SendMessageFragment.reciverImage = list.get(position).getImage();
-                SendMessageFragment.reciverName = list.get(position).getName();
-                Navigation.findNavController(holder.itemView).navigate(R.id.sendMessageFragment);
+
             }
         });
 
@@ -77,4 +75,6 @@ public class AllContractListAdaper extends RecyclerView.Adapter<AllContractListA
             imageView = itemView.findViewById(R.id.profile_image);
         }
     }
+
+
 }

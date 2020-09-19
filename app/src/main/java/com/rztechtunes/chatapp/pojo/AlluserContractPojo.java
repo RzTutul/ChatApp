@@ -9,6 +9,7 @@ public class AlluserContractPojo {
     String about;
     String image;
     String status;
+    boolean isSelected = false;
 
     public AlluserContractPojo() {
     }
@@ -22,6 +23,14 @@ public class AlluserContractPojo {
         this.about = about;
         this.image = image;
         this.status = status;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public String getStatus() {

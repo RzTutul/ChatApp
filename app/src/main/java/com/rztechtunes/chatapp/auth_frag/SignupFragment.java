@@ -1,4 +1,4 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.auth_frag;
 
 import android.Manifest;
 import android.app.Activity;
@@ -37,6 +37,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hbb20.CountryCodePicker;
+import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
 import com.rztechtunes.chatapp.repos.AuthRepos;
@@ -113,12 +114,30 @@ public class SignupFragment extends Fragment {
 
                 authPojo = new AuthPojo("",name,email,phone,about,"");
 
-                if (file!=null)
+                if (file==null)
                 {
 
-                    authViewModel.setUserInfo(getActivity(),file,authPojo);
-
+                    Toast.makeText(getActivity(), "Select a image", Toast.LENGTH_SHORT).show();
                 }
+                else if(name.equals(""))
+                {
+                    nameET.setError("Set a name!");
+                }
+                else if(email.equals(""))
+                {
+                    emailET.setError("Set a email!");
+                }
+                else if(about.equals(""))
+                {
+                    aboutET.setError("Write about yourself!");
+                }
+
+                else
+                {
+                    authViewModel.setUserInfo(getActivity(),file,authPojo);
+                }
+
+
 
 
                //

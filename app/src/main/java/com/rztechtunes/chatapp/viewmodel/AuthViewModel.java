@@ -79,12 +79,12 @@ public class AuthViewModel extends ViewModel {
 
     public void setUserInfo(Context context, File file, final AuthPojo authPojo) {
         final ProgressDialog pd = new ProgressDialog(context);
-        pd.setMessage("Wait Image Uploading...");
+        pd.setMessage("Wait a moment...");
         pd.show();
 
         StorageReference rootRef = FirebaseStorage.getInstance().getReference();
         Uri fileUri = Uri.fromFile(file);
-        final StorageReference imageRef = rootRef.child("EventImages/" + fileUri.getLastPathSegment());
+        final StorageReference imageRef = rootRef.child("ChatImages/" + fileUri.getLastPathSegment());
 
         ///For image Compress
         Bitmap bmp = null;

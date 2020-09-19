@@ -58,7 +58,7 @@ public class MessageViewModel extends ViewModel {
 
         StorageReference rootRef = FirebaseStorage.getInstance().getReference();
         Uri fileUri = Uri.fromFile(file);
-        final StorageReference imageRef = rootRef.child("EventImages/" + fileUri.getLastPathSegment());
+        final StorageReference imageRef = rootRef.child("ChatImages/" + fileUri.getLastPathSegment());
 
         ///For image Compress
         Bitmap bmp = null;

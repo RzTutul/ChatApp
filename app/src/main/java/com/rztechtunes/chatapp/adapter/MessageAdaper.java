@@ -5,22 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.rztechtunes.chatapp.R;
-import com.rztechtunes.chatapp.SendMessageFragment;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.List;
 
@@ -63,39 +57,37 @@ public class MessageAdaper extends RecyclerView.Adapter<MessageAdaper.ContractVi
         if ((list.get(position).getImage())==null)
         {
             holder.msgTV.setVisibility(View.VISIBLE);
+            holder.imageView.setVisibility(View.GONE);
             holder.msgTV.setText(list.get(position).getMsg());
             holder.timeTV.setText(list.get(position).getStatus());
-            Picasso.get().load(list.get(position).getSenderImage()).into(holder.profile_image);
+           // Picasso.get().load(list.get(position).getSenderImage()).into(holder.profile_image);
+            Glide.with(context)
+                    .load(list.get(position).getSenderImage())
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_perm_)
+                    .into(holder.profile_image);
         }
         else
         {
             holder.imageView.setVisibility(View.VISIBLE);
             holder.msgTV.setVisibility(View.GONE);
-            Picasso.get().load(list.get(position).getSenderImage()).into(holder.profile_image);
+          //  Picasso.get().load(list.get(position).getSenderImage()).into(holder.profile_image);
+
+            Glide.with(context)
+                    .load(list.get(position).getSenderImage())
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_perm_)
+                    .into(holder.profile_image);
+
             holder.timeTV.setText(list.get(position).getStatus());
-            Picasso.get().load(list.get(position).getImage()).into(holder.imageView);
+             //Picasso.get().load(list.get(position).getImage()).into(holder.imageView);
 
 
+            Glide.with(context)
+                    .load(list.get(position).getImage())
+                    .placeholder(R.drawable.ic_image_black_24dp)
+                    .into(holder.imageView);
         }
-
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-              /*  if(isImageFitToScreen) {
-                    Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
-                    isImageFitToScreen=false;
-                    //holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    //holder.imageView.setAdjustViewBounds(true);
-                    holder.imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                }
-                else{
-                    isImageFitToScreen=true;
-                    holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    holder.imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                }*/
-            }
-        });
 
 
     }
@@ -107,7 +99,8 @@ public class MessageAdaper extends RecyclerView.Adapter<MessageAdaper.ContractVi
 
     class ContractViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView profile_image,imageView;
+        ImageView profile_image;
+        ImageView imageView;
         TextView msgTV,timeTV;
 
         public ContractViewHolder(@NonNull View itemView) {

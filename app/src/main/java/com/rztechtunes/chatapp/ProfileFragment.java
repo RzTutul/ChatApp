@@ -14,9 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
-import com.squareup.picasso.Picasso;
+
 
 public class ProfileFragment extends Fragment {
 
@@ -50,7 +51,13 @@ public class ProfileFragment extends Fragment {
         authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
             @Override
             public void onChanged(AuthPojo authPojo) {
-                Picasso.get().load(authPojo.getImage()).into(profileImage);
+                //Picasso.get().load(authPojo.getImage()).into(profileImage);
+                Glide.with(getActivity())
+                        .load(authPojo.getImage())
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_perm_)
+                        .into(profileImage);
+
                 nameTV.setText(authPojo.getName());
                 emailTV.setText(authPojo.getEmail());
                 phoneTV.setText(authPojo.getPhone());

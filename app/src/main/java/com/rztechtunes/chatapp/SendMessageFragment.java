@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.adapter.MessageAdaper;
@@ -39,7 +40,7 @@ import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
-import com.squareup.picasso.Picasso;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -101,8 +102,11 @@ public class SendMessageFragment extends Fragment {
 
 
         nameTV.setText(reciverName);
-        Picasso.get().load(reciverImage).into(prfileImage);
-
+        //Picasso.get().load(reciverImage).into(prfileImage);
+        Glide.with(getActivity())
+                .load(reciverImage)
+                .placeholder(R.drawable.ic_perm_)
+                .into(prfileImage);
 
 
         authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
@@ -116,12 +120,18 @@ public class SendMessageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String message= msgET.getText().toString().trim();
-                Log.i(TAG, "rec: "+reciverName);
-                Log.i(TAG, "current: "+CurrentauthPojo.getName());
-                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("",message,"",reciverID,reciverName,reciverImage,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
-                    messageViewModel.sendMessage(senderReciverPojo);
 
-                msgET.setText("");
+                if (message.equals(""))
+                {
+                    msgET.setError("Write something");
+                }
+                else
+                {
+                    SenderReciverPojo senderReciverPojo = new SenderReciverPojo("",message,"",reciverID,reciverName,reciverImage,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
+                    messageViewModel.sendMessage(senderReciverPojo);
+                    msgET.setText("");
+                }
+
 
             }
         });
@@ -157,6 +167,7 @@ public class SendMessageFragment extends Fragment {
                 MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos,getActivity());
                 LinearLayoutManager llm = new LinearLayoutManager(getActivity());
                 llm.setStackFromEnd(true);
+                llm.setOrientation(LinearLayoutManager.VERTICAL);
                 msgRV.setLayoutManager(llm);
                 msgRV.setAdapter(messageAdaper);
 
@@ -184,6 +195,7 @@ public class SendMessageFragment extends Fragment {
             }
         });
     }
+
     private void pictureSelected() {
 
 

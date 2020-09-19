@@ -3,6 +3,7 @@ package com.rztechtunes.chatapp.repos;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,6 +16,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
+import com.rztechtunes.chatapp.pojo.SendGroupMsgPojo;
+import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 
 import java.util.ArrayList;
@@ -30,6 +33,8 @@ public class GroupRepos {
 
     MutableLiveData<String> createGrpLD = new MutableLiveData<>();
     MutableLiveData<List<GroupPojo>> myGrpLD = new MutableLiveData<>();
+    MutableLiveData<List<SendGroupMsgPojo>> GrpMsgLD = new MutableLiveData<>();
+    MutableLiveData<List<AlluserContractPojo>> GrpUserLD = new MutableLiveData<>();
     public GroupRepos() {
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -40,9 +45,10 @@ public class GroupRepos {
 
     public void createNewGrp(final List<AlluserContractPojo> selectedContractList, final GroupPojo groupPojo) {
 
+
         groupRef = rootRef.child("Group");
         final String grpNameWithDateTime =groupPojo.getName()+ HelperUtils.getDateYearTime();
-
+        groupPojo.setGroupID(grpNameWithDateTime);
         groupRef.child(grpNameWithDateTime).child("Info").setValue(groupPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -110,5 +116,80 @@ public class GroupRepos {
         });
 
         return myGrpLD;
+    }
+
+    public void sendGroupMsg(SendGroupMsgPojo sendGroupMsgPojo) {
+        groupRef = rootRef.child("Group").child(sendGroupMsgPojo.getGroupID()).child("Msg");
+        String keyValue = groupRef.push().getKey();
+        groupRef.child(keyValue).setValue(sendGroupMsgPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+
+    }
+
+    public LiveData<List<SendGroupMsgPojo>> getAllGroupMsg(String groupID) {
+
+
+        rootRef.child("Group").child(groupID).child("Msg").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<SendGroupMsgPojo> groupMsgPojos = new ArrayList<>();
+
+                for (DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    groupMsgPojos.add(dataSnapshot.getValue(SendGroupMsgPojo.class));
+                }
+
+                GrpMsgLD.postValue(groupMsgPojos);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return GrpMsgLD;
+    }
+
+    public void sendImages(SendGroupMsgPojo sendGroupMsgPojo) {
+        groupRef = rootRef.child("Group").child(sendGroupMsgPojo.getGroupID()).child("Msg");
+        String keyValue = groupRef.push().getKey();
+        groupRef.child(keyValue).setValue(sendGroupMsgPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+    }
+
+    public MutableLiveData<List<AlluserContractPojo>> getGroupUser(String groupID) {
+
+        groupRef = rootRef.child("Group").child(groupID).child("Users");
+        groupRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<AlluserContractPojo> users =new ArrayList<>();
+
+                for (DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    users.add(dataSnapshot.getValue(AlluserContractPojo.class));
+
+                }
+                GrpUserLD.postValue(users);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return GrpUserLD;
     }
 }

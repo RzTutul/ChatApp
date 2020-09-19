@@ -1,6 +1,7 @@
 package com.rztechtunes.chatapp.pojo;
 
 public class GroupPojo {
+    String groupID;
     String images;
     String name;
     String description;
@@ -12,6 +13,15 @@ public class GroupPojo {
         this.images = images;
         this.name = name;
         this.description = description;
+    }
+
+
+    public String getGroupID() {
+        return groupID;
+    }
+
+    public void setGroupID(String groupID) {
+        this.groupID = groupID;
     }
 
     public String getImages() {

@@ -61,4 +61,9 @@
         android:name="com.rztechtunes.chatapp.CreateGroupFrag"
         android:label="fragment_create_group"
         tools:layout="@layout/fragment_create_group" />
+    <fragment
+        android:id="@+id/groupSendMessage"
+        android:name="com.rztechtunes.chatapp.GroupSendMessage"
+        android:label="fragment_group_send_message"
+        tools:layout="@layout/fragment_group_send_message" />
 </navigation>

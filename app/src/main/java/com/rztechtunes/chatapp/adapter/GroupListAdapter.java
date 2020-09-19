@@ -9,9 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.rztechtunes.chatapp.GroupSendMessage;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
@@ -51,7 +53,10 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Cont
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                GroupSendMessage.groupName = list.get(position).getName();
+                GroupSendMessage.groupID = list.get(position).getGroupID();
+                GroupSendMessage.groupImage = list.get(position).getImages();
+                Navigation.findNavController(holder.itemView).navigate(R.id.groupSendMessage);
             }
         });
 

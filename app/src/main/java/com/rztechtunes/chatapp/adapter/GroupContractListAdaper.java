@@ -18,12 +18,14 @@ import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
 public class GroupContractListAdaper extends RecyclerView.Adapter<GroupContractListAdaper.ContractViewHolder> {
     List<AlluserContractPojo> list;
+    List<AlluserContractPojo> selectContractList  = new ArrayList<>();
     Context context;
 
     public GroupContractListAdaper(List<AlluserContractPojo> list, Context context) {
@@ -56,6 +58,7 @@ public class GroupContractListAdaper extends RecyclerView.Adapter<GroupContractL
             @Override
             public void onClick(View v) {
                 list.get(position).setSelected(!list.get(position).isSelected());
+                selectContractList.add( list.get(position) );
                 holder.itemView.setBackgroundColor(list.get(position).isSelected() ? Color.GRAY : Color.WHITE);
 
             }
@@ -84,7 +87,16 @@ public class GroupContractListAdaper extends RecyclerView.Adapter<GroupContractL
 
     public List<AlluserContractPojo> getSelectedContract()
     {
-        return list;
+        List<AlluserContractPojo> finalSelect= new ArrayList<>();
+        for (AlluserContractPojo contractPojo: selectContractList)
+        {
+            if (contractPojo.isSelected())
+            {
+                finalSelect.add(contractPojo);
+            }
+        }
+
+        return finalSelect;
     }
 
 }

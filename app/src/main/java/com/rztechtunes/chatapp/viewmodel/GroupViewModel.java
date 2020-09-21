@@ -175,4 +175,9 @@ public class GroupViewModel extends ViewModel {
 
         return groupRepos.getGroupUser(groupID);
     }
+
+    public MutableLiveData<GroupPojo> getGroupInfo(String grpID) {
+
+        return groupRepos.getGroupInfo(grpID);
+    }
 }

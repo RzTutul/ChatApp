@@ -47,8 +47,9 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/myimage"
         android:layout_below="@+id/timeTV"
+        android:scaleType="centerCrop"
         android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
 
         />
 

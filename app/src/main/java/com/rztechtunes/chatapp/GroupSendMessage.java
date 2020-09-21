@@ -11,10 +11,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,8 +31,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.rztechtunes.chatapp.adapter.GroupMessageAdaper;
 import com.rztechtunes.chatapp.adapter.MessageAdaper;
@@ -64,6 +68,7 @@ public class GroupSendMessage extends Fragment {
     public static String groupID;
     public  static  String groupImage;
 
+    Toolbar toolbar;
     ImageButton sendMsgBtn,imageButn;
     EditText msgET;
     RecyclerView msgRV;
@@ -106,6 +111,7 @@ public class GroupSendMessage extends Fragment {
         nameTV = view.findViewById(R.id.nameTV);
         statusTV = view.findViewById(R.id.statusTV);
         imageButn = view.findViewById(R.id.imageButn);
+        toolbar = view.findViewById(R.id.toolbar);
 
 
         nameTV.setText(groupName);
@@ -114,6 +120,17 @@ public class GroupSendMessage extends Fragment {
                 .load(groupImage)
                 .placeholder(R.drawable.ic_perm_)
                 .into(prfileImage);
+
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GroupProfileFrag.grpID = groupID;
+                GroupProfileFrag.grpName = groupName;
+                GroupProfileFrag.grpImage = groupImage;
+                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.groupProfileFrag);
+            }
+        });
 
 
         authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
@@ -147,11 +164,13 @@ public class GroupSendMessage extends Fragment {
         groupViewModel.getGroupUser(groupID).observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
             @Override
             public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
+
                 for (AlluserContractPojo contractPojo: alluserContractPojos)
                 {
                     usersName = usersName+contractPojo.getName()+", ";
                 }
                 statusTV.setText(usersName);
+                usersName ="";
             }
         });
 
@@ -200,7 +219,7 @@ public class GroupSendMessage extends Fragment {
 
 
         final BottomSheetDialog bottomSheetDialog =new BottomSheetDialog(getActivity(),R.style.BottomSheetDialogTheme);
-        View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout,(LinearLayout)getActivity().findViewById(R.id.bottomSheetContainer));
+        View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_send_image,(LinearLayout)getActivity().findViewById(R.id.bottomSheetContainer));
         bottomSheetView.findViewById(R.id.cameraLL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

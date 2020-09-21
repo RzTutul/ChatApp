@@ -17,6 +17,7 @@ import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AllContractListAdaper extends RecyclerView.Adapter<AllContractListAdaper.ContractViewHolder> {
@@ -62,6 +63,11 @@ public class AllContractListAdaper extends RecyclerView.Adapter<AllContractListA
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public void filterList(ArrayList<AlluserContractPojo> filteredList) {
+        list = filteredList;
+        notifyDataSetChanged();
     }
 
     class ContractViewHolder extends RecyclerView.ViewHolder{

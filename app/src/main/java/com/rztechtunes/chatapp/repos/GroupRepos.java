@@ -35,6 +35,7 @@ public class GroupRepos {
     MutableLiveData<List<GroupPojo>> myGrpLD = new MutableLiveData<>();
     MutableLiveData<List<SendGroupMsgPojo>> GrpMsgLD = new MutableLiveData<>();
     MutableLiveData<List<AlluserContractPojo>> GrpUserLD = new MutableLiveData<>();
+    MutableLiveData<GroupPojo> GrpInfoLD = new MutableLiveData<>();
     public GroupRepos() {
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -59,7 +60,6 @@ public class GroupRepos {
                         @Override
                         public void onSuccess(Void aVoid) {
 
-
                         }
                     });
 
@@ -71,14 +71,14 @@ public class GroupRepos {
                         }
                     });
                 }
-                //insert into my data list
+            /*    //insert into my data list
                 rootRef.child(firebaseUser.getUid()).child("Group").child(grpNameWithDateTime).setValue(groupPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
 
                     }
                 });
-
+*/
 
                 createGrpLD.postValue("Successful");
             }
@@ -191,5 +191,26 @@ public class GroupRepos {
         });
 
         return GrpUserLD;
+    }
+
+    public MutableLiveData<GroupPojo> getGroupInfo(String grpID) {
+        groupRef = rootRef.child("Group").child(grpID).child("Info");
+
+        groupRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                GroupPojo groupPojo = new GroupPojo();
+                    groupPojo = snapshot.getValue(GroupPojo.class);
+
+                GrpInfoLD.postValue(groupPojo);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return GrpInfoLD;
     }
 }

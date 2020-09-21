@@ -3,48 +3,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="10dp"
     tools:context=".CreateGroupFrag">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Create Group"
+            app:titleTextColor="@color/colorWhite"
+            />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_marginTop="10dp"
+        android:id="@+id/cardview"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_baseline_group_add_24"
-        android:layout_width="100dp"
-        android:layout_height="100dp"/>
+        android:layout_below="@+id/appbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="2dp"
+        >
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/attach_gallery" />
+
+    </androidx.cardview.widget.CardView>
+
+
 
     <EditText
+        android:maxLength="30"
+        android:layout_margin="10dp"
         android:id="@+id/groupNameET"
-        android:layout_below="@id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Group Name"
-        />
+        android:layout_below="@id/cardview"
+        android:hint="Group Name" />
 
     <EditText
+        android:maxLength="60"
+        android:layout_margin="10dp"
         android:id="@+id/groupDiscription"
-        android:layout_below="@+id/groupNameET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/groupNameET"
         android:hint="Group Description" />
 
 
-<androidx.recyclerview.widget.RecyclerView
-    android:layout_below="@+id/groupDiscription"
-    android:id="@+id/contractRV"
-    android:layout_marginTop="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+
+    <TextView
+        android:layout_margin="10dp"
+        android:layout_below="@+id/groupDiscription"
+        android:id="@+id/particpantCounterTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Participant:"
+        android:textSize="18dp"
+        android:textColor="@color/colorPrimary"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+
+        android:layout_margin="10dp"
+        android:id="@+id/contractRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/particpantCounterTV"
+        android:layout_marginTop="10dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/createGroupBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_margin="30dp"
+        android:clickable="true"
         android:src="@drawable/ic_baseline_arrow_forward_24" />
 
 </RelativeLayout>

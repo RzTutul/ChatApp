@@ -12,7 +12,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose Profile Photo"
+        android:textColor="@color/colorWhite"
+        android:text="Choose Photo"
         android:textSize="25sp" />
 
 
@@ -40,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Camera"
+                android:textColor="@color/colorWhite"
                 />
 
         </LinearLayout>
@@ -61,7 +63,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Gallery" />
+                android:text="Gallery"
+                android:textColor="@color/colorWhite"
+                />
 
         </LinearLayout>
 

@@ -170,7 +170,7 @@ public class SendMessageFragment extends Fragment {
                 llm.setOrientation(LinearLayoutManager.VERTICAL);
                 msgRV.setLayoutManager(llm);
                 msgRV.setAdapter(messageAdaper);
-
+//                messageAdaper.setStateRestorationStrategy(StateRestorationStrategy.WHEN_NOT_EMPTY);
 
             }
 

@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.rztechtunes.chatapp.adapter.GroupContractListAdaper;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
@@ -61,7 +62,7 @@ public class CreateGroupFrag extends Fragment {
     List<AlluserContractPojo> contractPojoList = new ArrayList<>();
     List<AlluserContractPojo> selectedContractList = new ArrayList<>();
     GroupContractListAdaper groupContractListAdaper;
-
+    AlluserContractPojo myContractInfo ;
     ImageView groupImage;
     EditText groupNameET,descriptionET;
     private static final int GALLERY_REQUEST_CODE = 123;
@@ -92,7 +93,7 @@ public class CreateGroupFrag extends Fragment {
         groupNameET = view.findViewById(R.id.groupNameET);
         descriptionET = view.findViewById(R.id.groupDiscription);
         groupImage = view.findViewById(R.id.imageView);
-
+        myContractInfo = new AlluserContractPojo();
 
         groupImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,20 +106,41 @@ public class CreateGroupFrag extends Fragment {
             @Override
             public void onClick(View v) {
 
+                selectedContractList = groupContractListAdaper.getSelectedContract();
                 String grpName = groupNameET.getText().toString().trim();
                 String grpDesrption = descriptionET.getText().toString().trim();
 
-                GroupPojo groupPojo = new GroupPojo("",grpName,grpDesrption);
+                GroupPojo groupPojo = new GroupPojo("","",grpName,grpDesrption,HelperUtils.getDateWithTime(), FirebaseAuth.getInstance().getCurrentUser().getUid());
 
 
+                Log.i(TAG, "onClick: "+selectedContractList.size());
                 if (file != null)
                 {
-                    groupViewModel.createNewGroup(selectedContractList,groupPojo,file,getContext());
+                    if (grpName.equals(""))
+                    {
+                        groupNameET.setError("Give Group Name");
+
+                    }
+                    else if (grpDesrption.equals(""))
+                    {
+                        descriptionET.setError("Give a Description");
+                    }
+                    else if (selectedContractList.size()<=0)
+                    {
+                        Toast.makeText(getActivity(),"Select at list one participant", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        selectedContractList.add(myContractInfo);
+                        groupViewModel.createNewGroup(selectedContractList,groupPojo,file,getContext());
+                    }
 
                 }
                 else
                 {
-                    Toast.makeText(getActivity(),"Select a Image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Select group Image", Toast.LENGTH_SHORT).show();
+
+
                 }
 
 
@@ -148,7 +170,9 @@ public class CreateGroupFrag extends Fragment {
                 {
                     if ((contractPojo.getU_ID()).equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
                     {
-                        //add iw
+                        //add my contract info and send database
+                        myContractInfo = contractPojo;
+
                     }
                     else
                     {
@@ -157,12 +181,14 @@ public class CreateGroupFrag extends Fragment {
                     }
                 }
 
-                GroupContractListAdaper groupContractListAdaper = new GroupContractListAdaper(contractPojoList,getActivity());
+                 groupContractListAdaper = new GroupContractListAdaper(contractPojoList,getActivity());
                 LinearLayoutManager llm = new LinearLayoutManager(getActivity());
                 contractRV.setLayoutManager(llm);
                 contractRV.setAdapter(groupContractListAdaper);
 
-                selectedContractList = groupContractListAdaper.getSelectedContract();
+
+
+
             }
         });
 

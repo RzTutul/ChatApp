@@ -21,7 +21,7 @@ import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 
 public class ProfileFragment extends Fragment {
 
-    TextView nameTV,emailTV,phoneTV;
+    TextView nameTV,emailTV,phoneTV,aboutTV;
     ImageView profileImage;
     AuthViewModel authViewModel;
 
@@ -47,6 +47,7 @@ public class ProfileFragment extends Fragment {
         nameTV = view.findViewById(R.id.nameTV);
         emailTV = view.findViewById(R.id.gmailTV);
         phoneTV = view.findViewById(R.id.phoneTV);
+        aboutTV = view.findViewById(R.id.aboutTV);
 
         authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
             @Override
@@ -61,6 +62,7 @@ public class ProfileFragment extends Fragment {
                 nameTV.setText(authPojo.getName());
                 emailTV.setText(authPojo.getEmail());
                 phoneTV.setText(authPojo.getPhone());
+                aboutTV.setText(authPojo.getAbout());
             }
         });
     }

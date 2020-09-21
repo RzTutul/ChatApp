@@ -4,14 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/grpbg"
     tools:context=".GroupSendMessage">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -69,20 +73,24 @@
         >
 
         <LinearLayout
+            android:background="@color/colorWhite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:weightSum="3.5">
 
             <ImageButton
+                android:scaleType="centerCrop"
+                android:backgroundTint="@color/colorWhite"
                 android:id="@+id/imageButn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:layout_weight="0.5"
                 android:src="@drawable/ic_photo_camera_black_24dp" />
 
 
             <EditText
+                android:maxHeight="200dp"
                 android:id="@+id/messageET"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -90,9 +98,11 @@
                 android:hint=" Write message" />
 
             <ImageButton
+                android:scaleType="centerCrop"
+                android:backgroundTint="@color/colorWhite"
                 android:id="@+id/sentMsgBtn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:layout_weight="0.5"
                 android:src="@drawable/ic_baseline_send_24" />
 

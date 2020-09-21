@@ -55,7 +55,12 @@
         android:id="@+id/sendMessageFragment"
         android:name="com.rztechtunes.chatapp.SendMessageFragment"
         android:label="fragment_send_message"
-        tools:layout="@layout/fragment_send_message" />
+        tools:layout="@layout/fragment_send_message" >
+        <action
+            android:id="@+id/action_sendMessageFragment_to_fullScreenImageView"
+            app:destination="@id/fullScreenImageView"
+            app:enterAnim="@anim/push_up_in" />
+    </fragment>
     <fragment
         android:id="@+id/createGroupFrag"
         android:name="com.rztechtunes.chatapp.CreateGroupFrag"
@@ -66,4 +71,14 @@
         android:name="com.rztechtunes.chatapp.GroupSendMessage"
         android:label="fragment_group_send_message"
         tools:layout="@layout/fragment_group_send_message" />
+    <fragment
+        android:id="@+id/groupProfileFrag"
+        android:name="com.rztechtunes.chatapp.GroupProfileFrag"
+        android:label="fragment_group_profile"
+        tools:layout="@layout/fragment_group_profile" />
+    <fragment
+        android:id="@+id/fullScreenImageView"
+        android:name="com.rztechtunes.chatapp.FullScreenImageView"
+        android:label="fragment_full_screen_image_view"
+        tools:layout="@layout/fragment_full_screen_image_view" />
 </navigation>

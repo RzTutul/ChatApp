@@ -24,7 +24,8 @@ public class FullScreenImageView extends Fragment {
    public static String image;
    public static String senderName;
    public static String sendTime;
-   TextView nameTV,timeTV;
+
+    TextView nameTV,timeTV;
    ImageButton dwonloadBtn;
     PhotoView photoView;
     public FullScreenImageView() {

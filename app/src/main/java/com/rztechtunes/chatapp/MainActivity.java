@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         Log.i(TAG, "MainonPause: ");
+
         authViewModel.stateLiveData.observe(this, new Observer<AuthViewModel.AuthenticationState>() {
             @Override
             public void onChanged(AuthViewModel.AuthenticationState authenticationState) {

@@ -19,6 +19,7 @@ import com.rztechtunes.chatapp.FullScreenImageView;
 import com.rztechtunes.chatapp.ImageDownloadManager.DirectoryHelper;
 import com.rztechtunes.chatapp.ImageDownloadManager.DownloadImageService;
 import com.rztechtunes.chatapp.R;
+import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 
 
@@ -98,11 +99,13 @@ public class MessageAdaper extends RecyclerView.Adapter<MessageAdaper.ContractVi
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 FullScreenImageView.image = list.get(position).getImage();
                 FullScreenImageView.senderName = list.get(position).getSenderName();
                 FullScreenImageView.sendTime = list.get(position).getStatus();
+                //Set position so that backpress go to the recylerview item postion
+                SendMessageFragment.position = position;
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_sendMessageFragment_to_fullScreenImageView);
+
               /*  AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
                 LayoutInflater inflater = LayoutInflater.from(context);
                 View mView =inflater.inflate(R.layout.image_zoom_view, null);

@@ -59,7 +59,8 @@
         <action
             android:id="@+id/action_sendMessageFragment_to_fullScreenImageView"
             app:destination="@id/fullScreenImageView"
-            app:enterAnim="@anim/push_up_in" />
+            app:enterAnim="@anim/push_up_in"
+            app:popEnterAnim="@anim/enteranimation" />
     </fragment>
     <fragment
         android:id="@+id/createGroupFrag"

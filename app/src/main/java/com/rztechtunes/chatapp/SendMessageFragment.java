@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
@@ -29,10 +30,22 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.rztechtunes.chatapp.Notification.Client;
+import com.rztechtunes.chatapp.Notification.Data;
+import com.rztechtunes.chatapp.Notification.MyResponse;
+import com.rztechtunes.chatapp.Notification.Sender;
+import com.rztechtunes.chatapp.Notification.Token;
 import com.rztechtunes.chatapp.adapter.MessageAdaper;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
@@ -48,6 +61,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
@@ -73,6 +90,13 @@ public class SendMessageFragment extends Fragment {
     private String currentPhotoPath;
     private File file;
 
+   public static int position=-1;
+
+    APIService apiService;
+
+     boolean notify = false;
+   String reciverOnlineStatus;
+    String message;
     public SendMessageFragment() {
         // Required empty public constructor
     }
@@ -91,6 +115,9 @@ public class SendMessageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //For send notificaiton
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
         sendMsgBtn = view.findViewById(R.id.sentMsgBtn);
         msgET = view.findViewById(R.id.messageET);
@@ -119,7 +146,7 @@ public class SendMessageFragment extends Fragment {
         sendMsgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message= msgET.getText().toString().trim();
+                 message= msgET.getText().toString().trim();
 
                 if (message.equals(""))
                 {
@@ -127,10 +154,12 @@ public class SendMessageFragment extends Fragment {
                 }
                 else
                 {
+                    notify = true;
                     SenderReciverPojo senderReciverPojo = new SenderReciverPojo("",message,"",reciverID,reciverName,reciverImage,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
                     messageViewModel.sendMessage(senderReciverPojo);
                     msgET.setText("");
                 }
+                position = -1;
 
 
             }
@@ -144,6 +173,8 @@ public class SendMessageFragment extends Fragment {
                     if (reciverID.equals(contractPojo.getU_ID()))
                     {
                         statusTV.setText(contractPojo.getStatus());
+                        reciverOnlineStatus = contractPojo.getStatus();
+
                     }
                 }
 
@@ -159,24 +190,108 @@ public class SendMessageFragment extends Fragment {
 
 
 
-        messageViewModel.getAllMessage(reciverID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
-            @Override
-            public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
+        if (position==-1)
+        {
+            messageViewModel.getAllMessage(reciverID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
+                @Override
+                public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
 
-                Log.i(TAG, "size: "+senderReciverPojos.size());
-                MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos,getActivity());
-                LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                llm.setStackFromEnd(true);
-                llm.setOrientation(LinearLayoutManager.VERTICAL);
-                msgRV.setLayoutManager(llm);
-                msgRV.setAdapter(messageAdaper);
-//                messageAdaper.setStateRestorationStrategy(StateRestorationStrategy.WHEN_NOT_EMPTY);
+                    MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos,getActivity());
 
-            }
+                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                    llm.setStackFromEnd(true);
+                    llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-        });
+                    msgRV.setLayoutManager(llm);
+                    msgRV.setAdapter(messageAdaper);
+
+                    if (notify)
+                    {
+
+                        //If user status isn't online then send msg with notification
+                        if (reciverOnlineStatus.equals("Online")) {
+
+                        }
+                        else
+                        {
+                            sendNotifiaction(reciverID, CurrentauthPojo.getName(), message);
+                        }
+                    }
+                    notify = false;
+
+                }
+
+            });
+
+        }
+        else
+        {
+            messageViewModel.getAllMessage(reciverID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
+                @Override
+                public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
+
+
+                    MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos,getActivity());
+
+                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                    llm.setStackFromEnd(true);
+                    llm.setOrientation(LinearLayoutManager.VERTICAL);
+
+                    //goto that positon before image selected
+                    llm.scrollToPositionWithOffset(position , 10);
+                    msgRV.setLayoutManager(llm);
+                    msgRV.setAdapter(messageAdaper);
+
+
+                }
+
+            });
+
+        }
+
+
 
     }
+
+    private void sendNotifiaction(String receiver, final String username, final String message){
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(FirebaseAuth.getInstance().getCurrentUser().getUid(), R.mipmap.ic_launcher, username+": "+message, "New Message",
+                            reciverID);
+
+                    Sender sender = new Sender(data, token.getToken());
+
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if (response.code() == 200){
+                                        if (response.body().success != 1){
+                                            Log.i(TAG, "onResponse: "+"fails");
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     @Override
     public void onStart() {
@@ -195,6 +310,8 @@ public class SendMessageFragment extends Fragment {
             }
         });
     }
+
+
 
     private void pictureSelected() {
 

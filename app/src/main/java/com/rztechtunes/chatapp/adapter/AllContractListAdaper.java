@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
+import com.rztechtunes.chatapp.UserProfileFrag;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
 
@@ -51,10 +52,8 @@ public class AllContractListAdaper extends RecyclerView.Adapter<AllContractListA
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SendMessageFragment.reciverID = list.get(position).getU_ID();
-                SendMessageFragment.reciverImage = list.get(position).getImage();
-                SendMessageFragment.reciverName = list.get(position).getName();
-                Navigation.findNavController(holder.itemView).navigate(R.id.sendMessageFragment);
+                UserProfileFrag.userID = list.get(position).getU_ID();
+                Navigation.findNavController(holder.itemView).navigate(R.id.userProfileFrag);
             }
         });
 

@@ -9,7 +9,12 @@
         android:id="@+id/chatFragment"
         android:name="com.rztechtunes.chatapp.ChatFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_chatFragment_to_sendMessageFragment"
+            app:destination="@id/sendMessageFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
     <fragment
         android:id="@+id/groupFragment"
         android:name="com.rztechtunes.chatapp.GroupFragment"
@@ -82,4 +87,14 @@
         android:name="com.rztechtunes.chatapp.FullScreenImageView"
         android:label="fragment_full_screen_image_view"
         tools:layout="@layout/fragment_full_screen_image_view" />
+    <fragment
+        android:id="@+id/friendProfileFrag"
+        android:name="com.rztechtunes.chatapp.FriendProfileFrag"
+        android:label="fragment_friend_profile"
+        tools:layout="@layout/fragment_friend_profile" />
+    <fragment
+        android:id="@+id/userProfileFrag"
+        android:name="com.rztechtunes.chatapp.UserProfileFrag"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
 </navigation>

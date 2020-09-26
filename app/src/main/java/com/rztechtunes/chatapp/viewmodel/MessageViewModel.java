@@ -105,4 +105,15 @@ public class MessageViewModel extends ViewModel {
         });
 
     }
+
+
+    public MutableLiveData<SenderReciverPojo> getLastMsg(String reciverID) {
+
+        return messageRespos.geLastmsg(reciverID);
+    }
+
+    public void setReadStatus(String reciverID) {
+        messageRespos.setReadStatus(reciverID);
+    }
+
 }

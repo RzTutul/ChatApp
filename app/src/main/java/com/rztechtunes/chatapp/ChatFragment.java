@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.rztechtunes.chatapp.Notification.Token;
 import com.rztechtunes.chatapp.adapter.FriendListAdaper;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
@@ -32,6 +33,8 @@ import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -42,20 +45,16 @@ public class ChatFragment extends Fragment {
     MessageViewModel messageViewModel;
     List<SenderReciverPojo> contractList = new ArrayList<>();
     AuthViewModel authViewModel;
-
     public ChatFragment() {
         // Required empty public constructor
     }
-
-
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //Set position so that go to the recylerview item postion for image selected
-        SendMessageFragment.position =-1;
+
 
         messageViewModel = ViewModelProviders.of(this).get(MessageViewModel.class);
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
@@ -73,29 +72,40 @@ public class ChatFragment extends Fragment {
             @Override
             public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
 
-                Log.i(TAG, "onChanged: "+senderReciverPojos.size());
-
-                FriendListAdaper friendListAdaper = new FriendListAdaper(senderReciverPojos,getActivity());
-                LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                msgRV.setLayoutManager(llm);
-                msgRV.setAdapter(friendListAdaper);
+                //new message list come first in row
+                Collections.sort(senderReciverPojos, new Comparator<SenderReciverPojo>() {
+                    public int compare(SenderReciverPojo s1, SenderReciverPojo s2) {
+                        return s1.getStatus().compareToIgnoreCase(s2.getStatus());
+                    }
+                });
+                //reverse the sort by day time
+                Collections.reverse(senderReciverPojos);
+                BuildRV(senderReciverPojos);
             }
 
 
         });
 
 
-
-
+        updateToken(FirebaseInstanceId.getInstance().getToken());
 
 
     }
-    private void updateToken(String token){
+
+    public void BuildRV(List<SenderReciverPojo> senderReciverPojos) {
+            FriendListAdaper friendListAdaper = new FriendListAdaper(senderReciverPojos, getActivity());
+            LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+            msgRV.setLayoutManager(llm);
+            msgRV.setAdapter(friendListAdaper);
+            
+
+    }
+
+    private void updateToken(String token) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
         Token token1 = new Token(token);
         reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token1);
     }
-
 
 
 }

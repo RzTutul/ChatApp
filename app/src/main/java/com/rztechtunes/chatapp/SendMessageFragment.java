@@ -11,10 +11,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +53,7 @@ import com.rztechtunes.chatapp.adapter.MessageAdaper;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
+import com.rztechtunes.chatapp.repos.MessageRespos;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
@@ -76,9 +80,10 @@ public class SendMessageFragment extends Fragment {
     private static final int REQUEST_CAMERA_CODE = 321;
     private static final int REQUEST_STORAGE_CODE = 456;
     public static String reciverID;
-   public  static  String reciverImage;
-   public static  String reciverName;
-    ImageButton sendMsgBtn,imageButn;
+    public static String reciverImage;
+    public static String reciverName;
+
+    ImageButton sendMsgBtn, imageButn;
     EditText msgET;
     RecyclerView msgRV;
     MessageViewModel messageViewModel;
@@ -86,17 +91,20 @@ public class SendMessageFragment extends Fragment {
     AuthPojo CurrentauthPojo;
 
     ImageView prfileImage;
-    TextView nameTV,statusTV;
+    TextView nameTV, statusTV;
     private String currentPhotoPath;
     private File file;
 
-   public static int position=-1;
+    public static int position = -1;
 
     APIService apiService;
 
-     boolean notify = false;
-   String reciverOnlineStatus;
+    boolean notify = false;
+    String reciverOnlineStatus;
     String message;
+  Toolbar toolbar;
+
+
     public SendMessageFragment() {
         // Required empty public constructor
     }
@@ -126,6 +134,22 @@ public class SendMessageFragment extends Fragment {
         nameTV = view.findViewById(R.id.nameTV);
         statusTV = view.findViewById(R.id.statusTV);
         imageButn = view.findViewById(R.id.imageButn);
+        toolbar = view.findViewById(R.id.toolbar);
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FriendProfileFrag.frndID = reciverID;
+                Navigation.findNavController(v).navigate(R.id.friendProfileFrag);
+
+            }
+        });
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.homeFragment);
+            }
+        });
 
 
         nameTV.setText(reciverName);
@@ -139,42 +163,34 @@ public class SendMessageFragment extends Fragment {
         authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
             @Override
             public void onChanged(AuthPojo authPojo) {
-                CurrentauthPojo =authPojo;
+                CurrentauthPojo = authPojo;
             }
         });
 
         sendMsgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 message= msgET.getText().toString().trim();
+                message = msgET.getText().toString().trim();
 
-                if (message.equals(""))
-                {
+                if (message.equals("")) {
                     msgET.setError("Write something");
-                }
-                else
-                {
+                } else {
                     notify = true;
-                    SenderReciverPojo senderReciverPojo = new SenderReciverPojo("",message,"",reciverID,reciverName,reciverImage,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
+                    SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", message, "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getImage(), HelperUtils.getDateWithTime(), 0);
                     messageViewModel.sendMessage(senderReciverPojo);
                     msgET.setText("");
                 }
                 position = -1;
-
-
             }
         });
 
         authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
             @Override
             public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
-                for (AlluserContractPojo contractPojo : alluserContractPojos)
-                {
-                    if (reciverID.equals(contractPojo.getU_ID()))
-                    {
+                for (AlluserContractPojo contractPojo : alluserContractPojos) {
+                    if (reciverID.equals(contractPojo.getU_ID())) {
                         statusTV.setText(contractPojo.getStatus());
                         reciverOnlineStatus = contractPojo.getStatus();
-
                     }
                 }
 
@@ -189,15 +205,11 @@ public class SendMessageFragment extends Fragment {
         });
 
 
-
-        if (position==-1)
-        {
+        if (position == -1) {
             messageViewModel.getAllMessage(reciverID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
                 @Override
                 public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
-
-                    MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos,getActivity());
-
+                    MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos, getActivity());
                     LinearLayoutManager llm = new LinearLayoutManager(getActivity());
                     llm.setStackFromEnd(true);
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -205,63 +217,83 @@ public class SendMessageFragment extends Fragment {
                     msgRV.setLayoutManager(llm);
                     msgRV.setAdapter(messageAdaper);
 
-                    if (notify)
-                    {
+
+                    if (notify) {
 
                         //If user status isn't online then send msg with notification
                         if (reciverOnlineStatus.equals("Online")) {
 
-                        }
-                        else
-                        {
+                        } else {
                             sendNotifiaction(reciverID, CurrentauthPojo.getName(), message);
                         }
                     }
                     notify = false;
 
+
                 }
 
             });
 
-        }
-        else
-        {
+        } else {
             messageViewModel.getAllMessage(reciverID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
                 @Override
                 public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
 
-
-                    MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos,getActivity());
+                    MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos, getActivity());
 
                     LinearLayoutManager llm = new LinearLayoutManager(getActivity());
                     llm.setStackFromEnd(true);
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
 
                     //goto that positon before image selected
-                    llm.scrollToPositionWithOffset(position , 10);
+                    llm.scrollToPositionWithOffset(position, 10);
                     msgRV.setLayoutManager(llm);
                     msgRV.setAdapter(messageAdaper);
 
+                    if (notify) {
 
+                        //If user status isn't online then send msg with notification
+                        if (reciverOnlineStatus.equals("Online")) {
+
+                        } else {
+                            sendNotifiaction(reciverID, CurrentauthPojo.getName(), message);
+                        }
+                    }
+                    notify = false;
                 }
-
             });
 
         }
 
+        //set msg is read
+
+       /*     messageViewModel.getLastMsg(reciverID).observe(getActivity(), new Observer<SenderReciverPojo>() {
+                @Override
+                public void onChanged(SenderReciverPojo senderReciverPojo) {
+
+
+                    if ((senderReciverPojo.getReciverID()).equals(FirebaseAuth.getInstance().getUid())) {
+
+                        messageViewModel.setReadStatus(reciverID);
+                    }
+
+
+                }
+            });*/
 
 
     }
 
-    private void sendNotifiaction(String receiver, final String username, final String message){
+
+    private void sendNotifiaction(String receiver, final String username, final String message) {
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(FirebaseAuth.getInstance().getCurrentUser().getUid(), R.mipmap.ic_launcher, username+": "+message, "New Message",
+                    Data data = new Data(FirebaseAuth.getInstance().getCurrentUser().getUid(), R.mipmap.ic_launcher, username + ": " + message, "New Message",
                             reciverID);
 
                     Sender sender = new Sender(data, token.getToken());
@@ -270,9 +302,9 @@ public class SendMessageFragment extends Fragment {
                             .enqueue(new Callback<MyResponse>() {
                                 @Override
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                    if (response.code() == 200){
-                                        if (response.body().success != 1){
-                                            Log.i(TAG, "onResponse: "+"fails");
+                                    if (response.code() == 200) {
+                                        if (response.body().success != 1) {
+                                            Log.i(TAG, "onResponse: " + "fails");
                                         }
                                     }
                                 }
@@ -296,11 +328,11 @@ public class SendMessageFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         authViewModel.stateLiveData.observe(this, new Observer<AuthViewModel.AuthenticationState>() {
             @Override
             public void onChanged(AuthViewModel.AuthenticationState authenticationState) {
-                switch (authenticationState)
-                {
+                switch (authenticationState) {
                     case AUTHENTICATED:
                         authViewModel.setUserSatus("Online");
                         break;
@@ -312,12 +344,11 @@ public class SendMessageFragment extends Fragment {
     }
 
 
-
     private void pictureSelected() {
 
 
-        final BottomSheetDialog bottomSheetDialog =new BottomSheetDialog(getActivity(),R.style.BottomSheetDialogTheme);
-        View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout,(LinearLayout)getActivity().findViewById(R.id.bottomSheetContainer));
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, (LinearLayout) getActivity().findViewById(R.id.bottomSheetContainer));
         bottomSheetView.findViewById(R.id.cameraLL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -343,10 +374,6 @@ public class SendMessageFragment extends Fragment {
 
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
-
-
-
-
 
 
     }
@@ -422,36 +449,38 @@ public class SendMessageFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE &&
-                resultCode == RESULT_OK){
-            Log.e(TAG, "onActivityResult: "+currentPhotoPath);
+                resultCode == RESULT_OK) {
+            Log.e(TAG, "onActivityResult: " + currentPhotoPath);
             file = new File(currentPhotoPath);
             Uri fileUri = Uri.fromFile(file);
             try {
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
-              //  picImageBtn.setImageBitmap(bmp);
-                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("","","",reciverID,reciverName,reciverImage,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
-                messageViewModel.sendImage(senderReciverPojo,file,getActivity());
+                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
+                //  picImageBtn.setImageBitmap(bmp);
+                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", "[] Image", "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getImage(), HelperUtils.getDateWithTime(), 0);
+                messageViewModel.sendImage(senderReciverPojo, file, getActivity());
+                notify = true;
+                message = "send image";
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             // addPictureCard.setVisibility(View.GONE);
-        }
-
-        else if  (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
+        } else if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             String[] projection = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(data.getData(), projection, null, null, null);
             cursor.moveToFirst();
             int index = cursor.getColumnIndex(projection[0]);
             currentPhotoPath = cursor.getString(index);
-            Log.e(TAG, "onActivityResultgalary: "+currentPhotoPath);
+            Log.e(TAG, "onActivityResultgalary: " + currentPhotoPath);
             file = new File(currentPhotoPath);
             Uri fileUri = Uri.fromFile(file);
             try {
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
-               // picImageBtn.setImageBitmap(bmp);
-                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("","","",reciverID,reciverName,reciverImage,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
-                messageViewModel.sendImage(senderReciverPojo,file,getActivity());
+                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
+                // picImageBtn.setImageBitmap(bmp);
+                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", "[] Image", "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getImage(), HelperUtils.getDateWithTime(), 0);
+                messageViewModel.sendImage(senderReciverPojo, file, getActivity());
+                notify = true;
+                message = "send image";
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -11,12 +11,13 @@ public class SenderReciverPojo {
     String senderName;
     String senderImage;
     String status;
+    int isRead;
 
 
     public SenderReciverPojo() {
     }
 
-    public SenderReciverPojo(String id, String msg, String senderID, String reciverID, String reciverName, String reciverImage, String senderName, String senderImage, String status) {
+    public SenderReciverPojo(String id, String msg, String senderID, String reciverID, String reciverName, String reciverImage, String senderName, String senderImage, String status,int isRead) {
         this.id = id;
         this.msg = msg;
         this.senderID = senderID;
@@ -26,8 +27,17 @@ public class SenderReciverPojo {
         this.senderName = senderName;
         this.senderImage = senderImage;
         this.status = status;
+        this.isRead = isRead;
     }
 
+
+    public int getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
+    }
 
     public String getImage() {
         return image;

@@ -51,6 +51,7 @@ public class AuthRepos {
     private MutableLiveData<AuthViewModel.AuthenticationState> stateLiveData;
     private MutableLiveData<AuthPojo> userInfoLD = new MutableLiveData<>();
     private MutableLiveData<List<AlluserContractPojo>> alluserInfoLD = new MutableLiveData<>();
+    private MutableLiveData<AuthPojo> friendInfoLD = new MutableLiveData<>();
 
 
 
@@ -161,6 +162,29 @@ public class AuthRepos {
             }
         });
 
+    }
+
+    public MutableLiveData<AuthPojo> getFriendInformaiton(String frndID) {
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        alluserRef = rootRef.child("AlluserInfo");
+
+
+        alluserRef.child(frndID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                AuthPojo userInfo = dataSnapshot.getValue(AuthPojo.class);
+                friendInfoLD.postValue(userInfo);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+        return friendInfoLD;
     }
 }
 

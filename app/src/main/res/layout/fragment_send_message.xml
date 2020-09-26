@@ -13,10 +13,16 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            >
 
             <de.hdodenhof.circleimageview.CircleImageView
+
                 android:id="@+id/profile_image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -81,7 +87,7 @@
                 android:backgroundTint="@color/colorWhite"
                 android:id="@+id/imageButn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:layout_weight="0.5"
                 android:src="@drawable/ic_photo_camera_black_24dp" />
 
@@ -99,7 +105,7 @@
                 android:backgroundTint="@color/colorWhite"
                 android:id="@+id/sentMsgBtn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:layout_weight="0.5"
                 android:src="@drawable/ic_baseline_send_24" />
 

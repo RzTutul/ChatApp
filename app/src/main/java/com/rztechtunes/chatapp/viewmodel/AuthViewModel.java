@@ -57,6 +57,13 @@ public class AuthViewModel extends ViewModel {
         return authRepos.getUserInfo();
     }
 
+    public  MutableLiveData<AuthPojo> getFriendInformaiton(String frndID) {
+
+        return authRepos.getFriendInformaiton(frndID);
+
+    }
+
+
     public MutableLiveData<List<AlluserContractPojo>> getAllUser() {
         return authRepos.getAllUserInfo();
     }
@@ -64,6 +71,7 @@ public class AuthViewModel extends ViewModel {
 
         authRepos.setUserSatus(dateWithTime);
     }
+
 
     public enum AuthenticationState
     {

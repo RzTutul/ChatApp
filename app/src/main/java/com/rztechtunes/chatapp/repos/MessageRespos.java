@@ -33,13 +33,12 @@ public class MessageRespos {
     DatabaseReference recevierID;
     DatabaseReference chatList;
     DatabaseReference reciverChatList;
-
+    int count = 0;
     MutableLiveData<List<SenderReciverPojo>> frndLD = new MutableLiveData<>();
     MutableLiveData<List<SenderReciverPojo>> msgLD = new MutableLiveData<>();
+    MutableLiveData<SenderReciverPojo> lastMsgLD = new MutableLiveData<>();
 
     public MessageRespos() {
-
-
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -47,6 +46,8 @@ public class MessageRespos {
     }
 
     public void sendMessage(SenderReciverPojo senderReciverPojo) {
+
+
         userID = rootRef.child(firebaseUser.getUid());
         chatList = userID.child("ChatList").child(senderReciverPojo.getReciverID());
         String id = chatList.push().getKey();
@@ -71,31 +72,29 @@ public class MessageRespos {
 
 
     }
-    public MutableLiveData<List<SenderReciverPojo>> getFrndContract()
-    {
+
+    public MutableLiveData<List<SenderReciverPojo>> getFrndContract() {
         rootRef = FirebaseDatabase.getInstance().getReference();
         userID = rootRef.child(firebaseUser.getUid());
         chatList = userID.child("ChatList");
-
         chatList.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<SenderReciverPojo> contractPojoList = new ArrayList<>();
                 List<SenderReciverPojo> finalConractList = new ArrayList<>();
-                for (DataSnapshot data: dataSnapshot.getChildren())
-                {
 
+                SenderReciverPojo senderReciverPojo;
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
                     //find specific user msg
-                    for (DataSnapshot d : data.getChildren())
-                    {
+                    for (DataSnapshot d : data.getChildren()) {
+
                         contractPojoList.add(d.getValue(SenderReciverPojo.class));
                     }
+                    senderReciverPojo = contractPojoList.get(contractPojoList.size() - 1);
                     //only save the last msg
-                    finalConractList.add(contractPojoList.get(contractPojoList.size() - 1));
+                    finalConractList.add(senderReciverPojo);
                     contractPojoList.clear();
-
                 }
-
 
                 frndLD.postValue(finalConractList);
 
@@ -121,9 +120,9 @@ public class MessageRespos {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<SenderReciverPojo> contractPojoList = new ArrayList<>();
-                for (DataSnapshot data: dataSnapshot.getChildren())
-                {
-                        contractPojoList.add(data.getValue(SenderReciverPojo.class));
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+
+                    contractPojoList.add(data.getValue(SenderReciverPojo.class));
 
 
                 }
@@ -162,4 +161,92 @@ public class MessageRespos {
             }
         });
     }
+
+
+    public MutableLiveData<SenderReciverPojo> geLastmsg(String reciverID) {
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        userID = rootRef.child(firebaseUser.getUid());
+        chatList = userID.child("ChatList");
+
+        chatList.child(reciverID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                SenderReciverPojo senderReciverPojo = new SenderReciverPojo();
+                List<SenderReciverPojo> list = new ArrayList<>();
+                for (DataSnapshot d: dataSnapshot.getChildren())
+                {
+                        list.add(d.getValue(SenderReciverPojo.class));
+
+                }
+                if (list.size()>0)
+                {
+                    senderReciverPojo = list.get(list.size()-1);
+                    lastMsgLD.postValue(senderReciverPojo);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+        return lastMsgLD;
+    }
+
+    public void setReadStatus(String reciverID) {
+        userID = rootRef.child(firebaseUser.getUid());
+        chatList = userID.child("ChatList").child(reciverID);
+
+
+        chatList.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                SenderReciverPojo senderReciverPojo = new SenderReciverPojo();
+                String key = null;
+                for (DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    senderReciverPojo = dataSnapshot.getValue(SenderReciverPojo.class);
+                    key = dataSnapshot.getKey();
+                }
+                if (senderReciverPojo!= null && key!= null)
+                {
+
+                        chatList.child(key).child("isRead").setValue(1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        });
+
+                        recevierID = rootRef.child(reciverID);
+                        reciverChatList = recevierID.child("ChatList").child(firebaseUser.getUid());
+
+                        reciverChatList.child(key).child("isRead").setValue(1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        });
+
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
 }
+

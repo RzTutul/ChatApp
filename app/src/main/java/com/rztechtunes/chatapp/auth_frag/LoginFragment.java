@@ -1,5 +1,6 @@
 package com.rztechtunes.chatapp.auth_frag;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;

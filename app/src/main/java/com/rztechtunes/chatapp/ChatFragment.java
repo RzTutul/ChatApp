@@ -4,21 +4,27 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
@@ -45,6 +51,9 @@ public class ChatFragment extends Fragment {
     MessageViewModel messageViewModel;
     List<SenderReciverPojo> contractList = new ArrayList<>();
     AuthViewModel authViewModel;
+    BottomNavigationView bottomNav;
+    FloatingActionButton cameraFB;
+
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -66,6 +75,19 @@ public class ChatFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         msgRV = view.findViewById(R.id.messageRV);
+        cameraFB = view.findViewById(R.id.cameraFB);
+
+        //For Bottom Nevigation
+        bottomNav = view.findViewById(R.id.bottomNavigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+
+        cameraFB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.storyFragment);
+            }
+        });
 
 
         messageViewModel.getFrndContract().observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
@@ -92,6 +114,29 @@ public class ChatFragment extends Fragment {
 
     }
 
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.logout_menu:
+                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.createGroupFrag);
+                            break;
+                        case R.id.setting_menu:
+                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.contractFragment);
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    return true;
+                }
+            };
+
+
+
+
     public void BuildRV(List<SenderReciverPojo> senderReciverPojos) {
             FriendListAdaper friendListAdaper = new FriendListAdaper(senderReciverPojos, getActivity());
             LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -106,6 +151,8 @@ public class ChatFragment extends Fragment {
         Token token1 = new Token(token);
         reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token1);
     }
+
+
 
 
 }

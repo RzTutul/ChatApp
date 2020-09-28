@@ -75,6 +75,7 @@ public class HomeFragment extends Fragment {
         chatFragment = new ChatFragment();
         groupFragment = new GroupFragment();
         contractFragment = new ContractFragment();
+        contractFragment = new ContractFragment();
 
         tabLayout.setupWithViewPager(viewPager);
 

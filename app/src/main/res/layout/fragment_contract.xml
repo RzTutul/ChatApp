@@ -11,13 +11,13 @@
       android:visibility="gone"
       android:gravity="center"
       android:drawableLeft="@drawable/ic_baseline_search_24"
-      android:layout_margin="5dp"
+     android:layout_margin="10dp"
      android:paddingLeft="12dp"
       android:id="@+id/searchET"
-      android:hint="name or phone number"
+      android:hint="Search"
       android:layout_width="match_parent"
       android:layout_height="50dp"
-      android:background="@drawable/rounded_editetext"
+      android:background="@drawable/rounded_editbox"
     />
 
   <androidx.recyclerview.widget.RecyclerView

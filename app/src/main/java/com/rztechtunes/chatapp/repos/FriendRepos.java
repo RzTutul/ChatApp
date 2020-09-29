@@ -15,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
 import com.rztechtunes.chatapp.pojo.FriendRequestPojo;
+import com.rztechtunes.chatapp.pojo.StoriesPojo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,11 @@ public class FriendRepos {
     DatabaseReference rootRef;
     DatabaseReference userRef;
     DatabaseReference myRef;
-MutableLiveData<List<FriendRequestPojo>> myFrndLD = new MutableLiveData<>();
-MutableLiveData<List<FriendRequestPojo>> requestlistLD = new MutableLiveData<>();
-     AuthPojo authPojo = new AuthPojo() ;
+    MutableLiveData<List<FriendRequestPojo>> myFrndLD = new MutableLiveData<>();
+    MutableLiveData<List<FriendRequestPojo>> requestlistLD = new MutableLiveData<>();
+    MutableLiveData<List<StoriesPojo>> storiesLD = new MutableLiveData<>();
+    AuthPojo authPojo = new AuthPojo();
+
     public FriendRepos() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -56,8 +59,7 @@ MutableLiveData<List<FriendRequestPojo>> requestlistLD = new MutableLiveData<>()
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<FriendRequestPojo> list = new ArrayList<>();
 
-                for (DataSnapshot dataSnapshot: snapshot.getChildren())
-                {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     list.add(dataSnapshot.getValue(FriendRequestPojo.class));
                 }
                 requestlistLD.postValue(list);
@@ -69,7 +71,6 @@ MutableLiveData<List<FriendRequestPojo>> requestlistLD = new MutableLiveData<>()
 
             }
         });
-
 
 
         return requestlistLD;
@@ -84,8 +85,7 @@ MutableLiveData<List<FriendRequestPojo>> requestlistLD = new MutableLiveData<>()
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<FriendRequestPojo> list = new ArrayList<>();
 
-                for (DataSnapshot dataSnapshot: snapshot.getChildren())
-                {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     list.add(dataSnapshot.getValue(FriendRequestPojo.class));
                 }
                 myFrndLD.postValue(list);
@@ -97,7 +97,6 @@ MutableLiveData<List<FriendRequestPojo>> requestlistLD = new MutableLiveData<>()
 
             }
         });
-
 
 
         return myFrndLD;
@@ -138,8 +137,7 @@ MutableLiveData<List<FriendRequestPojo>> requestlistLD = new MutableLiveData<>()
                     }
                 });
 
-                }
-
+            }
 
 
         });
@@ -156,7 +154,7 @@ MutableLiveData<List<FriendRequestPojo>> requestlistLD = new MutableLiveData<>()
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                 authPojo = dataSnapshot.getValue(AuthPojo.class);
+                authPojo = dataSnapshot.getValue(AuthPojo.class);
 
             }
 
@@ -168,5 +166,88 @@ MutableLiveData<List<FriendRequestPojo>> requestlistLD = new MutableLiveData<>()
 
 
         return authPojo;
+    }
+
+
+
+    public void addStories(StoriesPojo storiesPojo) {
+        myRef = rootRef.child(firebaseUser.getUid()).child("Stories");
+
+        String key = myRef.push().getKey();
+        myRef.child(key).setValue(storiesPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+
+
+    }
+
+    public MutableLiveData<List<StoriesPojo>> getStories(){
+        List<StoriesPojo> storiesPojoList = new ArrayList<>();
+        DatabaseReference friendRef;
+        friendRef = rootRef.child(firebaseUser.getUid()).child("Friends");
+        myRef = rootRef.child(firebaseUser.getUid()).child("Stories");
+        myRef.orderByKey().limitToLast(1).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    storiesPojoList.add(dataSnapshot.getValue(StoriesPojo.class));
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        //Find out my friend list add get their last stories;
+        friendRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    if (dataSnapshot.getKey() != null)
+                    {
+                        userRef = rootRef.child(dataSnapshot.getKey()).child("Stories");
+                        userRef.orderByKey().limitToLast(1).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot1: snapshot.getChildren())
+                                {
+                                    storiesPojoList.add(dataSnapshot1.getValue(StoriesPojo.class));
+                                }
+                                storiesLD.postValue(storiesPojoList);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+
+        return storiesLD;
     }
 }

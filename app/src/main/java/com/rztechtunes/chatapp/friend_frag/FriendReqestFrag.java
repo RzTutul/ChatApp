@@ -1,4 +1,4 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.friend_frag;
 
 import android.os.Bundle;
 
@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.FriendRequestAdaper;
 import com.rztechtunes.chatapp.pojo.FriendRequestPojo;
 import com.rztechtunes.chatapp.viewmodel.FirendViewModel;

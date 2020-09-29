@@ -119,7 +119,7 @@
         tools:layout="@layout/fragment_actvie_friend" />
     <fragment
         android:id="@+id/friendReqestFrag"
-        android:name="com.rztechtunes.chatapp.FriendReqestFrag"
+        android:name="com.rztechtunes.chatapp.friend_frag.FriendReqestFrag"
         android:label="fragment_friend_reqest"
         tools:layout="@layout/fragment_friend_reqest" />
 </navigation>

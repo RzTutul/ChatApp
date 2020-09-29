@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
-import com.rztechtunes.chatapp.FriendReqestFrag;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.ViewPagerAdapter;
 

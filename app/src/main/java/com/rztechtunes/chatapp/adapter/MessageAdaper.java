@@ -106,27 +106,6 @@ public class MessageAdaper extends RecyclerView.Adapter<MessageAdaper.ContractVi
                 SendMessageFragment.position = position;
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_sendMessageFragment_to_fullScreenImageView);
 
-              /*  AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-                LayoutInflater inflater = LayoutInflater.from(context);
-                View mView =inflater.inflate(R.layout.image_zoom_view, null);
-                PhotoView photoView = mView.findViewById(R.id.imageView);
-                ImageView downloadBtn = mView.findViewById(R.id.downloadBtn);
-
-                Glide.with(context)
-                        .load(list.get(position).getImage())
-                        .placeholder(R.drawable.ic_image_black_24dp)
-                        .into(photoView);
-
-                mBuilder.setView(mView);
-                final AlertDialog mDialog = mBuilder.create();
-                mDialog.show();
-                downloadBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        mDialog.dismiss();
-                    }
-                });*/
 
             }
         });

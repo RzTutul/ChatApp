@@ -1,4 +1,4 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.group_chat;
 
 import android.os.Bundle;
 
@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.AllContractListAdaper;
 import com.rztechtunes.chatapp.adapter.GroupContractListAdaper;
 import com.rztechtunes.chatapp.adapter.GroupListAdapter;

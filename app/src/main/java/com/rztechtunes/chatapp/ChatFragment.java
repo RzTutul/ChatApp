@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -12,29 +11,20 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.rztechtunes.chatapp.Notification.Token;
-import com.rztechtunes.chatapp.adapter.FriendListAdaper;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
+import com.rztechtunes.chatapp.adapter.ChatFriendListAdaper;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
-import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
@@ -42,8 +32,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 public class ChatFragment extends Fragment {
 
@@ -119,8 +107,8 @@ public class ChatFragment extends Fragment {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {
-                        case R.id.logout_menu:
-                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.createGroupFrag);
+                        case R.id.firend_menu:
+                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.friendFragment);
                             break;
                         case R.id.setting_menu:
                             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.contractFragment);
@@ -138,10 +126,10 @@ public class ChatFragment extends Fragment {
 
 
     public void BuildRV(List<SenderReciverPojo> senderReciverPojos) {
-            FriendListAdaper friendListAdaper = new FriendListAdaper(senderReciverPojos, getActivity());
+            ChatFriendListAdaper chatFriendListAdaper = new ChatFriendListAdaper(senderReciverPojos, getActivity());
             LinearLayoutManager llm = new LinearLayoutManager(getActivity());
             msgRV.setLayoutManager(llm);
-            msgRV.setAdapter(friendListAdaper);
+            msgRV.setAdapter(chatFriendListAdaper);
             
 
     }

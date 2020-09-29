@@ -1,4 +1,4 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.group_chat;
 
 import android.os.Bundle;
 
@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.GrpParticipantAdaper;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.GroupPojo;

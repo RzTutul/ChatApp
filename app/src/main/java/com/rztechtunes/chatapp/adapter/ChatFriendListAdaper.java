@@ -1,7 +1,6 @@
 package com.rztechtunes.chatapp.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +15,16 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
-import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
 
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
-
-public class FriendListAdaper extends RecyclerView.Adapter<FriendListAdaper.ContractViewHolder> {
+public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAdaper.ContractViewHolder> {
     List<SenderReciverPojo> list;
 
     Context context;
-    public FriendListAdaper(List<SenderReciverPojo> list, Context context) {
+    public ChatFriendListAdaper(List<SenderReciverPojo> list, Context context) {
         this.list = list;
         this.context = context;
     }

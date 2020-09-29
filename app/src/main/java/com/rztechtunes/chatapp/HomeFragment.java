@@ -1,6 +1,5 @@
 package com.rztechtunes.chatapp;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,11 +25,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.adapter.ViewPagerAdapter;
+import com.rztechtunes.chatapp.group_chat.GroupFragment;
 import com.rztechtunes.chatapp.pojo.AuthPojo;
-import com.rztechtunes.chatapp.repos.AuthRepos;
-import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 
 
@@ -126,7 +123,7 @@ public class HomeFragment extends Fragment {
             case R.id.setting_menu:
                 Toast.makeText(getActivity(), "OK", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.logout_menu:
+            case R.id.friendFragment:
                 authViewModel.getLogoutUser();
                 Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.loginFragment);
                 break;

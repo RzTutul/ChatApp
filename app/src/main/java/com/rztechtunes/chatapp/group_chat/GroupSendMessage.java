@@ -1,4 +1,4 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.group_chat;
 
 import android.Manifest;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -26,17 +27,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
+;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.rztechtunes.chatapp.adapter.GroupContractListAdaper;
+import com.rztechtunes.chatapp.R;
+import com.rztechtunes.chatapp.adapter.GroupMessageAdaper;
 import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
-import com.rztechtunes.chatapp.pojo.GroupPojo;
+import com.rztechtunes.chatapp.pojo.AuthPojo;
 import com.rztechtunes.chatapp.pojo.SendGroupMsgPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
@@ -45,162 +47,176 @@ import com.rztechtunes.chatapp.viewmodel.GroupViewModel;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 
-public class CreateGroupFrag extends Fragment {
 
-    RecyclerView contractRV;
-    AuthViewModel authViewModel;
-    GroupViewModel groupViewModel;
-    FloatingActionButton createBtn;
 
-    List<AlluserContractPojo> contractPojoList = new ArrayList<>();
-    List<AlluserContractPojo> selectedContractList = new ArrayList<>();
-    GroupContractListAdaper groupContractListAdaper;
-    AlluserContractPojo myContractInfo ;
-    ImageView groupImage;
-    EditText groupNameET,descriptionET;
+public class GroupSendMessage extends Fragment {
+
     private static final int GALLERY_REQUEST_CODE = 123;
     private static final int REQUEST_CAMERA_CODE = 321;
     private static final int REQUEST_STORAGE_CODE = 456;
+
+    public static String groupName;
+    public static String groupID;
+    public  static  String groupImage;
+
+    Toolbar toolbar;
+    ImageButton sendMsgBtn,imageButn;
+    EditText msgET;
+    RecyclerView msgRV;
+    GroupViewModel groupViewModel;
+    AuthViewModel authViewModel;
+    AuthPojo CurrentauthPojo;
+
+    ImageView prfileImage;
+    TextView nameTV,statusTV;
     private String currentPhotoPath;
     private File file;
-    public CreateGroupFrag() {
+    String usersName ="you,";
+
+    public GroupSendMessage() {
         // Required empty public constructor
     }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
-        groupViewModel = ViewModelProviders.of(this).get(GroupViewModel.class);
-
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_group, container, false);
+
+        groupViewModel = ViewModelProviders.of(this).get(GroupViewModel.class);
+        authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
+        return inflater.inflate(R.layout.fragment_group_send_message, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        contractRV = view.findViewById(R.id.contractRV);
-        createBtn = view.findViewById(R.id.createGroupBtn);
-        groupNameET = view.findViewById(R.id.groupNameET);
-        descriptionET = view.findViewById(R.id.groupDiscription);
-        groupImage = view.findViewById(R.id.imageView);
-        myContractInfo = new AlluserContractPojo();
 
-        groupImage.setOnClickListener(new View.OnClickListener() {
+
+        sendMsgBtn = view.findViewById(R.id.sentMsgBtn);
+        msgET = view.findViewById(R.id.messageET);
+        msgRV = view.findViewById(R.id.messageRV);
+        prfileImage = view.findViewById(R.id.profile_image);
+        nameTV = view.findViewById(R.id.nameTV);
+        statusTV = view.findViewById(R.id.statusTV);
+        imageButn = view.findViewById(R.id.imageButn);
+        toolbar = view.findViewById(R.id.toolbar);
+
+
+        nameTV.setText(groupName);
+        //Picasso.get().load(reciverImage).into(prfileImage);
+        Glide.with(getActivity())
+                .load(groupImage)
+                .placeholder(R.drawable.ic_perm_)
+                .into(prfileImage);
+
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GroupProfileFrag.grpID = groupID;
+                GroupProfileFrag.grpName = groupName;
+                GroupProfileFrag.grpImage = groupImage;
+                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.groupProfileFrag);
+            }
+        });
+
+
+        authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
+            @Override
+            public void onChanged(AuthPojo authPojo) {
+                CurrentauthPojo =authPojo;
+            }
+        });
+
+        sendMsgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message= msgET.getText().toString().trim();
+
+                if (message.equals(""))
+                {
+                    msgET.setError("Write something");
+                }
+                else
+                {
+                    SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,message,"",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getImage(), HelperUtils.getDateWithTime());
+                    groupViewModel.sendGroupMsg(sendGroupMsgPojo);
+                    msgET.setText("");
+                }
+
+
+            }
+        });
+
+
+        groupViewModel.getGroupUser(groupID).observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
+            @Override
+            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
+
+                for (AlluserContractPojo contractPojo: alluserContractPojos)
+                {
+                    usersName = usersName+contractPojo.getName()+", ";
+                }
+                statusTV.setText(usersName);
+                usersName ="";
+            }
+        });
+
+   /*     authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
+            @Override
+            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
+                for (AlluserContractPojo contractPojo : alluserContractPojos)
+                {
+                    if (reciverID.equals(contractPojo.getU_ID()))
+                    {
+                        statusTV.setText(contractPojo.getStatus());
+                    }
+                }
+
+            }
+        });*/
+
+        imageButn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pictureSelected();
             }
         });
 
-        createBtn.setOnClickListener(new View.OnClickListener() {
+        groupViewModel.getAllGroupMessage(groupID).observe(getActivity(), new Observer<List<SendGroupMsgPojo>>() {
             @Override
-            public void onClick(View v) {
-
-                selectedContractList = groupContractListAdaper.getSelectedContract();
-                String grpName = groupNameET.getText().toString().trim();
-                String grpDesrption = descriptionET.getText().toString().trim();
-
-                GroupPojo groupPojo = new GroupPojo("","",grpName,grpDesrption,HelperUtils.getDateWithTime(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+            public void onChanged(List<SendGroupMsgPojo> sendGroupMsgPojos) {
 
 
-                Log.i(TAG, "onClick: "+selectedContractList.size());
-                if (file != null)
-                {
-                    if (grpName.equals(""))
-                    {
-                        groupNameET.setError("Give Group Name");
-
-                    }
-                    else if (grpDesrption.equals(""))
-                    {
-                        descriptionET.setError("Give a Description");
-                    }
-                    else if (selectedContractList.size()<=0)
-                    {
-                        Toast.makeText(getActivity(),"Select at list one participant", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        selectedContractList.add(myContractInfo);
-                        groupViewModel.createNewGroup(selectedContractList,groupPojo,file,getContext());
-                    }
-
-                }
-                else
-                {
-                    Toast.makeText(getActivity(),"Select group Image", Toast.LENGTH_SHORT).show();
-
-
-                }
-
-
-            }
-        });
-
-        groupViewModel.getCreateGrpStatus().observe(getActivity(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                if (s.equals("Successful"))
-                {
-                    Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
-                }
-                else
-                {
-
-                }
-            }
-        });
-
-
-        authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
-            @Override
-            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
-                contractPojoList.clear();
-                for (AlluserContractPojo contractPojo: alluserContractPojos)
-                {
-                    if ((contractPojo.getU_ID()).equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
-                    {
-                        //add my contract info and send database
-                        myContractInfo = contractPojo;
-
-                    }
-                    else
-                    {
-                        //add without my myinfo
-                        contractPojoList.add(contractPojo);
-                    }
-                }
-
-                 groupContractListAdaper = new GroupContractListAdaper(contractPojoList,getActivity());
+                GroupMessageAdaper messageAdaper = new GroupMessageAdaper(sendGroupMsgPojos,getActivity());
                 LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                contractRV.setLayoutManager(llm);
-                contractRV.setAdapter(groupContractListAdaper);
-
-
+                llm.setStackFromEnd(true);
+                llm.setOrientation(LinearLayoutManager.VERTICAL);
+                msgRV.setLayoutManager(llm);
+                msgRV.setAdapter(messageAdaper);
 
 
             }
+
         });
-
-
 
     }
+
 
     private void pictureSelected() {
 
 
         final BottomSheetDialog bottomSheetDialog =new BottomSheetDialog(getActivity(),R.style.BottomSheetDialogTheme);
-        View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout,(LinearLayout)getActivity().findViewById(R.id.bottomSheetContainer));
+        View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_send_image,(LinearLayout)getActivity().findViewById(R.id.bottomSheetContainer));
         bottomSheetView.findViewById(R.id.cameraLL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -311,8 +327,9 @@ public class CreateGroupFrag extends Fragment {
             Uri fileUri = Uri.fromFile(file);
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
-                 groupImage.setImageBitmap(bmp);
-
+                //  picImageBtn.setImageBitmap(bmp);
+                SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,"","",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
+                groupViewModel.sendImage(sendGroupMsgPojo,file,getActivity());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -331,8 +348,9 @@ public class CreateGroupFrag extends Fragment {
             Uri fileUri = Uri.fromFile(file);
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
-                groupImage.setImageBitmap(bmp);
-
+                // picImageBtn.setImageBitmap(bmp);
+                SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,"","",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
+                groupViewModel.sendImage(sendGroupMsgPojo,file,getActivity());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -341,4 +359,5 @@ public class CreateGroupFrag extends Fragment {
 
         }
     }
+
 }

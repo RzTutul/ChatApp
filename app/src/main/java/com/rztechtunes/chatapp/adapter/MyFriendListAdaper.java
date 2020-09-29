@@ -12,17 +12,19 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.rztechtunes.chatapp.group_chat.GroupSendMessage;
 import com.rztechtunes.chatapp.R;
-import com.rztechtunes.chatapp.pojo.GroupPojo;
+import com.rztechtunes.chatapp.UserProfileFrag;
+import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
+import com.rztechtunes.chatapp.pojo.FriendRequestPojo;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.ContractViewHolder> {
-    List<GroupPojo> list;
+public class MyFriendListAdaper extends RecyclerView.Adapter<MyFriendListAdaper.ContractViewHolder> {
+    List<FriendRequestPojo> list;
     Context context;
 
-    public GroupListAdapter(List<GroupPojo> list, Context context) {
+    public MyFriendListAdaper(List<FriendRequestPojo> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -31,30 +33,30 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Cont
     @Override
     public ContractViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.all_contract_row,parent,false);
+        View view = layoutInflater.inflate(R.layout.my_friend_list_row,parent,false);
         return new ContractViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ContractViewHolder holder, final int position) {
 
-        holder.nameTV.setText(list.get(position).getName());
-        holder.aboutTV.setText(list.get(position).getDescription());
 
-        Glide.with(context)
-                .load(list.get(position).getImages())
-                .placeholder(R.drawable.ic_perm_)
-                .into(holder.imageView);
+            holder.nameTV.setText(list.get(position).getName());
+            holder.aboutTV.setText(list.get(position).getAbout());
+
+            Glide.with(context)
+                    .load(list.get(position).getImage())
+                    .placeholder(R.drawable.ic_perm_)
+                    .into(holder.imageView);
+
 
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GroupSendMessage.groupName = list.get(position).getName();
-                GroupSendMessage.groupID = list.get(position).getGroupID();
-                GroupSendMessage.groupImage = list.get(position).getImages();
-                Navigation.findNavController(holder.itemView).navigate(R.id.groupSendMessage);
+                UserProfileFrag.userID = list.get(position).getU_ID();
+                Navigation.findNavController(holder.itemView).navigate(R.id.userProfileFrag);
             }
         });
 
@@ -64,6 +66,8 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Cont
     public int getItemCount() {
         return list.size();
     }
+
+
 
     class ContractViewHolder extends RecyclerView.ViewHolder{
 
@@ -78,6 +82,4 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Cont
             imageView = itemView.findViewById(R.id.profile_image);
         }
     }
-
-
 }

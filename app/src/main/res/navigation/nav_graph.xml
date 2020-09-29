@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/groupFragment"
-        android:name="com.rztechtunes.chatapp.GroupFragment"
+        android:name="com.rztechtunes.chatapp.group_chat.GroupFragment"
         android:label="fragment_group"
         tools:layout="@layout/fragment_group" />
     <fragment
@@ -69,17 +69,17 @@
     </fragment>
     <fragment
         android:id="@+id/createGroupFrag"
-        android:name="com.rztechtunes.chatapp.CreateGroupFrag"
+        android:name="com.rztechtunes.chatapp.group_chat.CreateGroupFrag"
         android:label="fragment_create_group"
         tools:layout="@layout/fragment_create_group" />
     <fragment
         android:id="@+id/groupSendMessage"
-        android:name="com.rztechtunes.chatapp.GroupSendMessage"
+        android:name="com.rztechtunes.chatapp.group_chat.GroupSendMessage"
         android:label="fragment_group_send_message"
         tools:layout="@layout/fragment_group_send_message" />
     <fragment
         android:id="@+id/groupProfileFrag"
-        android:name="com.rztechtunes.chatapp.GroupProfileFrag"
+        android:name="com.rztechtunes.chatapp.group_chat.GroupProfileFrag"
         android:label="fragment_group_profile"
         tools:layout="@layout/fragment_group_profile" />
     <fragment
@@ -102,4 +102,24 @@
         android:name="com.rztechtunes.chatapp.StoryFragment"
         android:label="fragment_story"
         tools:layout="@layout/fragment_story" />
+    <fragment
+        android:id="@+id/friendFragment"
+        android:name="com.rztechtunes.chatapp.friend_frag.FriendFragment"
+        android:label="fragment_friend"
+        tools:layout="@layout/fragment_friend" />
+    <fragment
+        android:id="@+id/myFriendFragment"
+        android:name="com.rztechtunes.chatapp.friend_frag.MyFriendFragment"
+        android:label="fragment_my_friend"
+        tools:layout="@layout/fragment_my_friend" />
+    <fragment
+        android:id="@+id/actvieFriendFrag"
+        android:name="com.rztechtunes.chatapp.friend_frag.ActvieFriendFrag"
+        android:label="fragment_actvie_friend"
+        tools:layout="@layout/fragment_actvie_friend" />
+    <fragment
+        android:id="@+id/friendReqestFrag"
+        android:name="com.rztechtunes.chatapp.FriendReqestFrag"
+        android:label="fragment_friend_reqest"
+        tools:layout="@layout/fragment_friend_reqest" />
 </navigation>

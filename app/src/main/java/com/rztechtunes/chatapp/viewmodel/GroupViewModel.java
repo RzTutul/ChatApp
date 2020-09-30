@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,10 +17,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
 import com.rztechtunes.chatapp.pojo.SendGroupMsgPojo;
-import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 import com.rztechtunes.chatapp.repos.GroupRepos;
 
 import java.io.ByteArrayOutputStream;
@@ -38,7 +36,7 @@ public class GroupViewModel extends ViewModel {
     }
 
 
-    public void createNewGroup(final List<AlluserContractPojo> selectedContractList, final GroupPojo groupPojo, File file, Context context) {
+    public void createNewGroup(final List<UserInformationPojo> selectedContractList, final GroupPojo groupPojo, File file, Context context) {
 
 
         final ProgressDialog pd = new ProgressDialog(context);
@@ -171,7 +169,7 @@ public class GroupViewModel extends ViewModel {
         });
     }
 
-    public MutableLiveData<List<AlluserContractPojo>> getGroupUser(String groupID) {
+    public MutableLiveData<List<UserInformationPojo>> getGroupUser(String groupID) {
 
         return groupRepos.getGroupUser(groupID);
     }

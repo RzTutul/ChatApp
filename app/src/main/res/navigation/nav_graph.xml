@@ -112,14 +112,15 @@
         android:name="com.rztechtunes.chatapp.friend_frag.MyFriendFragment"
         android:label="fragment_my_friend"
         tools:layout="@layout/fragment_my_friend" />
-    <fragment
-        android:id="@+id/actvieFriendFrag"
-        android:name="com.rztechtunes.chatapp.friend_frag.ActvieFriendFrag"
-        android:label="fragment_actvie_friend"
-        tools:layout="@layout/fragment_actvie_friend" />
+
     <fragment
         android:id="@+id/friendReqestFrag"
         android:name="com.rztechtunes.chatapp.friend_frag.FriendReqestFrag"
         android:label="fragment_friend_reqest"
         tools:layout="@layout/fragment_friend_reqest" />
+    <fragment
+        android:id="@+id/addMoreParticipentFrag"
+        android:name="com.rztechtunes.chatapp.AddMoreParticipentFrag"
+        android:label="fragment_add_more_participent"
+        tools:layout="@layout/fragment_add_more_participent" />
 </navigation>

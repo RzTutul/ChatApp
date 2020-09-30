@@ -20,14 +20,11 @@ import android.widget.EditText;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.adapter.AllContractListAdaper;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 public class ContractFragment extends Fragment {
     FloatingActionButton searchActionButton;
@@ -35,7 +32,7 @@ public class ContractFragment extends Fragment {
     RecyclerView contractRV ;
     EditText searchET;
     AllContractListAdaper allContractListAdaper;
-    List<AlluserContractPojo>contractPojoList = new ArrayList<>();
+    List<UserInformationPojo>contractPojoList = new ArrayList<>();
     public ContractFragment() {
         // Required empty public constructor
     }
@@ -82,12 +79,12 @@ public class ContractFragment extends Fragment {
             }
         });
 
-        authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
+        authViewModel.getAllUser().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
-            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
+            public void onChanged(List<UserInformationPojo> userInformationPojos) {
 
                 contractPojoList.clear();
-                for (AlluserContractPojo contractPojo: alluserContractPojos)
+                for (UserInformationPojo contractPojo: userInformationPojos)
                 {
                     if ((contractPojo.getU_ID()).equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
                     {
@@ -110,8 +107,8 @@ public class ContractFragment extends Fragment {
         });
     }
     private void filter(String text) {
-        ArrayList<AlluserContractPojo> filteredList = new ArrayList<>();
-        for (AlluserContractPojo contractPojo : contractPojoList) {
+        ArrayList<UserInformationPojo> filteredList = new ArrayList<>();
+        for (UserInformationPojo contractPojo : contractPojoList) {
             if (contractPojo.getName().toLowerCase().contains(text.toLowerCase()) ||contractPojo.getPhone().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(contractPojo);
             }

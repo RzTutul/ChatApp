@@ -30,8 +30,7 @@ import com.rztechtunes.chatapp.Notification.Data;
 import com.rztechtunes.chatapp.Notification.MyResponse;
 import com.rztechtunes.chatapp.Notification.Sender;
 import com.rztechtunes.chatapp.Notification.Token;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
-import com.rztechtunes.chatapp.pojo.FriendRequestPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
 
@@ -51,7 +50,7 @@ public class UserProfileFrag extends Fragment {
     ImageView profileImage;
     AuthViewModel authViewModel;
     FirendViewModel firendViewModel;
-    FriendRequestPojo myCurrentInfo;
+    UserInformationPojo myCurrentInfo;
     APIService apiService;
 
     public UserProfileFrag() {
@@ -84,9 +83,9 @@ public class UserProfileFrag extends Fragment {
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
 
-        authViewModel.getFriendInformaiton(userID).observe(getActivity(), new Observer<AuthPojo>() {
+        authViewModel.getFriendInformaiton(userID).observe(getActivity(), new Observer<UserInformationPojo>() {
             @Override
-            public void onChanged(AuthPojo authPojo) {
+            public void onChanged(UserInformationPojo authPojo) {
                 userName = authPojo.getName();
                 userImage = authPojo.getImage();
                 Glide.with(getActivity())
@@ -126,10 +125,10 @@ public class UserProfileFrag extends Fragment {
 
 
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
+        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
             @Override
-            public void onChanged(AuthPojo authPojo) {
-               myCurrentInfo = new FriendRequestPojo(authPojo.getU_ID(),authPojo.getName(),authPojo.getEmail(),authPojo.getPhone(),authPojo.getAbout(),authPojo.getImage());
+            public void onChanged(UserInformationPojo authPojo) {
+               myCurrentInfo = authPojo;
             }
         });
 

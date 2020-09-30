@@ -1,8 +1,6 @@
 package com.rztechtunes.chatapp.auth_frag;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -13,7 +11,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -26,7 +23,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,13 +30,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hbb20.CountryCodePicker;
 import com.rztechtunes.chatapp.R;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
-import com.rztechtunes.chatapp.repos.AuthRepos;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 
 import java.io.File;
@@ -48,8 +41,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
@@ -59,12 +50,13 @@ public class SignupFragment extends Fragment {
     private static final int REQUEST_STORAGE_CODE = 123;
     private static final int REQUEST_CAMERA_CODE = 123;
     private static final int GALLERY_REQUEST_CODE = 456;
-    private EditText nameET,emailET,aboutET;
+    private EditText nameET, emailET, aboutET;
     private TextView saveBtn;
     private AuthViewModel authViewModel;
-    private AuthPojo authPojo;
+    UserInformationPojo authPojo;
+
     private CountryCodePicker ccp;
-    String number;
+    public static String country;
     ImageView picImageBtn;
     private String currentPhotoPath;
     private File file;
@@ -74,7 +66,6 @@ public class SignupFragment extends Fragment {
     public SignupFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -94,15 +85,15 @@ public class SignupFragment extends Fragment {
         emailET = view.findViewById(R.id.ed_email);
         aboutET = view.findViewById(R.id.ed_about);
         saveBtn = view.findViewById(R.id.btn_sign);
-        ccp = view.findViewById(R.id.ccp);
+
         picImageBtn = view.findViewById(R.id.picImageBtn);
 
-      picImageBtn.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              pictureSelected();
-          }
-      });
+        picImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pictureSelected();
+            }
+        });
 
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -112,35 +103,24 @@ public class SignupFragment extends Fragment {
                 String email = emailET.getText().toString();
                 String about = aboutET.getText().toString();
 
-                authPojo = new AuthPojo("",name,email,phone,about,"");
 
-                if (file==null)
-                {
+                if (file == null) {
 
                     Toast.makeText(getActivity(), "Select a image", Toast.LENGTH_SHORT).show();
-                }
-                else if(name.equals(""))
-                {
+                } else if (name.equals("")) {
                     nameET.setError("Set a name!");
-                }
-                else if(email.equals(""))
-                {
+                } else if (email.equals("")) {
                     emailET.setError("Set a email!");
-                }
-                else if(about.equals(""))
-                {
+                } else if (about.equals("")) {
                     aboutET.setError("Write about yourself!");
+                } else {
+                    authPojo = new UserInformationPojo("", name, email, phone, about, country, "", "Online");
+
+                    authViewModel.setUserInfo(getActivity(), file, authPojo);
                 }
 
-                else
-                {
-                    authViewModel.setUserInfo(getActivity(),file,authPojo);
-                }
 
-
-
-
-               //
+                //
             }
         });
      /*   authViewModel.stateLiveData.observe(getActivity(), new Observer<AuthViewModel.AuthenticationState>() {
@@ -158,35 +138,33 @@ public class SignupFragment extends Fragment {
             }
         });*/
 
-        if (FirebaseAuth.getInstance().getCurrentUser() !=null) {
-            uui = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        }
-
-
-            authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
+        authViewModel.getAllUser().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
-            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
+            public void onChanged(List<UserInformationPojo> userInformationPojos) {
 
-               Log.i(TAG, "onChanged: "+alluserContractPojos.size());
-                Log.i(TAG, "uui: "+uui);
-                 if (alluserContractPojos.size()>0)
-                {
-                for (AlluserContractPojo contractPojo: alluserContractPojos)
-                {
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    uui = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                }
 
-                      if ((contractPojo.getU_ID()).equals(uui))
+                if (userInformationPojos.size() > 0) {
+                    for (UserInformationPojo contractPojo : userInformationPojos) {
+
+
+                        if (contractPojo.getU_ID() !=null)
                         {
-                          Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
-                            break;
+                            if ((contractPojo.getU_ID()).equals(uui)) {
+                                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                                break;
+                            }
                         }
+
+
+
                     }
 
                 }
-                 else
-                 {
 
-                 }
+
             }
         });
 
@@ -196,8 +174,8 @@ public class SignupFragment extends Fragment {
     private void pictureSelected() {
 
 
-        final BottomSheetDialog bottomSheetDialog =new BottomSheetDialog(getActivity(),R.style.BottomSheetDialogTheme);
-        View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout,(LinearLayout)getActivity().findViewById(R.id.bottomSheetContainer));
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, (LinearLayout) getActivity().findViewById(R.id.bottomSheetContainer));
         bottomSheetView.findViewById(R.id.cameraLL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,7 +185,7 @@ public class SignupFragment extends Fragment {
                 bottomSheetDialog.dismiss();
             }
         });
-           bottomSheetView.findViewById(R.id.gallaryLL).setOnClickListener(new View.OnClickListener() {
+        bottomSheetView.findViewById(R.id.gallaryLL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -223,10 +201,6 @@ public class SignupFragment extends Fragment {
 
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
-
-
-
-
 
 
     }
@@ -302,31 +276,29 @@ public class SignupFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE &&
-                resultCode == RESULT_OK){
-            Log.e(TAG, "onActivityResult: "+currentPhotoPath);
+                resultCode == RESULT_OK) {
+            Log.e(TAG, "onActivityResult: " + currentPhotoPath);
             file = new File(currentPhotoPath);
             Uri fileUri = Uri.fromFile(file);
             try {
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
+                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 picImageBtn.setImageBitmap(bmp);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             // addPictureCard.setVisibility(View.GONE);
-        }
-
-        else if  (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
+        } else if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             String[] projection = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(data.getData(), projection, null, null, null);
             cursor.moveToFirst();
             int index = cursor.getColumnIndex(projection[0]);
             currentPhotoPath = cursor.getString(index);
-            Log.e(TAG, "onActivityResultgalary: "+currentPhotoPath);
+            Log.e(TAG, "onActivityResultgalary: " + currentPhotoPath);
             file = new File(currentPhotoPath);
             Uri fileUri = Uri.fromFile(file);
             try {
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
+                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 picImageBtn.setImageBitmap(bmp);
             } catch (IOException e) {
                 e.printStackTrace();

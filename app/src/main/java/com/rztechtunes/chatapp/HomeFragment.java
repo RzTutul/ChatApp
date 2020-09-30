@@ -27,7 +27,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.rztechtunes.chatapp.adapter.ViewPagerAdapter;
 import com.rztechtunes.chatapp.group_chat.GroupFragment;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 
 
@@ -93,9 +93,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
+        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
             @Override
-            public void onChanged(AuthPojo authPojo) {
+            public void onChanged(UserInformationPojo authPojo) {
 
                 Glide.with(getActivity())
                         .load(authPojo.getImage())

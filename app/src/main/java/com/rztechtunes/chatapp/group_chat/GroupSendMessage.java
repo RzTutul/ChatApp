@@ -37,8 +37,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.GroupMessageAdaper;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.SendGroupMsgPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
@@ -71,7 +70,7 @@ public class GroupSendMessage extends Fragment {
     RecyclerView msgRV;
     GroupViewModel groupViewModel;
     AuthViewModel authViewModel;
-    AuthPojo CurrentauthPojo;
+    UserInformationPojo CurrentauthPojo;
 
     ImageView prfileImage;
     TextView nameTV,statusTV;
@@ -130,9 +129,9 @@ public class GroupSendMessage extends Fragment {
         });
 
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
+        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
             @Override
-            public void onChanged(AuthPojo authPojo) {
+            public void onChanged(UserInformationPojo authPojo) {
                 CurrentauthPojo =authPojo;
             }
         });
@@ -158,11 +157,11 @@ public class GroupSendMessage extends Fragment {
         });
 
 
-        groupViewModel.getGroupUser(groupID).observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
+        groupViewModel.getGroupUser(groupID).observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
-            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
+            public void onChanged(List<UserInformationPojo> userInformationPojos) {
 
-                for (AlluserContractPojo contractPojo: alluserContractPojos)
+                for (UserInformationPojo contractPojo: userInformationPojos)
                 {
                     usersName = usersName+contractPojo.getName()+", ";
                 }

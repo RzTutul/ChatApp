@@ -14,10 +14,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
 import com.rztechtunes.chatapp.pojo.SendGroupMsgPojo;
-import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class GroupRepos {
     MutableLiveData<String> createGrpLD = new MutableLiveData<>();
     MutableLiveData<List<GroupPojo>> myGrpLD = new MutableLiveData<>();
     MutableLiveData<List<SendGroupMsgPojo>> GrpMsgLD = new MutableLiveData<>();
-    MutableLiveData<List<AlluserContractPojo>> GrpUserLD = new MutableLiveData<>();
+    MutableLiveData<List<UserInformationPojo>> GrpUserLD = new MutableLiveData<>();
     MutableLiveData<GroupPojo> GrpInfoLD = new MutableLiveData<>();
     public GroupRepos() {
 
@@ -44,7 +43,7 @@ public class GroupRepos {
 
     }
 
-    public void createNewGrp(final List<AlluserContractPojo> selectedContractList, final GroupPojo groupPojo) {
+    public void createNewGrp(final List<UserInformationPojo> selectedContractList, final GroupPojo groupPojo) {
 
 
         groupRef = rootRef.child("Group");
@@ -54,7 +53,7 @@ public class GroupRepos {
             @Override
             public void onSuccess(Void aVoid) {
 
-                for (AlluserContractPojo contractPojo: selectedContractList)
+                for (UserInformationPojo contractPojo: selectedContractList)
                 {
                     groupRef.child(grpNameWithDateTime).child("Users").child(contractPojo.getU_ID()).setValue(contractPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -167,17 +166,17 @@ public class GroupRepos {
         });
     }
 
-    public MutableLiveData<List<AlluserContractPojo>> getGroupUser(String groupID) {
+    public MutableLiveData<List<UserInformationPojo>> getGroupUser(String groupID) {
 
         groupRef = rootRef.child("Group").child(groupID).child("Users");
         groupRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<AlluserContractPojo> users =new ArrayList<>();
+                List<UserInformationPojo> users =new ArrayList<>();
 
                 for (DataSnapshot dataSnapshot: snapshot.getChildren())
                 {
-                    users.add(dataSnapshot.getValue(AlluserContractPojo.class));
+                    users.add(dataSnapshot.getValue(UserInformationPojo.class));
 
                 }
                 GrpUserLD.postValue(users);

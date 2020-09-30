@@ -1,7 +1,5 @@
 package com.rztechtunes.chatapp.repos;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
@@ -13,14 +11,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
-import com.rztechtunes.chatapp.pojo.FriendRequestPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.StoriesPojo;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 public class FriendRepos {
     FirebaseAuth firebaseAuth;
@@ -28,10 +23,10 @@ public class FriendRepos {
     DatabaseReference rootRef;
     DatabaseReference userRef;
     DatabaseReference myRef;
-    MutableLiveData<List<FriendRequestPojo>> myFrndLD = new MutableLiveData<>();
-    MutableLiveData<List<FriendRequestPojo>> requestlistLD = new MutableLiveData<>();
+    MutableLiveData<List<UserInformationPojo>> myFrndLD = new MutableLiveData<>();
+    MutableLiveData<List<UserInformationPojo>> requestlistLD = new MutableLiveData<>();
     MutableLiveData<List<StoriesPojo>> storiesLD = new MutableLiveData<>();
-    AuthPojo authPojo = new AuthPojo();
+    UserInformationPojo authPojo = new UserInformationPojo();
 
     public FriendRepos() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -40,7 +35,7 @@ public class FriendRepos {
 
     }
 
-    public void sendFriendRequest(String userID, FriendRequestPojo myCurrentInfo) {
+    public void sendFriendRequest(String userID, UserInformationPojo myCurrentInfo) {
         userRef = rootRef.child(userID);
         userRef.child("Request").child(myCurrentInfo.getU_ID()).setValue(myCurrentInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -51,16 +46,16 @@ public class FriendRepos {
 
     }
 
-    public MutableLiveData<List<FriendRequestPojo>> getRequestList() {
+    public MutableLiveData<List<UserInformationPojo>> getRequestList() {
         userRef = rootRef.child(firebaseUser.getUid());
 
         userRef.child("Request").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<FriendRequestPojo> list = new ArrayList<>();
+                List<UserInformationPojo> list = new ArrayList<>();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    list.add(dataSnapshot.getValue(FriendRequestPojo.class));
+                    list.add(dataSnapshot.getValue(UserInformationPojo.class));
                 }
                 requestlistLD.postValue(list);
 
@@ -77,16 +72,16 @@ public class FriendRepos {
     }
 
 
-    public MutableLiveData<List<FriendRequestPojo>> getMyFriendList() {
+    public MutableLiveData<List<UserInformationPojo>> getMyFriendList() {
         userRef = rootRef.child(firebaseUser.getUid());
 
         userRef.child("Friends").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<FriendRequestPojo> list = new ArrayList<>();
+                List<UserInformationPojo> list = new ArrayList<>();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    list.add(dataSnapshot.getValue(FriendRequestPojo.class));
+                    list.add(dataSnapshot.getValue(UserInformationPojo.class));
                 }
                 myFrndLD.postValue(list);
 
@@ -102,7 +97,7 @@ public class FriendRepos {
         return myFrndLD;
     }
 
-    public void acceptedRequest(FriendRequestPojo friendRequestPojo) {
+    public void acceptedRequest(UserInformationPojo friendRequestPojo) {
 
         myRef = rootRef.child(firebaseUser.getUid()).child("Friends");
         //add that user to my friendlist
@@ -116,7 +111,7 @@ public class FriendRepos {
                 userRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        authPojo = dataSnapshot.getValue(AuthPojo.class);
+                        authPojo = dataSnapshot.getValue(UserInformationPojo.class);
                         userRef = rootRef.child(friendRequestPojo.getU_ID()).child("Friends");
                         userRef.child(firebaseUser.getUid()).setValue(authPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -145,7 +140,7 @@ public class FriendRepos {
 
     }
 
-    public AuthPojo getCurrentUserInfo() {
+    public UserInformationPojo getCurrentUserInfo() {
 
         rootRef = FirebaseDatabase.getInstance().getReference();
         userRef = rootRef.child(firebaseUser.getUid());
@@ -154,7 +149,7 @@ public class FriendRepos {
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                authPojo = dataSnapshot.getValue(AuthPojo.class);
+                authPojo = dataSnapshot.getValue(UserInformationPojo.class);
 
             }
 

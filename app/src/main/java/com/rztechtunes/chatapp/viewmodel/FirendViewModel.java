@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,8 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
-import com.rztechtunes.chatapp.pojo.FriendRequestPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.StoriesPojo;
 import com.rztechtunes.chatapp.repos.FriendRepos;
 
@@ -35,22 +33,22 @@ public class FirendViewModel extends ViewModel {
         friendRepos = new FriendRepos();
     }
 
-    public void sendFriendRequest(String userID, FriendRequestPojo myCurrentInfo) {
+    public void sendFriendRequest(String userID, UserInformationPojo myCurrentInfo) {
 
         friendRepos.sendFriendRequest(userID,myCurrentInfo);
     }
 
-    public MutableLiveData<List<FriendRequestPojo>> getMyFirendList() {
+    public MutableLiveData<List<UserInformationPojo>> getMyFirendList() {
 
         return friendRepos.getMyFriendList();
     }
 
-    public LiveData<List<FriendRequestPojo>> getRequestList() {
+    public LiveData<List<UserInformationPojo>> getRequestList() {
 
         return  friendRepos.getRequestList();
     }
 
-    public void acceptedRequest(FriendRequestPojo friendRequestPojo) {
+    public void acceptedRequest(UserInformationPojo friendRequestPojo) {
         friendRepos.acceptedRequest(friendRequestPojo);
     }
 

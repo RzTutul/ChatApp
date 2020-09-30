@@ -23,7 +23,6 @@
             app:expandedTitleMarginStart="18dp"
             app:title="Data"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-
             >
 
             <ImageView

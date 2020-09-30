@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 
 
@@ -49,9 +49,9 @@ public class ProfileFragment extends Fragment {
         phoneTV = view.findViewById(R.id.phoneTV);
         aboutTV = view.findViewById(R.id.aboutTV);
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
+        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
             @Override
-            public void onChanged(AuthPojo authPojo) {
+            public void onChanged(UserInformationPojo authPojo) {
                 //Picasso.get().load(authPojo.getImage()).into(profileImage);
                 Glide.with(getActivity())
                         .load(authPojo.getImage())

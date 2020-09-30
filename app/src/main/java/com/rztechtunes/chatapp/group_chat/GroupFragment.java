@@ -17,17 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.R;
-import com.rztechtunes.chatapp.adapter.AllContractListAdaper;
-import com.rztechtunes.chatapp.adapter.GroupContractListAdaper;
 import com.rztechtunes.chatapp.adapter.GroupListAdapter;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
-import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.GroupViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;

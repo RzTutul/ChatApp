@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.FriendRequestAdaper;
-import com.rztechtunes.chatapp.pojo.FriendRequestPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
 
 import java.util.List;
@@ -43,9 +43,9 @@ public class FriendReqestFrag extends Fragment {
 
         friendReqRV = view.findViewById(R.id.frinedReqRV);
 
-        firendViewModel.getRequestList().observe(getActivity(), new Observer<List<FriendRequestPojo>>() {
+        firendViewModel.getRequestList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
-            public void onChanged(List<FriendRequestPojo> friendRequestPojos) {
+            public void onChanged(List<UserInformationPojo> friendRequestPojos) {
                 FriendRequestAdaper friendRequestAdaper = new FriendRequestAdaper(friendRequestPojos,getContext());
                 LinearLayoutManager llm = new LinearLayoutManager(getActivity());
                 friendReqRV.setLayoutManager(llm);

@@ -2,7 +2,6 @@ package com.rztechtunes.chatapp.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,25 +9,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.rztechtunes.chatapp.R;
-import com.rztechtunes.chatapp.SendMessageFragment;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
-
-public class GroupContractListAdaper extends RecyclerView.Adapter<GroupContractListAdaper.ContractViewHolder> {
-    List<AlluserContractPojo> list;
-    List<AlluserContractPojo> selectContractList  = new ArrayList<>();
+public class Add_GrpMore_ParticipantAdapter extends RecyclerView.Adapter<Add_GrpMore_ParticipantAdapter.ContractViewHolder> {
+    List<UserInformationPojo> list;
+    List<UserInformationPojo> selectContractList  = new ArrayList<>();
     Context context;
 
-    public GroupContractListAdaper(List<AlluserContractPojo> list, Context context) {
+    public Add_GrpMore_ParticipantAdapter(List<UserInformationPojo> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -44,13 +39,17 @@ public class GroupContractListAdaper extends RecyclerView.Adapter<GroupContractL
     @Override
     public void onBindViewHolder(@NonNull final ContractViewHolder holder, final int position) {
 
-        holder.nameTV.setText(list.get(position).getName());
-        holder.aboutTV.setText(list.get(position).getAbout());
 
-        Glide.with(context)
-                .load(list.get(position).getImage())
-                .placeholder(R.drawable.ic_perm_)
-                .into(holder.imageView);
+            holder.nameTV.setText(list.get(position).getName());
+            holder.aboutTV.setText(list.get(position).getAbout());
+
+            Glide.with(context)
+                    .load(list.get(position).getImage())
+                    .placeholder(R.drawable.ic_perm_)
+                    .into(holder.imageView);
+
+
+
 
 
 
@@ -85,10 +84,10 @@ public class GroupContractListAdaper extends RecyclerView.Adapter<GroupContractL
         }
     }
 
-    public List<AlluserContractPojo> getSelectedContract()
+    public List<UserInformationPojo> getSelectedContract()
     {
-        List<AlluserContractPojo> finalSelect= new ArrayList<>();
-        for (AlluserContractPojo contractPojo: selectContractList)
+        List<UserInformationPojo> finalSelect= new ArrayList<>();
+        for (UserInformationPojo contractPojo: selectContractList)
         {
             if (contractPojo.isSelected())
             {

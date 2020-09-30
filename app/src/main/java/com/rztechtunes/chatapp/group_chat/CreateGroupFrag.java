@@ -33,14 +33,13 @@ import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.rztechtunes.chatapp.R;
-import com.rztechtunes.chatapp.adapter.GroupContractListAdaper;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
+import com.rztechtunes.chatapp.adapter.SelectGroupContractListAdaper;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
-import com.rztechtunes.chatapp.pojo.SendGroupMsgPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
+import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
 import com.rztechtunes.chatapp.viewmodel.GroupViewModel;
 
 import java.io.File;
@@ -58,12 +57,13 @@ public class CreateGroupFrag extends Fragment {
     RecyclerView contractRV;
     AuthViewModel authViewModel;
     GroupViewModel groupViewModel;
+    FirendViewModel firendViewModel;
     FloatingActionButton createBtn;
 
-    List<AlluserContractPojo> contractPojoList = new ArrayList<>();
-    List<AlluserContractPojo> selectedContractList = new ArrayList<>();
-    GroupContractListAdaper groupContractListAdaper;
-    AlluserContractPojo myContractInfo ;
+    List<UserInformationPojo> contractPojoList = new ArrayList<>();
+    List<UserInformationPojo> selectedContractList = new ArrayList<>();
+    SelectGroupContractListAdaper selectGroupContractListAdaper;
+    UserInformationPojo myContractInfo ;
     ImageView groupImage;
     EditText groupNameET,descriptionET;
     private static final int GALLERY_REQUEST_CODE = 123;
@@ -81,6 +81,7 @@ public class CreateGroupFrag extends Fragment {
 
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
         groupViewModel = ViewModelProviders.of(this).get(GroupViewModel.class);
+        firendViewModel = ViewModelProviders.of(this).get(FirendViewModel.class);
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_create_group, container, false);
@@ -94,7 +95,7 @@ public class CreateGroupFrag extends Fragment {
         groupNameET = view.findViewById(R.id.groupNameET);
         descriptionET = view.findViewById(R.id.groupDiscription);
         groupImage = view.findViewById(R.id.imageView);
-        myContractInfo = new AlluserContractPojo();
+        myContractInfo = new UserInformationPojo();
 
         groupImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +108,7 @@ public class CreateGroupFrag extends Fragment {
             @Override
             public void onClick(View v) {
 
-                selectedContractList = groupContractListAdaper.getSelectedContract();
+                selectedContractList = selectGroupContractListAdaper.getSelectedContract();
                 String grpName = groupNameET.getText().toString().trim();
                 String grpDesrption = descriptionET.getText().toString().trim();
 
@@ -163,29 +164,24 @@ public class CreateGroupFrag extends Fragment {
         });
 
 
-        authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
+
+        firendViewModel.getMyFirendList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
-            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
-                contractPojoList.clear();
-                for (AlluserContractPojo contractPojo: alluserContractPojos)
-                {
-                    if ((contractPojo.getU_ID()).equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
-                    {
-                        //add my contract info and send database
-                        myContractInfo = contractPojo;
+            public void onChanged(List<UserInformationPojo> userInformationPojos) {
+                //for add my contract to addmin in this group
+                authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
+                    @Override
+                    public void onChanged(UserInformationPojo authPojo) {
+                        myContractInfo = authPojo;
+                        myContractInfo.setSelected(true);
 
+                        selectGroupContractListAdaper = new SelectGroupContractListAdaper(userInformationPojos,getActivity());
+                        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                        contractRV.setLayoutManager(llm);
+                        contractRV.setAdapter(selectGroupContractListAdaper);
                     }
-                    else
-                    {
-                        //add without my myinfo
-                        contractPojoList.add(contractPojo);
-                    }
-                }
+                });
 
-                 groupContractListAdaper = new GroupContractListAdaper(contractPojoList,getActivity());
-                LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                contractRV.setLayoutManager(llm);
-                contractRV.setAdapter(groupContractListAdaper);
 
 
 
@@ -194,11 +190,11 @@ public class CreateGroupFrag extends Fragment {
         });
 
 
-
     }
 
-    private void pictureSelected() {
 
+
+    private void pictureSelected() {
 
         final BottomSheetDialog bottomSheetDialog =new BottomSheetDialog(getActivity(),R.style.BottomSheetDialogTheme);
         View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout,(LinearLayout)getActivity().findViewById(R.id.bottomSheetContainer));

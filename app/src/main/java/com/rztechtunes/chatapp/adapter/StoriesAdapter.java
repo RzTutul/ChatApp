@@ -16,11 +16,8 @@ import com.bumptech.glide.Glide;
 import com.rztechtunes.chatapp.FullScreenImageView;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
-import com.rztechtunes.chatapp.UserProfileFrag;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
 import com.rztechtunes.chatapp.pojo.StoriesPojo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;

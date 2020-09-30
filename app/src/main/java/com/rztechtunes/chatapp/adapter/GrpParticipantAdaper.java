@@ -15,16 +15,16 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 
 import java.util.List;
 
 public class GrpParticipantAdaper extends RecyclerView.Adapter<GrpParticipantAdaper.ContractViewHolder> {
-    List<AlluserContractPojo> list;
+    List<UserInformationPojo> list;
     Context context;
     String adminID;
 
-    public GrpParticipantAdaper(List<AlluserContractPojo> list, Context context, String adminID) {
+    public GrpParticipantAdaper(List<UserInformationPojo> list, Context context, String adminID) {
         this.list = list;
         this.context = context;
         this.adminID = adminID;

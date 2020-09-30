@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
@@ -30,9 +29,8 @@ import android.widget.LinearLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.rztechtunes.chatapp.adapter.StoriesAdapter;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
-import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 import com.rztechtunes.chatapp.pojo.StoriesPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
@@ -58,7 +56,7 @@ public class StoryFragment extends Fragment {
 
     FirendViewModel firendViewModel;
     AuthViewModel authViewModel;
-    AuthPojo myInfo;
+    UserInformationPojo myInfo;
     public StoryFragment() {
         // Required empty public constructor
     }
@@ -87,9 +85,9 @@ public class StoryFragment extends Fragment {
             }
         });
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
+        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
             @Override
-            public void onChanged(AuthPojo authPojo) {
+            public void onChanged(UserInformationPojo authPojo) {
                 myInfo = authPojo;
             }
         });

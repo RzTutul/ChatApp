@@ -62,6 +62,7 @@ public class LoginFragment extends Fragment {
                     phone = phone.substring(1);
                 }
                 String code = ccp.getSelectedCountryCodeWithPlus();
+                SignupFragment.country = ccp.getSelectedCountryEnglishName();
 
                 PhoneVarifyFragment.phoneNumber = code+phone;
 

@@ -14,17 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.UserProfileFrag;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
-import com.rztechtunes.chatapp.pojo.FriendRequestPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyFriendListAdaper extends RecyclerView.Adapter<MyFriendListAdaper.ContractViewHolder> {
-    List<FriendRequestPojo> list;
+    List<UserInformationPojo> list;
     Context context;
 
-    public MyFriendListAdaper(List<FriendRequestPojo> list, Context context) {
+    public MyFriendListAdaper(List<UserInformationPojo> list, Context context) {
         this.list = list;
         this.context = context;
     }

@@ -5,11 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -17,20 +14,16 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.repos.AuthRepos;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 public class AuthViewModel extends ViewModel {
     private AuthRepos authRepos;
@@ -52,19 +45,19 @@ public class AuthViewModel extends ViewModel {
 
     }
 
-    public MutableLiveData<AuthPojo> getUserInfo() {
+    public MutableLiveData<UserInformationPojo> getUserInfo() {
 
         return authRepos.getUserInfo();
     }
 
-    public  MutableLiveData<AuthPojo> getFriendInformaiton(String frndID) {
+    public  MutableLiveData<UserInformationPojo> getFriendInformaiton(String frndID) {
 
         return authRepos.getFriendInformaiton(frndID);
 
     }
 
 
-    public MutableLiveData<List<AlluserContractPojo>> getAllUser() {
+    public MutableLiveData<List<UserInformationPojo>> getAllUser() {
         return authRepos.getAllUserInfo();
     }
     public void setUserSatus(String dateWithTime) {
@@ -85,7 +78,7 @@ public class AuthViewModel extends ViewModel {
         stateLiveData.postValue(AuthenticationState.UNAUTHENTICATED);
     }
 
-    public void setUserInfo(Context context, File file, final AuthPojo authPojo) {
+    public void setUserInfo(Context context, File file, final UserInformationPojo authPojo) {
         final ProgressDialog pd = new ProgressDialog(context);
         pd.setMessage("Wait a moment...");
         pd.show();

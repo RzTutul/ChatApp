@@ -18,7 +18,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
@@ -32,10 +31,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -50,10 +47,8 @@ import com.rztechtunes.chatapp.Notification.MyResponse;
 import com.rztechtunes.chatapp.Notification.Sender;
 import com.rztechtunes.chatapp.Notification.Token;
 import com.rztechtunes.chatapp.adapter.MessageAdaper;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
-import com.rztechtunes.chatapp.repos.MessageRespos;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
@@ -62,7 +57,6 @@ import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -88,7 +82,7 @@ public class SendMessageFragment extends Fragment {
     RecyclerView msgRV;
     MessageViewModel messageViewModel;
     AuthViewModel authViewModel;
-    AuthPojo CurrentauthPojo;
+    UserInformationPojo CurrentauthPojo;
 
     ImageView prfileImage;
     TextView nameTV, statusTV;
@@ -160,9 +154,9 @@ public class SendMessageFragment extends Fragment {
                 .into(prfileImage);
 
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<AuthPojo>() {
+        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
             @Override
-            public void onChanged(AuthPojo authPojo) {
+            public void onChanged(UserInformationPojo authPojo) {
                 CurrentauthPojo = authPojo;
             }
         });
@@ -184,10 +178,10 @@ public class SendMessageFragment extends Fragment {
             }
         });
 
-        authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
+        authViewModel.getAllUser().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
-            public void onChanged(List<AlluserContractPojo> alluserContractPojos) {
-                for (AlluserContractPojo contractPojo : alluserContractPojos) {
+            public void onChanged(List<UserInformationPojo> userInformationPojos) {
+                for (UserInformationPojo contractPojo : userInformationPojos) {
                     if (reciverID.equals(contractPojo.getU_ID())) {
                         statusTV.setText(contractPojo.getStatus());
                         reciverOnlineStatus = contractPojo.getStatus();

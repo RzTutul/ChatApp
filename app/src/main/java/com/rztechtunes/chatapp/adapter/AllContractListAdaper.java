@@ -13,19 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.rztechtunes.chatapp.R;
-import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.UserProfileFrag;
-import com.rztechtunes.chatapp.pojo.AlluserContractPojo;
-import com.rztechtunes.chatapp.pojo.AuthPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AllContractListAdaper extends RecyclerView.Adapter<AllContractListAdaper.ContractViewHolder> {
-    List<AlluserContractPojo> list;
+    List<UserInformationPojo> list;
     Context context;
 
-    public AllContractListAdaper(List<AlluserContractPojo> list, Context context) {
+    public AllContractListAdaper(List<UserInformationPojo> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -64,7 +62,7 @@ public class AllContractListAdaper extends RecyclerView.Adapter<AllContractListA
         return list.size();
     }
 
-    public void filterList(ArrayList<AlluserContractPojo> filteredList) {
+    public void filterList(ArrayList<UserInformationPojo> filteredList) {
         list = filteredList;
         notifyDataSetChanged();
     }

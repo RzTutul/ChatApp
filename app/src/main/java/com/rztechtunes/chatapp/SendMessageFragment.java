@@ -31,6 +31,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -171,7 +172,22 @@ public class SendMessageFragment extends Fragment {
                 } else {
                     notify = true;
                     SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", message, "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getImage(), HelperUtils.getDateWithTime(), 0);
-                    messageViewModel.sendMessage(senderReciverPojo);
+                    messageViewModel.sendMessage(senderReciverPojo).observe(getActivity(), new Observer<String>() {
+                        @Override
+                        public void onChanged(String s) {
+
+                            try {
+                                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+
+                            }
+                            catch (Exception e)
+                            {
+                                Log.i(TAG, "exception: "+e.getLocalizedMessage());
+                            }
+
+
+                        }
+                    });
                     msgET.setText("");
                 }
                 position = -1;
@@ -258,6 +274,9 @@ public class SendMessageFragment extends Fragment {
             });
 
         }
+
+
+
 
         //set msg is read
 

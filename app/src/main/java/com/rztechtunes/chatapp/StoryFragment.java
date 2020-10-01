@@ -92,13 +92,34 @@ public class StoryFragment extends Fragment {
             }
         });
 
+        firendViewModel.addStoriesSuccefulLD.observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if (s.equals("1"))
+                {
+                    getFriendStories();
+                }
+                else
+                {
+                    getFriendStories();
+                }
+            }
+        });
 
+        getFriendStories();
+    }
+
+
+
+
+    public void getFriendStories() {
         firendViewModel.getStories().observe(getActivity(), new Observer<List<StoriesPojo>>() {
             @Override
             public void onChanged(List<StoriesPojo> storiesPojos) {
 
                 StoriesAdapter storiesAdapter = new StoriesAdapter(storiesPojos,getContext());
                 GridLayoutManager glm =new GridLayoutManager(getContext(),2);
+                storiesAdapter.notifyDataSetChanged();
                 storiesRV.setLayoutManager(glm);
                 storiesRV.setAdapter(storiesAdapter);
             }

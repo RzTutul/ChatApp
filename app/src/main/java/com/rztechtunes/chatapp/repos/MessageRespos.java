@@ -1,5 +1,7 @@
 package com.rztechtunes.chatapp.repos;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -12,11 +14,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rztechtunes.chatapp.pojo.BlockPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class MessageRespos {
 
@@ -26,11 +31,15 @@ public class MessageRespos {
     DatabaseReference userID;
     DatabaseReference recevierID;
     DatabaseReference chatList;
+    DatabaseReference blockList;
     DatabaseReference reciverChatList;
-    int count = 0;
     MutableLiveData<List<SenderReciverPojo>> frndLD = new MutableLiveData<>();
     MutableLiveData<List<SenderReciverPojo>> msgLD = new MutableLiveData<>();
     MutableLiveData<SenderReciverPojo> lastMsgLD = new MutableLiveData<>();
+    MutableLiveData<String> blockStatus = new MutableLiveData<>();
+    MutableLiveData<List<BlockPojo>> blockListLD = new MutableLiveData<>();
+
+    boolean isBlocked;
 
     public MessageRespos() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -39,31 +48,165 @@ public class MessageRespos {
 
     }
 
-    public void sendMessage(SenderReciverPojo senderReciverPojo) {
-
+    public MutableLiveData<String> sendMessage(SenderReciverPojo senderReciverPojo) {
 
         userID = rootRef.child(firebaseUser.getUid());
-        chatList = userID.child("ChatList").child(senderReciverPojo.getReciverID());
-        String id = chatList.push().getKey();
-        senderReciverPojo.setId(id);
-        senderReciverPojo.setSenderID(firebaseAuth.getUid());
-        chatList.child(id).setValue(senderReciverPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+        //Check blockList
+        blockList = rootRef.child(senderReciverPojo.getReciverID()).child("BlockList");
+        blockList.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if ((firebaseUser.getUid()).equals(dataSnapshot.getKey())) {
+                        blockStatus.postValue("You can't conversion with this person!");
+                        isBlocked = true;
+                        break;
+                    } else {
+                        isBlocked = false;
+                    }
+
+                }
+
+                //Now Check myBlockList
+                blockList = rootRef.child(firebaseUser.getUid()).child("BlockList");
+                blockList.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for (DataSnapshot d : snapshot.getChildren()) {
+                            if ((senderReciverPojo.getReciverID()).equals(d.getKey())) {
+                                blockStatus.postValue("This person is blocked by you");
+                                isBlocked = true;
+                                break;
+                            }
+                        }
+
+
+                        if (!isBlocked) {
+                            //if noOne block then send message
+                            chatList = userID.child("ChatList").child(senderReciverPojo.getReciverID());
+                            String id = chatList.push().getKey();
+                            senderReciverPojo.setId(id);
+                            senderReciverPojo.setSenderID(firebaseAuth.getUid());
+                            chatList.child(id).setValue(senderReciverPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            });
+
+                            recevierID = rootRef.child(senderReciverPojo.getReciverID());
+                            reciverChatList = recevierID.child("ChatList").child(senderReciverPojo.getSenderID());
+                            senderReciverPojo.setStatus(HelperUtils.getDateWithTime());
+                            reciverChatList.child(id).setValue(senderReciverPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            });
+                        }
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
 
-        recevierID = rootRef.child(senderReciverPojo.getReciverID());
-        reciverChatList = recevierID.child("ChatList").child(senderReciverPojo.getSenderID());
-        senderReciverPojo.setStatus(HelperUtils.getDateWithTime());
-        reciverChatList.child(id).setValue(senderReciverPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+        return blockStatus;
+
+    }
+
+
+    public MutableLiveData<String> sendImages(SenderReciverPojo senderReciverPojo) {
+
+        userID = rootRef.child(firebaseUser.getUid());
+
+        //Check blockList
+        blockList = rootRef.child(senderReciverPojo.getReciverID()).child("BlockList");
+        blockList.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if ((firebaseUser.getUid()).equals(dataSnapshot.getKey())) {
+                        blockStatus.postValue("You can't conversion with this person!");
+                        isBlocked = true;
+                        break;
+                    } else {
+                        isBlocked = false;
+                    }
+
+                }
+
+                //Now Check myBlockList
+                blockList = rootRef.child(firebaseUser.getUid()).child("BlockList");
+                blockList.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for (DataSnapshot d : snapshot.getChildren()) {
+                            if ((senderReciverPojo.getReciverID()).equals(d.getKey())) {
+                                blockStatus.postValue("This person is blocked by you");
+                                isBlocked = true;
+                                break;
+                            }
+                        }
+
+
+                        if (!isBlocked) {
+                            //if noOne block then send message
+                            userID = rootRef.child(firebaseUser.getUid());
+                            chatList = userID.child("ChatList").child(senderReciverPojo.getReciverID());
+                            String id = chatList.push().getKey();
+                            senderReciverPojo.setId(id);
+                            senderReciverPojo.setSenderID(firebaseAuth.getUid());
+                            chatList.child(id).setValue(senderReciverPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            });
+                            recevierID = rootRef.child(senderReciverPojo.getReciverID());
+                            reciverChatList = recevierID.child("ChatList").child(senderReciverPojo.getSenderID());
+                            senderReciverPojo.setStatus(HelperUtils.getDateWithTime());
+                            reciverChatList.child(id).setValue(senderReciverPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            });
+                        }
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
 
+        return blockStatus;
 
     }
 
@@ -133,28 +276,6 @@ public class MessageRespos {
         return msgLD;
     }
 
-    public void sendImages(SenderReciverPojo senderReciverPojo) {
-        userID = rootRef.child(firebaseUser.getUid());
-        chatList = userID.child("ChatList").child(senderReciverPojo.getReciverID());
-        String id = chatList.push().getKey();
-        senderReciverPojo.setId(id);
-        senderReciverPojo.setSenderID(firebaseAuth.getUid());
-        chatList.child(id).setValue(senderReciverPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
-            }
-        });
-        recevierID = rootRef.child(senderReciverPojo.getReciverID());
-        reciverChatList = recevierID.child("ChatList").child(senderReciverPojo.getSenderID());
-        senderReciverPojo.setStatus(HelperUtils.getDateWithTime());
-        reciverChatList.child(id).setValue(senderReciverPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
-            }
-        });
-    }
 
 
     public MutableLiveData<SenderReciverPojo> geLastmsg(String reciverID) {
@@ -168,14 +289,12 @@ public class MessageRespos {
 
                 SenderReciverPojo senderReciverPojo = new SenderReciverPojo();
                 List<SenderReciverPojo> list = new ArrayList<>();
-                for (DataSnapshot d: dataSnapshot.getChildren())
-                {
-                        list.add(d.getValue(SenderReciverPojo.class));
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    list.add(d.getValue(SenderReciverPojo.class));
 
                 }
-                if (list.size()>0)
-                {
-                    senderReciverPojo = list.get(list.size()-1);
+                if (list.size() > 0) {
+                    senderReciverPojo = list.get(list.size() - 1);
                     lastMsgLD.postValue(senderReciverPojo);
                 }
 
@@ -187,7 +306,6 @@ public class MessageRespos {
 
             }
         });
-
 
 
         return lastMsgLD;
@@ -203,31 +321,28 @@ public class MessageRespos {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 SenderReciverPojo senderReciverPojo = new SenderReciverPojo();
                 String key = null;
-                for (DataSnapshot dataSnapshot: snapshot.getChildren())
-                {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     senderReciverPojo = dataSnapshot.getValue(SenderReciverPojo.class);
                     key = dataSnapshot.getKey();
                 }
-                if (senderReciverPojo!= null && key!= null)
-                {
+                if (senderReciverPojo != null && key != null) {
 
-                        chatList.child(key).child("isRead").setValue(1).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
+                    chatList.child(key).child("isRead").setValue(1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
 
-                            }
-                        });
+                        }
+                    });
 
-                        recevierID = rootRef.child(reciverID);
-                        reciverChatList = recevierID.child("ChatList").child(firebaseUser.getUid());
+                    recevierID = rootRef.child(reciverID);
+                    reciverChatList = recevierID.child("ChatList").child(firebaseUser.getUid());
 
-                        reciverChatList.child(key).child("isRead").setValue(1).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
+                    reciverChatList.child(key).child("isRead").setValue(1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
 
-                            }
-                        });
-
+                        }
+                    });
 
 
                 }
@@ -240,6 +355,52 @@ public class MessageRespos {
             }
         });
 
+
+    }
+
+    public void deleteMessage(String friendID) {
+        userID = rootRef.child(firebaseUser.getUid()).child("ChatList").child(friendID);
+        userID.removeValue();
+    }
+
+    public void blockFriend(BlockPojo blockPojo) {
+
+        blockList = rootRef.child(firebaseUser.getUid()).child("BlockList");
+        blockList.child(blockPojo.getU_id()).setValue(blockPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+    }
+
+
+    public MutableLiveData<List<BlockPojo>> getBlockList() {
+
+        userID = rootRef.child(firebaseUser.getUid()).child("BlockList");
+        userID.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<BlockPojo> list = new ArrayList<>();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    list.add(dataSnapshot.getValue(BlockPojo.class));
+                }
+                blockListLD.postValue(list);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return blockListLD;
+    }
+
+    public void UnblockFriend(String frndID) {
+        userID = rootRef.child(firebaseUser.getUid()).child("BlockList");
+
+        userID.child(frndID).removeValue();
 
     }
 }

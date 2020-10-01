@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.rztechtunes.chatapp.pojo.BlockPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 import com.rztechtunes.chatapp.repos.MessageRespos;
 
@@ -29,16 +30,17 @@ import java.util.List;
 public class MessageViewModel extends ViewModel {
 
     MessageRespos messageRespos ;
-    boolean isImageFitToScreen;
+
+   public MutableLiveData<String> blockStatusLD = new MutableLiveData<>();
 
     public MessageViewModel() {
 
         messageRespos = new MessageRespos();
     }
 
-    public void sendMessage(SenderReciverPojo senderReciverPojo) {
+    public MutableLiveData<String> sendMessage(SenderReciverPojo senderReciverPojo) {
 
-        messageRespos.sendMessage(senderReciverPojo);
+       return messageRespos.sendMessage(senderReciverPojo);
 
     }
 
@@ -116,4 +118,20 @@ public class MessageViewModel extends ViewModel {
         messageRespos.setReadStatus(reciverID);
     }
 
+    public void deleteMessage(String friendID) {
+        messageRespos.deleteMessage(friendID);
+    }
+
+    public void blockFriend(BlockPojo blockPojo) {
+        messageRespos.blockFriend(blockPojo);
+    }
+
+    public MutableLiveData<List<BlockPojo>> getBlockList() {
+
+       return messageRespos.getBlockList();
+    }
+
+    public void UnblockFriend(String frndID) {
+        messageRespos.UnblockFriend(frndID);
+    }
 }

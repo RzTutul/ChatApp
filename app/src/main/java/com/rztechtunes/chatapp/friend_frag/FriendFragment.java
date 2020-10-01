@@ -4,12 +4,15 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 
 import com.google.android.material.tabs.TabLayout;
 import com.rztechtunes.chatapp.R;
@@ -22,6 +25,7 @@ public class FriendFragment extends Fragment {
     private ViewPager viewPager;
     private MyFriendFragment myFriendFragment;
     private FriendReqestFrag friendReqestFrag;
+    Toolbar toolbar;
 
     public FriendFragment() {
         // Required empty public constructor
@@ -41,6 +45,8 @@ public class FriendFragment extends Fragment {
 
         tabLayout = view.findViewById(R.id.tab_layout);
         viewPager = view.findViewById(R.id.view_pager);
+        toolbar = view.findViewById(R.id.toolbar);
+
 
         myFriendFragment  = new MyFriendFragment();
         friendReqestFrag = new FriendReqestFrag();
@@ -53,6 +59,13 @@ public class FriendFragment extends Fragment {
         viewPager.setAdapter(viewPagerAdapter);
 
 
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.homeFragment);
+            }
+        });
 
 
     }

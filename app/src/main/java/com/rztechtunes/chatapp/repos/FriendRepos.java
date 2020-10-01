@@ -11,6 +11,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rztechtunes.chatapp.pojo.BlockPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.StoriesPojo;
 
@@ -28,6 +29,7 @@ public class FriendRepos {
     MutableLiveData<List<StoriesPojo>> storiesLD = new MutableLiveData<>();
     MutableLiveData<List<StoriesPojo>> myStoriesLD = new MutableLiveData<>();
     MutableLiveData<List<StoriesPojo>> userStoriesLD = new MutableLiveData<>();
+    MutableLiveData<String> addStoriesSuccefulLD = new MutableLiveData<>();
     UserInformationPojo authPojo = new UserInformationPojo();
 
     public FriendRepos() {
@@ -167,7 +169,7 @@ public class FriendRepos {
 
 
 
-    public void addStories(StoriesPojo storiesPojo) {
+    public MutableLiveData<String> addStories(StoriesPojo storiesPojo) {
         myRef = rootRef.child(firebaseUser.getUid()).child("Stories");
 
         String key = myRef.push().getKey();
@@ -175,10 +177,11 @@ public class FriendRepos {
             @Override
             public void onSuccess(Void aVoid) {
 
+                addStoriesSuccefulLD.postValue("1");
             }
         });
 
-
+        return addStoriesSuccefulLD;
     }
 
     public MutableLiveData<List<StoriesPojo>> getStories(){
@@ -194,6 +197,8 @@ public class FriendRepos {
                 {
                     storiesPojoList.add(dataSnapshot.getValue(StoriesPojo.class));
                 }
+
+                storiesLD.postValue(storiesPojoList);
 
             }
 
@@ -298,4 +303,11 @@ public class FriendRepos {
 
         return userStoriesLD;
     }
+
+    public void unFriend(String u_id) {
+        userRef = rootRef.child(firebaseUser.getUid()).child("Friends").child(u_id);
+        userRef.removeValue();
+    }
+
+
 }

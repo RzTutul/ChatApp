@@ -16,14 +16,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
+import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
 
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAdaper.ContractViewHolder> {
     List<SenderReciverPojo> list;
-
+    MessageViewModel messageViewModel = new MessageViewModel();
     Context context;
+    String friendID;
     public ChatFriendListAdaper(List<SenderReciverPojo> list, Context context) {
         this.list = list;
         this.context = context;
@@ -86,6 +90,42 @@ public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAda
                     SendMessageFragment.position = -1;
                 }
 
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if ((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getReciverID())) {
+                   friendID= list.get(position).getSenderID();
+                }
+
+                else if(((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getSenderID()))) {
+                    friendID = list.get(position).getReciverID();
+                }
+
+
+                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Are you sure?")
+                        .setContentText("Won't be able to recover message!")
+                        .setConfirmText("Yes,delete it!")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                messageViewModel.deleteMessage(friendID);
+                                notifyDataSetChanged();
+                                        sDialog
+                                        .setTitleText("Deleted!")
+                                        .setContentText("Message has been deleted!")
+                                        .setConfirmText("OK")
+                                        .setConfirmClickListener(null)
+                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+
+                            }
+                        })
+                        .show();
+
+                return false;
             }
         });
 

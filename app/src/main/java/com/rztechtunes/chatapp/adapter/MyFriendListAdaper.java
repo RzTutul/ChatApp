@@ -15,12 +15,16 @@ import com.bumptech.glide.Glide;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.UserProfileFrag;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
+import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
 
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MyFriendListAdaper extends RecyclerView.Adapter<MyFriendListAdaper.ContractViewHolder> {
     List<UserInformationPojo> list;
     Context context;
+    FirendViewModel firendViewModel = new FirendViewModel();
 
     public MyFriendListAdaper(List<UserInformationPojo> list, Context context) {
         this.list = list;
@@ -48,6 +52,34 @@ public class MyFriendListAdaper extends RecyclerView.Adapter<MyFriendListAdaper.
                     .into(holder.imageView);
 
 
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Unfriend?")
+                            .setContentText("Want to unfriend this person!")
+                            .setConfirmText("Yes, Unfriend!")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    firendViewModel.unFirend(list.get(position).getU_ID());
+                                    notifyDataSetChanged();
+                                    sDialog
+                                            .setTitleText("Unfriend!")
+                                            .setContentText("Unfriend has been Successful!")
+                                            .setConfirmText("OK")
+                                            .setConfirmClickListener(null)
+                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+
+                                }
+                            })
+                            .show();
+
+
+
+                    return false;
+                }
+            });
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

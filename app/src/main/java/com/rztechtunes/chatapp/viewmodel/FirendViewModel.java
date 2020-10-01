@@ -28,6 +28,7 @@ import java.util.List;
 
 public class FirendViewModel extends ViewModel {
     FriendRepos friendRepos;
+   public MutableLiveData<String> addStoriesSuccefulLD = new MutableLiveData<>();
 
     public FirendViewModel() {
         friendRepos = new FriendRepos();
@@ -102,7 +103,7 @@ public class FirendViewModel extends ViewModel {
                     pd.dismiss();
                     Uri downloadUri = task.getResult();
                     storiesPojo.setImage(downloadUri.toString());
-                    friendRepos.addStories(storiesPojo);
+                    addStoriesSuccefulLD = friendRepos.addStories(storiesPojo);
                 } else {
                     // Handle failures
                     // ...
@@ -120,4 +121,10 @@ public class FirendViewModel extends ViewModel {
 
         return friendRepos.getUserStories(userID);
     }
+
+    public void unFirend(String u_id) {
+        friendRepos.unFriend(u_id);
+    }
+
+
 }

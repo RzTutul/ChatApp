@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rztechtunes.chatapp.pojo.BlockPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 
@@ -29,6 +30,8 @@ public class AuthRepos {
     DatabaseReference  userRef;
     DatabaseReference  alluserRef;
     DatabaseReference userInfo;
+    DatabaseReference blockList;
+
 
 
 
@@ -54,6 +57,7 @@ public class AuthRepos {
         rootRef = FirebaseDatabase.getInstance().getReference();
         userRef = rootRef.child(firebaseUser.getUid());
         userInfo = userRef.child("Loginfo");
+
         alluserRef = rootRef.child("AlluserInfo");
         userInfo.keepSynced(true);
         alluserRef.keepSynced(true);
@@ -77,6 +81,12 @@ public class AuthRepos {
 
             }
         });
+
+
+        //This will help when user block a person then create a node name as BlockList so that check when use send message it's block or not
+        blockList = userRef.child("BlockList");
+        BlockPojo blockPojo  = new BlockPojo("7zzzzzzzzzzzBBBB","intital for block person");
+        blockList.child(blockPojo.getU_id()).setValue(blockPojo);
     }
 
 

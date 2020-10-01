@@ -10,24 +10,31 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hbb20.CountryCodePicker;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 
+import static android.content.ContentValues.TAG;
+
 
 public class LoginFragment extends Fragment {
 
-    private MaterialButton btnSing;
+    private FloatingActionButton btnSing;
     private CountryCodePicker ccp;
     private EditText phoneET;
 
     private AuthViewModel authViewModel ;
+
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -51,22 +58,35 @@ public class LoginFragment extends Fragment {
         ccp = view.findViewById(R.id.ccp);
         phoneET = view.findViewById(R.id.ed_phone);
 
+
+
+
+
         btnSing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 String phone = phoneET.getText().toString();
 
-                //Check number start with 0 or other digit
-                if ( (phone.charAt(0)) == '0') {
-                    phone = phone.substring(1);
+                if (phone.equals(""))
+                {
+                    phoneET.setError("Input your number");
                 }
-                String code = ccp.getSelectedCountryCodeWithPlus();
-                SignupFragment.country = ccp.getSelectedCountryEnglishName();
+                else
+                {
+                    //Check number start with 0 or other digit
+                    if ( (phone.charAt(0)) == '0') {
+                        phone = phone.substring(1);
+                    }
+                    String code = ccp.getSelectedCountryCodeWithPlus();
+                    SignupFragment.country =ccp.getSelectedCountryFlagResourceId()+"-"+ccp.getSelectedCountryEnglishName();
 
-                PhoneVarifyFragment.phoneNumber = code+phone;
+                    PhoneVarifyFragment.phoneNumber = code+phone;
 
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.phoneVarifyFragment);
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.phoneVarifyFragment);
+                }
+
+
             }
         });
 

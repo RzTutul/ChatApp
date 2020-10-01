@@ -111,4 +111,13 @@ public class FirendViewModel extends ViewModel {
         });
 
     }
+
+    public MutableLiveData<List<StoriesPojo>> getMyStories() {
+        return  friendRepos.getmyStories();
+    }
+
+    public MutableLiveData<List<StoriesPojo>> getUserStories(String userID) {
+
+        return friendRepos.getUserStories(userID);
+    }
 }

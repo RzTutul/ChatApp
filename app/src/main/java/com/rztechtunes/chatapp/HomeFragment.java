@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment {
 
         switch (item.getItemId())
         {
-            case R.id.setting_menu:
+            case R.id.profile_menu:
                 Toast.makeText(getActivity(), "OK", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.friendFragment:

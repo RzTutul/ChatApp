@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-         android:id="@+id/setting_menu"
-        android:icon="@drawable/ic_baseline_send_24"
+         android:id="@+id/profile_menu"
+        android:icon="@drawable/ic_baseline_person_pin_24"
         android:title="Profile"
         />
    <item

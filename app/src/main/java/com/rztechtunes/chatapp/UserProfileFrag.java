@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,9 +32,13 @@ import com.rztechtunes.chatapp.Notification.Data;
 import com.rztechtunes.chatapp.Notification.MyResponse;
 import com.rztechtunes.chatapp.Notification.Sender;
 import com.rztechtunes.chatapp.Notification.Token;
+import com.rztechtunes.chatapp.adapter.MyStoriesAdapter;
+import com.rztechtunes.chatapp.pojo.StoriesPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,12 +52,13 @@ public class UserProfileFrag extends Fragment {
     public  static String userID;
     String userName;
     String userImage;
-    TextView nameTV,emailTV,phoneTV,aboutTV;
-    ImageView profileImage;
+    TextView nameTV,emailTV,phoneTV,aboutTV,countyTV;
+    ImageView profileImage,fragImage;
     AuthViewModel authViewModel;
     FirendViewModel firendViewModel;
     UserInformationPojo myCurrentInfo;
     APIService apiService;
+    RecyclerView mediaRV;
 
     public UserProfileFrag() {
         // Required empty public constructor
@@ -76,10 +83,13 @@ public class UserProfileFrag extends Fragment {
         msgRL = view.findViewById(R.id.messageRL);
         sendReqRL = view.findViewById(R.id.sendReqRL);
         profileImage = view.findViewById(R.id.profile_image);
+        fragImage = view.findViewById(R.id.fragImage);
         nameTV = view.findViewById(R.id.nameTV);
         emailTV = view.findViewById(R.id.gmailTV);
         phoneTV = view.findViewById(R.id.phoneTV);
         aboutTV = view.findViewById(R.id.aboutTV);
+        countyTV = view.findViewById(R.id.countyTV);
+        mediaRV = view.findViewById(R.id.mediaRV);
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
 
@@ -97,6 +107,11 @@ public class UserProfileFrag extends Fragment {
                 emailTV.setText(authPojo.getEmail());
                 phoneTV.setText(authPojo.getPhone());
                 aboutTV.setText(authPojo.getAbout());
+
+                String county = authPojo.getCountry();
+                String [] splitCounty = county.split("-"); //split county code & name
+                countyTV.setText(splitCounty[1]);
+                fragImage.setImageResource(Integer.parseInt(splitCounty[0])); //get county code
             }
         });
 
@@ -124,6 +139,17 @@ public class UserProfileFrag extends Fragment {
         });
 
 
+        firendViewModel.getUserStories(userID).observe(getActivity(), new Observer<List<StoriesPojo>>() {
+            @Override
+            public void onChanged(List<StoriesPojo> storiesPojos) {
+                MyStoriesAdapter myStoriesAdapter = new MyStoriesAdapter(storiesPojos,getContext());
+                GridLayoutManager gll = new GridLayoutManager(getContext(),2);
+                mediaRV.setLayoutManager(gll);
+                mediaRV.setAdapter(myStoriesAdapter);
+
+            }
+        });
+
 
         authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
             @Override
@@ -133,6 +159,8 @@ public class UserProfileFrag extends Fragment {
         });
 
     }
+
+
 
 
     private void sendNotifiaction(String receiver, final String username, final String message) {

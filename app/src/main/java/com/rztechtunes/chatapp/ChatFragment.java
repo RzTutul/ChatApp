@@ -110,8 +110,8 @@ public class ChatFragment extends Fragment {
                         case R.id.firend_menu:
                             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.friendFragment);
                             break;
-                        case R.id.setting_menu:
-                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.contractFragment);
+                        case R.id.profile_menu:
+                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.profileFragment);
                             break;
 
                         default:

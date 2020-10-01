@@ -26,6 +26,8 @@ public class FriendRepos {
     MutableLiveData<List<UserInformationPojo>> myFrndLD = new MutableLiveData<>();
     MutableLiveData<List<UserInformationPojo>> requestlistLD = new MutableLiveData<>();
     MutableLiveData<List<StoriesPojo>> storiesLD = new MutableLiveData<>();
+    MutableLiveData<List<StoriesPojo>> myStoriesLD = new MutableLiveData<>();
+    MutableLiveData<List<StoriesPojo>> userStoriesLD = new MutableLiveData<>();
     UserInformationPojo authPojo = new UserInformationPojo();
 
     public FriendRepos() {
@@ -244,5 +246,56 @@ public class FriendRepos {
 
 
         return storiesLD;
+    }
+
+    public MutableLiveData<List<StoriesPojo>> getmyStories() {
+
+        myRef = rootRef.child(firebaseUser.getUid()).child("Stories");
+
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<StoriesPojo> list =new ArrayList<>();
+                for (DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    list.add(dataSnapshot.getValue(StoriesPojo.class));
+                }
+                myStoriesLD.postValue(list);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return myStoriesLD;
+
+    }
+
+    public MutableLiveData<List<StoriesPojo>> getUserStories(String userID) {
+
+        userRef = rootRef.child(userID).child("Stories");
+
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<StoriesPojo> list = new ArrayList<>();
+
+                for (DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    list.add(dataSnapshot.getValue(StoriesPojo.class));
+                }
+                userStoriesLD.postValue(list);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return userStoriesLD;
     }
 }

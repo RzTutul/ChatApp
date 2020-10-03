@@ -11,14 +11,20 @@ import androidx.navigation.Navigation;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.rztechtunes.chatapp.pojo.CallingPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
+import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
+
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
     AuthViewModel authViewModel = new AuthViewModel();
+    MessageViewModel messageViewModel = new MessageViewModel();
     NavController navController;
     boolean isExit;
     @Override
@@ -40,11 +46,24 @@ public class MainActivity extends AppCompatActivity {
                     default:
                         isExit =false;
 
-
-
                 }
             }
         });
+
+        messageViewModel.getNowCalling().observe(this, new Observer<List<CallingPojo>>() {
+            @Override
+            public void onChanged(List<CallingPojo> userInformationPojos) {
+
+                CallingPojo userinfo = userInformationPojos.get(userInformationPojos.size()-1);
+        /*       IncomingCallFrag.name  = userinfo.getName();
+               IncomingCallFrag.image  = userinfo.getImage();
+               IncomingCallFrag.roomName  = userinfo.getRoom_name();
+               IncomingCallFrag.u_id  = userinfo.getU_id();*/
+               IncomingCallFrag.callingPojo  = userinfo;
+                Navigation.findNavController(MainActivity.this,R.id.nav_host_fragment).navigate(R.id.incomingCallFrag);
+            }
+        });
+
     }
 
     @Override

@@ -19,7 +19,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.rztechtunes.chatapp.pojo.BlockPojo;
+import com.rztechtunes.chatapp.pojo.CallingPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.repos.MessageRespos;
 
 import java.io.ByteArrayOutputStream;
@@ -133,5 +135,28 @@ public class MessageViewModel extends ViewModel {
 
     public void UnblockFriend(String frndID) {
         messageRespos.UnblockFriend(frndID);
+    }
+
+    public void CallToFriend(String reciverID, CallingPojo CurrentauthPojo) {
+        messageRespos.CallToFriend(reciverID, CurrentauthPojo);
+    }
+
+    public MutableLiveData<List<CallingPojo>> getNowCalling() {
+
+        return messageRespos.getNowCalling();
+    }
+
+  public MutableLiveData<List<CallingPojo>> getRecivingStatus() {
+
+        return messageRespos.getRecvingStatus();
+    }
+
+
+    public void CallCancel(String reciverID) {
+        messageRespos.CallCanel(reciverID);
+    }
+
+    public MutableLiveData<String> ReceiveCall(CallingPojo callingPojo) {
+      return   messageRespos.ReceiveCall(callingPojo);
     }
 }

@@ -16,41 +16,66 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:navigationIcon="?attr/homeAsUpIndicator"
             app:contentInsetStart="0dp"
             app:contentInsetStartWithNavigation="0dp"
-            >
+            app:navigationIcon="?attr/homeAsUpIndicator">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                android:id="@+id/profile_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/myimage" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/myimage" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/nameTV"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="Rz Tutul"
-                    android:textSize="20sp" />
+                    android:layout_toRightOf="@id/profile_image"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/statusTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="10sp"
-                    android:fontFamily="sans-serif-light"
-                    android:text="Online" />
+                    <TextView
+                        android:id="@+id/nameTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="Rz Tutul"
+                        android:textSize="20sp" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/statusTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Online"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+
+                <ImageView
+                    android:scaleType="fitXY"
+                    android:id="@+id/callBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="90dp"
+                    android:src="@drawable/ic_baseline_call_24" />
+
+                <ImageView
+                    android:scaleType="fitXY"
+                    android:id="@+id/videoCallBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_baseline_videocam_24" />
+
+
+            </RelativeLayout>
 
 
         </androidx.appcompat.widget.Toolbar>
@@ -76,37 +101,37 @@
         >
 
         <LinearLayout
-            android:background="@color/colorWhite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
             android:padding="5dp"
             android:weightSum="3.5">
 
             <ImageButton
-                android:scaleType="centerCrop"
-                android:backgroundTint="@color/colorWhite"
                 android:id="@+id/imageButn"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="0.5"
+                android:backgroundTint="@color/colorWhite"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_photo_camera_black_24dp" />
 
 
             <EditText
-                android:maxHeight="200dp"
                 android:id="@+id/messageET"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
-                android:hint=" Write message" />
+                android:hint=" Write message"
+                android:maxHeight="200dp" />
 
             <ImageButton
-                android:scaleType="centerCrop"
-                android:backgroundTint="@color/colorWhite"
                 android:id="@+id/sentMsgBtn"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="0.5"
+                android:backgroundTint="@color/colorWhite"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_baseline_send_24" />
 
 

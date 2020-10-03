@@ -123,4 +123,15 @@
         android:name="com.rztechtunes.chatapp.AddMoreParticipentFrag"
         android:label="fragment_add_more_participent"
         tools:layout="@layout/fragment_add_more_participent" />
+    <fragment
+        android:id="@+id/videoCallingFrag"
+        android:name="com.rztechtunes.chatapp.VideoCallingFrag"
+        android:label="fragment_video_calling"
+        tools:layout="@layout/fragment_video_calling" />
+    <fragment
+        android:id="@+id/incomingCallFrag"
+        android:name="com.rztechtunes.chatapp.IncomingCallFrag"
+        android:label="fragment_incoming_call"
+        tools:layout="@layout/fragment_incoming_call" />
+
 </navigation>

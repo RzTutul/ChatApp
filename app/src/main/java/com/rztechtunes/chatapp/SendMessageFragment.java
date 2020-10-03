@@ -48,6 +48,7 @@ import com.rztechtunes.chatapp.Notification.MyResponse;
 import com.rztechtunes.chatapp.Notification.Sender;
 import com.rztechtunes.chatapp.Notification.Token;
 import com.rztechtunes.chatapp.adapter.MessageAdaper;
+import com.rztechtunes.chatapp.pojo.CallingPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
@@ -55,11 +56,16 @@ import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
 
+import org.jitsi.meet.sdk.JitsiMeet;
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,6 +85,7 @@ public class SendMessageFragment extends Fragment {
     public static String reciverName;
 
     ImageButton sendMsgBtn, imageButn;
+    ImageView callBtn;
     EditText msgET;
     RecyclerView msgRV;
     MessageViewModel messageViewModel;
@@ -98,6 +105,8 @@ public class SendMessageFragment extends Fragment {
     String reciverOnlineStatus;
     String message;
   Toolbar toolbar;
+
+  CallingPojo callingPojo ;
 
 
     public SendMessageFragment() {
@@ -129,6 +138,7 @@ public class SendMessageFragment extends Fragment {
         nameTV = view.findViewById(R.id.nameTV);
         statusTV = view.findViewById(R.id.statusTV);
         imageButn = view.findViewById(R.id.imageButn);
+        callBtn = view.findViewById(R.id.callBtn);
         toolbar = view.findViewById(R.id.toolbar);
 
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -143,6 +153,35 @@ public class SendMessageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(v).navigate(R.id.homeFragment);
+            }
+        });
+
+
+        //For calling
+        URL serverUrl;
+        try {
+
+            serverUrl = new URL("https://meet.jit.si");
+            JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
+                    .setServerURL(serverUrl)
+                    .setWelcomePageEnabled(false)
+                    .build();
+            JitsiMeet.setDefaultConferenceOptions(options);
+        } catch (Exception e) {
+
+        }
+
+        callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               String rooomName = CurrentauthPojo.getName()+reciverName;
+                //set the room name at uID
+                callingPojo = new CallingPojo(CurrentauthPojo.getU_ID(),rooomName,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),CurrentauthPojo.getStatus());
+
+                CurrentauthPojo.setU_ID(rooomName);
+                messageViewModel.CallToFriend(reciverID,callingPojo);
+                VideoCallingFrag.reciverID = reciverID;
+                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.videoCallingFrag);
             }
         });
 

@@ -1,5 +1,6 @@
 package com.rztechtunes.chatapp.repos;
 
+import android.telecom.Call;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rztechtunes.chatapp.pojo.BlockPojo;
+import com.rztechtunes.chatapp.pojo.CallingPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 
 import java.util.ArrayList;
@@ -38,6 +41,9 @@ public class MessageRespos {
     MutableLiveData<SenderReciverPojo> lastMsgLD = new MutableLiveData<>();
     MutableLiveData<String> blockStatus = new MutableLiveData<>();
     MutableLiveData<List<BlockPojo>> blockListLD = new MutableLiveData<>();
+    MutableLiveData<List<CallingPojo>> CallingLD = new MutableLiveData<>();
+    MutableLiveData<List<CallingPojo>> receivingLD = new MutableLiveData<>();
+    MutableLiveData<String> insertRecivingLD = new MutableLiveData<>();
 
     boolean isBlocked;
 
@@ -401,6 +407,94 @@ public class MessageRespos {
         userID = rootRef.child(firebaseUser.getUid()).child("BlockList");
 
         userID.child(frndID).removeValue();
+
+    }
+
+    public void CallToFriend(String reciverID, CallingPojo myInformation) {
+        userID = rootRef.child(reciverID).child("Calling");
+        String key = userID.push().getKey();
+        userID.child(key).setValue(myInformation).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+            }
+        });
+
+
+    }
+
+    public MutableLiveData<List<CallingPojo>> getNowCalling() {
+
+        userID = rootRef.child(firebaseUser.getUid()).child("Calling");
+
+        userID.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<CallingPojo> list = new ArrayList<>();
+                for (DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    list.add(dataSnapshot.getValue(CallingPojo.class));
+                    CallingLD.postValue(list);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return CallingLD;
+    }
+
+    public MutableLiveData<List<CallingPojo>> getRecvingStatus() {
+
+        userID = rootRef.child(firebaseUser.getUid()).child("Receiving");
+
+        userID.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<CallingPojo> list = new ArrayList<>();
+                for (DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    list.add(dataSnapshot.getValue(CallingPojo.class));
+                    receivingLD.postValue(list);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return receivingLD;
+    }
+
+
+    public void CallCanel(String reciverID) {
+        userID = rootRef.child(reciverID).child("Calling");
+        userID.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                userID = rootRef.child(firebaseUser.getUid()).child("Calling");
+                userID.removeValue();
+            }
+        });
+
+
+    }
+
+    public MutableLiveData<String> ReceiveCall(CallingPojo callingPojo) {
+        userID = rootRef.child(callingPojo.getU_id()).child("Receiving");
+        String key = userID.push().getKey();
+        userID.child(key).setValue(callingPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                insertRecivingLD.postValue("1");
+            }
+        });
+
+        return insertRecivingLD;
 
     }
 }

@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,12 +29,13 @@ import org.jitsi.meet.sdk.JitsiMeetActivity;
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 
 public class IncomingCallFrag extends Fragment {
 
 
-    ImageView receiveBtn,profile_image,cancelBtn;
+    ImageView receiveBtn,profile_image,cancelBtn,videoRecvBtn;
     TextView nameTV;
     private Vibrator vib;
     private MediaPlayer mp;
@@ -58,6 +60,8 @@ public class IncomingCallFrag extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        receiveBtn = view.findViewById(R.id.receiveBtn);
+        videoRecvBtn = view.findViewById(R.id.videoRecvBtn);
         receiveBtn = view.findViewById(R.id.receiveBtn);
         cancelBtn = view.findViewById(R.id.cancelBtn);
         profile_image = view.findViewById(R.id.profile_image);
@@ -92,6 +96,38 @@ public class IncomingCallFrag extends Fragment {
 
         }
 
+        if (callingPojo.getCall_type().equals("Video"))
+        {
+            videoRecvBtn.setVisibility(View.VISIBLE);
+            receiveBtn.setVisibility(View.GONE);
+        }
+        else
+        {
+            videoRecvBtn.setVisibility(View.GONE);
+            receiveBtn.setVisibility(View.VISIBLE);
+        }
+
+
+        //Calling 60 seconds if it not receivice
+        try {
+            new CountDownTimer(60000, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
+                   // btnTimer.setText(seconds + " Secound Wait");
+                }
+
+                @Override
+                public void onFinish() {
+                    mp.stop();
+                    vib.cancel();
+                    Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+
+                }
+            }.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         receiveBtn.setOnClickListener(new View.OnClickListener() {
@@ -104,11 +140,43 @@ public class IncomingCallFrag extends Fragment {
                     public void onChanged(String s) {
                         if (s.equals("1"))
                         {
+                            Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+
+                            JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
+                                    .setRoom(callingPojo.getRoom_name())
+                                    .setWelcomePageEnabled(false)
+                                    .setAudioOnly(true)
+                                    .build();
+                            JitsiMeetActivity.launch(getContext(),options);
+                        }
+
+                    }
+                });
+
+            }
+        });
+
+
+
+
+        videoRecvBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp.stop();
+                vib.cancel();
+                messageViewModel.ReceiveCall(callingPojo).observe(getActivity(), new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        if (s.equals("1"))
+                        {
+                            Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+
                             JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
                                     .setRoom(callingPojo.getRoom_name())
                                     .setWelcomePageEnabled(false)
                                     .build();
                             JitsiMeetActivity.launch(getContext(),options);
+
                         }
 
                     }
@@ -123,7 +191,6 @@ public class IncomingCallFrag extends Fragment {
             public void onClick(View v) {
                 mp.stop();
                 vib.cancel();
-
                 Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
             }
         });

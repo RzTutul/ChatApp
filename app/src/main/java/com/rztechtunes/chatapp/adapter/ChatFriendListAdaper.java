@@ -1,6 +1,7 @@
 package com.rztechtunes.chatapp.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +17,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
+import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
 
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import timber.log.Timber;
+
+import static android.content.ContentValues.TAG;
 
 public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAdaper.ContractViewHolder> {
     List<SenderReciverPojo> list;
     MessageViewModel messageViewModel = new MessageViewModel();
     Context context;
     String friendID;
+
     public ChatFriendListAdaper(List<SenderReciverPojo> list, Context context) {
         this.list = list;
         this.context = context;
@@ -45,20 +51,31 @@ public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAda
     public void onBindViewHolder(@NonNull final ContractViewHolder holder, final int position) {
 
 
+        String currentdate = HelperUtils.getDateWithTime();
+        long different = HelperUtils.getDefferentBetweenTwoDate(currentdate, list.get(position).getStatus());
+
+        if (different == 0) {
+            String[] time = (list.get(position).getStatus()).split("\\s+");
+            holder.dateTV.setText("Today " + time[2] + time[3]);
+        } else if (different == 1) {
+            String[] time = (list.get(position).getStatus()).split("\\s+");
+            holder.dateTV.setText("Yesterday " + time[2] + time[3]);
+        } else {
+            holder.dateTV.setText(list.get(position).getStatus());
+
+        }
 
         holder.msgTV.setText(list.get(position).getMsg());
-        holder.dateTV.setText(list.get(position).getStatus());
 
 
         if ((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getSenderID())) {
             holder.nameTV.setText(list.get(position).getReciverName());
-          //  Picasso.get().load(list.get(position).getReciverImage()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imageView);
+            //  Picasso.get().load(list.get(position).getReciverImage()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imageView);
             Glide.with(context)
                     .load(list.get(position).getReciverImage())
                     .placeholder(R.drawable.ic_image_black_24dp)
                     .into(holder.imageView);
-        }
-        else if ((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getReciverID())) {
+        } else if ((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getReciverID())) {
             holder.nameTV.setText(list.get(position).getSenderName());
             Glide.with(context)
                     .load(list.get(position).getSenderImage())
@@ -80,9 +97,7 @@ public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAda
                     Navigation.findNavController(holder.itemView).navigate(R.id.sendMessageFragment);
 
 
-                }
-
-                else if(((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getSenderID()))) {
+                } else if (((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getSenderID()))) {
                     SendMessageFragment.reciverID = list.get(position).getReciverID();
                     SendMessageFragment.reciverImage = list.get(position).getReciverImage();
                     SendMessageFragment.reciverName = list.get(position).getReciverName();
@@ -97,10 +112,8 @@ public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAda
             @Override
             public boolean onLongClick(View v) {
                 if ((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getReciverID())) {
-                   friendID= list.get(position).getSenderID();
-                }
-
-                else if(((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getSenderID()))) {
+                    friendID = list.get(position).getSenderID();
+                } else if (((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getSenderID()))) {
                     friendID = list.get(position).getReciverID();
                 }
 
@@ -114,7 +127,7 @@ public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAda
                             public void onClick(SweetAlertDialog sDialog) {
                                 messageViewModel.deleteMessage(friendID);
                                 notifyDataSetChanged();
-                                        sDialog
+                                sDialog
                                         .setTitleText("Deleted!")
                                         .setContentText("Message has been deleted!")
                                         .setConfirmText("OK")
@@ -139,7 +152,7 @@ public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAda
     class ContractViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
-        TextView nameTV, msgTV,dateTV;
+        TextView nameTV, msgTV, dateTV;
 
         public ContractViewHolder(@NonNull View itemView) {
             super(itemView);

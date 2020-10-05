@@ -40,10 +40,10 @@ public class AllContractListAdaper extends RecyclerView.Adapter<AllContractListA
     public void onBindViewHolder(@NonNull final ContractViewHolder holder, final int position) {
 
         holder.nameTV.setText(list.get(position).getName());
-        holder.aboutTV.setText(list.get(position).getAbout());
+        holder.aboutTV.setText(list.get(position).getStatus());
 
         Glide.with(context)
-                .load(list.get(position).getImage())
+                .load(list.get(position).getprofileImage())
                 .placeholder(R.drawable.ic_perm_)
                 .into(holder.imageView);
 

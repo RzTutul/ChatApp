@@ -6,16 +6,26 @@ public class CallingPojo {
     String name;
     String image;
     String time;
+    String call_type;
 
     public CallingPojo() {
     }
 
-    public CallingPojo(String u_id, String room_name, String name, String image, String time) {
+    public CallingPojo(String u_id, String room_name, String name, String image, String time, String call_type) {
         this.u_id = u_id;
         this.room_name = room_name;
         this.name = name;
         this.image = image;
         this.time = time;
+        this.call_type = call_type;
+    }
+
+    public String getCall_type() {
+        return call_type;
+    }
+
+    public void setCall_type(String call_type) {
+        this.call_type = call_type;
     }
 
     public String getU_id() {

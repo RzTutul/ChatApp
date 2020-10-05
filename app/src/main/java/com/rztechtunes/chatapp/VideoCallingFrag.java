@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.rztechtunes.chatapp.pojo.CallingPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
@@ -31,16 +35,21 @@ import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
 
 public class VideoCallingFrag extends Fragment {
 
-    ImageView cancelBtn;
+    ImageView cancelBtn,profile_image;
+    TextView nameTV;
     MessageViewModel messageViewModel;
     private MediaPlayer mp;
     public static String reciverID;
+    public static String name;
+    public static String image;
     private Context mContext;
+    CountDownTimer count;
     public VideoCallingFrag() {
         // Required empty public constructor
     }
@@ -59,6 +68,16 @@ public class VideoCallingFrag extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         cancelBtn = view.findViewById(R.id.cancelBtn);
+        profile_image = view.findViewById(R.id.profile_image);
+        nameTV = view.findViewById(R.id.nameTV);
+
+        nameTV.setText(name);
+        //Picasso.get().load(reciverImage).into(prfileImage);
+        Glide.with(getActivity())
+                .load(image)
+                .placeholder(R.drawable.ic_perm_)
+                .into(profile_image);
+
         mp = MediaPlayer.create(getActivity(), R.raw.callingtone);
         mp.setLooping(true);
         mp.start();
@@ -77,12 +96,42 @@ public class VideoCallingFrag extends Fragment {
 
         }
 
+        //Calling 60 seconds if it not receivice
+        try {
+         count =    new CountDownTimer(60000, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
+                    // btnTimer.setText(seconds + " Secound Wait");
+                }
+
+                @Override
+                public void onFinish() {
+                    mp.stop();
+                    messageViewModel.CallCancel(reciverID);
+                    Toast.makeText(mContext, "No Response!", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+
+                }
+            };
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        count.start();
+
+
+
+
 
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mp.stop();
+                count.cancel();
                 messageViewModel.CallCancel(reciverID);
                 Navigation.findNavController(getActivity(),R.id.nav_host_fragment).popBackStack();
             }
@@ -94,17 +143,30 @@ public class VideoCallingFrag extends Fragment {
                 mp.stop();
                 if (userInformationPojos.size()>0)
                 {
-
                     CallingPojo userinfo = userInformationPojos.get(userInformationPojos.size()-1);
-
-                    JitsiMeetConferenceOptions options1 = new JitsiMeetConferenceOptions.Builder()
-                            .setRoom(userinfo.getRoom_name())
-                            .setWelcomePageEnabled(false)
-                            .build();
-                    JitsiMeetActivity.launch(mContext,options1);
+                    if (userinfo.getCall_type().equals("Video"))
+                    {
 
 
-                    Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                        JitsiMeetConferenceOptions options1 = new JitsiMeetConferenceOptions.Builder()
+                                .setRoom(userinfo.getRoom_name())
+                                .setWelcomePageEnabled(false)
+                                .build();
+                        JitsiMeetActivity.launch(mContext,options1);
+
+                    }
+                    else
+                    {
+                        JitsiMeetConferenceOptions options1 = new JitsiMeetConferenceOptions.Builder()
+                                .setRoom(userinfo.getRoom_name())
+                                .setWelcomePageEnabled(false)
+                                .setAudioOnly(true)
+                                .build();
+                        JitsiMeetActivity.launch(mContext,options1);
+                    }
+
+
+                    Navigation.findNavController(getActivity(),R.id.nav_host_fragment).popBackStack();
                 }
 
 

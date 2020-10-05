@@ -33,9 +33,6 @@ public class AuthRepos {
     DatabaseReference blockList;
 
 
-
-
-
     private MutableLiveData<AuthViewModel.AuthenticationState> stateLiveData;
     private MutableLiveData<UserInformationPojo> userInfoLD = new MutableLiveData<>();
     private MutableLiveData<List<UserInformationPojo>> alluserInfoLD = new MutableLiveData<>();
@@ -53,7 +50,6 @@ public class AuthRepos {
 
     public void addAuthUserInfo(UserInformationPojo authPojo) {
         firebaseUser = firebaseAuth.getCurrentUser();
-        Log.i(TAG, "onComplete: "+firebaseUser.getUid());
         rootRef = FirebaseDatabase.getInstance().getReference();
         userRef = rootRef.child(firebaseUser.getUid());
         userInfo = userRef.child("Loginfo");

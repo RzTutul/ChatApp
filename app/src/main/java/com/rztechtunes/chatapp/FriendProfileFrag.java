@@ -43,7 +43,7 @@ public class FriendProfileFrag extends Fragment {
     public  static String frndID;
     CardView deleteCard,blockCard,unBlockCard;
 
-    TextView phoneTV,gmailTV,aboutTV;
+    TextView phoneTV,gmailTV,StatusTV;
     RecyclerView mediaRV;
     ImageView frndImageView;
     AuthViewModel authViewModel;
@@ -73,7 +73,7 @@ public class FriendProfileFrag extends Fragment {
         phoneTV = view.findViewById(R.id.phoneTV);
         gmailTV = view.findViewById(R.id.gmailTV);
         mediaRV = view.findViewById(R.id.mediaRV);
-        aboutTV = view.findViewById(R.id.aboutTV);
+        StatusTV = view.findViewById(R.id.aboutTV);
         frndImageView = view.findViewById(R.id.frndImageView);
         deleteCard = view.findViewById(R.id.deletCard);
         blockCard = view.findViewById(R.id.blockCard);
@@ -177,19 +177,18 @@ public class FriendProfileFrag extends Fragment {
                 friendNameTV.setTitle(authPojo.getName());
                 gmailTV.setText(authPojo.getEmail());
                 phoneTV.setText(authPojo.getPhone());
-                aboutTV.setText(authPojo.getAbout());
+                StatusTV.setText(authPojo.getStatus());
 
                 Glide.with(getActivity())
-                        .load(authPojo.getImage())
+                        .load(authPojo.getprofileImage())
                         .placeholder(R.drawable.ic_image_black_24dp)
                         .into(frndImageView);
             }
         });
 
-       messageViewModel.getAllMessage(frndID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
+       messageViewModel.getAllSharedMedia(frndID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
            @Override
            public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
-
                Collections.reverse(senderReciverPojos);
                FriendMediaImageAdaper friendMediaImageAdaper = new FriendMediaImageAdaper(senderReciverPojos, getContext());
                LinearLayoutManager llm = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);

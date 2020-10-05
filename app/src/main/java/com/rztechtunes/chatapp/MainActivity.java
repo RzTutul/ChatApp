@@ -50,19 +50,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        messageViewModel.getNowCalling().observe(this, new Observer<List<CallingPojo>>() {
-            @Override
-            public void onChanged(List<CallingPojo> userInformationPojos) {
 
-                CallingPojo userinfo = userInformationPojos.get(userInformationPojos.size()-1);
-        /*       IncomingCallFrag.name  = userinfo.getName();
-               IncomingCallFrag.image  = userinfo.getImage();
-               IncomingCallFrag.roomName  = userinfo.getRoom_name();
-               IncomingCallFrag.u_id  = userinfo.getU_id();*/
-               IncomingCallFrag.callingPojo  = userinfo;
-                Navigation.findNavController(MainActivity.this,R.id.nav_host_fragment).navigate(R.id.incomingCallFrag);
+
+        authViewModel.stateLiveData.observe(this, new Observer<AuthViewModel.AuthenticationState>() {
+            @Override
+            public void onChanged(AuthViewModel.AuthenticationState authenticationState) {
+                switch (authenticationState)
+                {
+                    case AUTHENTICATED:
+                        messageViewModel.getNowCalling().observe(MainActivity.this, new Observer<List<CallingPojo>>() {
+                            @Override
+                            public void onChanged(List<CallingPojo> userInformationPojos) {
+
+                                CallingPojo userinfo = userInformationPojos.get(userInformationPojos.size()-1);
+                                IncomingCallFrag.callingPojo  = userinfo;
+                                Navigation.findNavController(MainActivity.this,R.id.nav_host_fragment).navigate(R.id.incomingCallFrag);
+                            }
+                        });                    case UNAUTHENTICATED:
+                }
             }
         });
+
+
 
     }
 

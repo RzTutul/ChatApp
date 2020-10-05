@@ -51,7 +51,7 @@ public class StoryFragment extends Fragment {
     private String currentPhotoPath;
     private File file;
     private static final int GALLERY_REQUEST_CODE = 123;
-    private static final int REQUEST_CAMERA_CODE = 321;
+    private static final int REQUEST_CAMERA_CODE = 000;
     private static final int REQUEST_STORAGE_CODE = 456;
 
     FirendViewModel firendViewModel;
@@ -179,13 +179,9 @@ public class StoryFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_STORAGE_CODE && grantResults[0] ==
-                PackageManager.PERMISSION_GRANTED) {
-          /*  if (requestCode==REQUEST_CAMERA_CODE)
-            {
-                dispatchCameraIntent();
-            }*/
+        if (requestCode == REQUEST_STORAGE_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                dispatchCameraIntent();
 
         }
     }
@@ -239,7 +235,7 @@ public class StoryFragment extends Fragment {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 //  picImageBtn.setImageBitmap(bmp);
-                StoriesPojo storiesPojo = new StoriesPojo(myInfo.getU_ID(),myInfo.getName(),myInfo.getImage(),"",HelperUtils.getDateWithTime());
+                StoriesPojo storiesPojo = new StoriesPojo(myInfo.getU_ID(),myInfo.getName(),myInfo.getprofileImage(),"",HelperUtils.getDateWithTime());
                 firendViewModel.addStories(storiesPojo, file, getActivity());
 
             } catch (IOException e) {
@@ -259,7 +255,7 @@ public class StoryFragment extends Fragment {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 // picImageBtn.setImageBitmap(bmp);
-                StoriesPojo storiesPojo = new StoriesPojo(myInfo.getU_ID(),myInfo.getName(),myInfo.getImage(),"",HelperUtils.getDateWithTime());
+                StoriesPojo storiesPojo = new StoriesPojo(myInfo.getU_ID(),myInfo.getName(),myInfo.getprofileImage(),"",HelperUtils.getDateWithTime());
                 firendViewModel.addStories(storiesPojo, file, getActivity());
 
             } catch (IOException e) {

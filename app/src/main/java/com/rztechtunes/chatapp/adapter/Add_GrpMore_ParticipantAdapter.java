@@ -41,10 +41,10 @@ public class Add_GrpMore_ParticipantAdapter extends RecyclerView.Adapter<Add_Grp
 
 
             holder.nameTV.setText(list.get(position).getName());
-            holder.aboutTV.setText(list.get(position).getAbout());
+            holder.aboutTV.setText(list.get(position).gethobby());
 
             Glide.with(context)
-                    .load(list.get(position).getImage())
+                    .load(list.get(position).getprofileImage())
                     .placeholder(R.drawable.ic_perm_)
                     .into(holder.imageView);
 

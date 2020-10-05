@@ -147,7 +147,7 @@ public class GroupSendMessage extends Fragment {
                 }
                 else
                 {
-                    SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,message,"",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getImage(), HelperUtils.getDateWithTime());
+                    SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,message,"",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getprofileImage(), HelperUtils.getDateWithTime());
                     groupViewModel.sendGroupMsg(sendGroupMsgPojo);
                     msgET.setText("");
                 }
@@ -327,7 +327,7 @@ public class GroupSendMessage extends Fragment {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
                 //  picImageBtn.setImageBitmap(bmp);
-                SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,"","",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
+                SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,"","",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getprofileImage(),HelperUtils.getDateWithTime());
                 groupViewModel.sendImage(sendGroupMsgPojo,file,getActivity());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -348,7 +348,7 @@ public class GroupSendMessage extends Fragment {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
                 // picImageBtn.setImageBitmap(bmp);
-                SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,"","",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getImage(),HelperUtils.getDateWithTime());
+                SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,"","",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getprofileImage(),HelperUtils.getDateWithTime());
                 groupViewModel.sendImage(sendGroupMsgPojo,file,getActivity());
             } catch (IOException e) {
                 e.printStackTrace();

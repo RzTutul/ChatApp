@@ -43,9 +43,9 @@ public class FriendRequestAdaper extends RecyclerView.Adapter<FriendRequestAdape
 
 
             holder.nameTV.setText(list.get(position).getName());
-            holder.aboutTV.setText(list.get(position).getAbout());
+            holder.aboutTV.setText(list.get(position).getStatus());
             Glide.with(context)
-                    .load(list.get(position).getImage())
+                    .load(list.get(position).getprofileImage())
                     .placeholder(R.drawable.ic_perm_)
                     .into(holder.imageView);
 

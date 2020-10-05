@@ -159,4 +159,13 @@ public class MessageViewModel extends ViewModel {
     public MutableLiveData<String> ReceiveCall(CallingPojo callingPojo) {
       return   messageRespos.ReceiveCall(callingPojo);
     }
+
+    public void deleteRecivingStatus() {
+
+        messageRespos.deleteRecivingStatus();
+    }
+
+    public LiveData<List<SenderReciverPojo>> getAllSharedMedia(String frndID) {
+        return messageRespos.getSharedMedia(frndID);
+    }
 }

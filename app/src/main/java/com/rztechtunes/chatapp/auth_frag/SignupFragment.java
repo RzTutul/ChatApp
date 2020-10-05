@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hbb20.CountryCodePicker;
 import com.rztechtunes.chatapp.R;
@@ -49,19 +50,21 @@ public class SignupFragment extends Fragment {
 
     private static final int REQUEST_STORAGE_CODE = 123;
     private static final int REQUEST_CAMERA_CODE = 123;
+    private static final int REQUEST_CAMERA_CODE_COVER = 852;
     private static final int GALLERY_REQUEST_CODE = 456;
-    private EditText nameET, emailET, aboutET;
-    private TextView saveBtn;
+    private static final int GALLERY_REQUEST_CODE_COVER = 963;
+    private EditText nameET,statusET, emailET, hobbyET;
+    private FloatingActionButton saveBtn;
     private AuthViewModel authViewModel;
     UserInformationPojo authPojo;
-
     private CountryCodePicker ccp;
     public static String country;
-    ImageView picImageBtn;
-    private String currentPhotoPath;
-    private File file;
+    ImageView selectProfile, selectCoverPic, profileImagView,coverImageView;
+    private String profilePath,coverPath;
+    private File profileFile,coverFile;
     public static String phone;
     String uui;
+    int profile;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -81,17 +84,31 @@ public class SignupFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        nameET = view.findViewById(R.id.ed_username);
-        emailET = view.findViewById(R.id.ed_email);
-        aboutET = view.findViewById(R.id.ed_about);
+        nameET = view.findViewById(R.id.nameET);
+        statusET = view.findViewById(R.id.statusET);
+        emailET = view.findViewById(R.id.gmilET);
+        hobbyET = view.findViewById(R.id.hobbyET);
         saveBtn = view.findViewById(R.id.btn_sign);
 
-        picImageBtn = view.findViewById(R.id.picImageBtn);
+        selectProfile = view.findViewById(R.id.selectProfile);
+        profileImagView = view.findViewById(R.id.profile_image);
+        selectCoverPic = view.findViewById(R.id.selectCover);
+        coverImageView = view.findViewById(R.id.coverImageView);
 
-        picImageBtn.setOnClickListener(new View.OnClickListener() {
+        selectProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 pictureSelected();
+            }
+        });
+
+        selectCoverPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                selectCoverPic();
+
             }
         });
 
@@ -99,24 +116,38 @@ public class SignupFragment extends Fragment {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String name = nameET.getText().toString();
+                String status = statusET.getText().toString();
                 String email = emailET.getText().toString();
-                String about = aboutET.getText().toString();
+                String hobby = hobbyET.getText().toString();
 
 
-                if (file == null) {
+                if (profileFile == null) {
 
-                    Toast.makeText(getActivity(), "Select a image", Toast.LENGTH_SHORT).show();
-                } else if (name.equals("")) {
+                    Toast.makeText(getActivity(), "Select a Profile Image", Toast.LENGTH_SHORT).show();
+                }
+                    if (coverFile == null) {
+
+                    Toast.makeText(getActivity(), "Select a Cover Image", Toast.LENGTH_SHORT).show();
+                }
+
+
+                else if (name.equals("")) {
                     nameET.setError("Set a name!");
-                } else if (email.equals("")) {
-                    emailET.setError("Set a email!");
-                } else if (about.equals("")) {
-                    aboutET.setError("Write about yourself!");
-                } else {
-                    authPojo = new UserInformationPojo("", name, email, phone, about, country, "", "Online");
+                }
+                     else if (status.equals("")) {
+                    nameET.setError("Set a status!");
+                }
 
-                    authViewModel.setUserInfo(getActivity(), file, authPojo);
+                else if (email.equals("")) {
+                    emailET.setError("Set a email!");
+                } else if (hobby.equals("")) {
+                    hobbyET.setError("Set your Hobby!");
+                } else {
+                    authPojo = new UserInformationPojo("", name, email, phone, hobby, country, "","",status, "Online");
+
+                    authViewModel.setUserInfo(getActivity(), profileFile,coverFile, authPojo);
                 }
 
 
@@ -171,8 +202,7 @@ public class SignupFragment extends Fragment {
 
     }
 
-    private void pictureSelected() {
-
+    private void selectCoverPic() {
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BottomSheetDialogTheme);
         View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, (LinearLayout) getActivity().findViewById(R.id.bottomSheetContainer));
@@ -180,7 +210,7 @@ public class SignupFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (checkStoragePermission()) {
-                    dispatchCameraIntent();
+                    dispatchCameraIntentForCoverPic();
                 }
                 bottomSheetDialog.dismiss();
             }
@@ -191,7 +221,7 @@ public class SignupFragment extends Fragment {
 
                 if (checkStoragePermission()) {
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE_COVER);
                 }
 
                 bottomSheetDialog.dismiss();
@@ -201,13 +231,48 @@ public class SignupFragment extends Fragment {
 
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
-
-
     }
+
+
+    private void pictureSelected() {
+
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BottomSheetDialogTheme);
+            View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, (LinearLayout) getActivity().findViewById(R.id.bottomSheetContainer));
+            bottomSheetView.findViewById(R.id.cameraLL).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (checkStoragePermission()) {
+                        dispatchCameraIntent();
+                    }
+                    bottomSheetDialog.dismiss();
+                }
+            });
+            bottomSheetView.findViewById(R.id.gallaryLL).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (checkStoragePermission()) {
+                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
+                    }
+
+                    bottomSheetDialog.dismiss();
+                }
+            });
+
+
+            bottomSheetDialog.setContentView(bottomSheetView);
+            bottomSheetDialog.show();
+        }
+
+
+
+
+
+
 
     private boolean checkStoragePermission() {
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
@@ -219,19 +284,43 @@ public class SignupFragment extends Fragment {
         return true;
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_STORAGE_CODE && grantResults[0] ==
                 PackageManager.PERMISSION_GRANTED) {
-          /*  if (requestCode==REQUEST_CAMERA_CODE)
+         /*   if (requestCode==REQUEST_CAMERA_CODE)
             {
                 dispatchCameraIntent();
             }*/
 
 
         }
+    }
+
+
+
+    private void dispatchCameraIntentForCoverPic()
+    {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                        "com.rztechtunes.chatapp",
+                        photoFile);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(cameraIntent, REQUEST_CAMERA_CODE_COVER);
+            }
+        }
+
     }
 
 
@@ -268,45 +357,84 @@ public class SignupFragment extends Fragment {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
+        profilePath = image.getAbsolutePath();
         return image;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CAMERA_CODE &&
-                resultCode == RESULT_OK) {
-            Log.e(TAG, "onActivityResult: " + currentPhotoPath);
-            file = new File(currentPhotoPath);
-            Uri fileUri = Uri.fromFile(file);
-            try {
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
-                picImageBtn.setImageBitmap(bmp);
-            } catch (IOException e) {
-                e.printStackTrace();
+
+
+
+            if (requestCode == REQUEST_CAMERA_CODE &&
+                    resultCode == RESULT_OK) {
+                Log.e(TAG, "onActivityResult: " + profilePath);
+                profileFile = new File(profilePath);
+                Uri fileUri = Uri.fromFile(profileFile);
+                try {
+                    Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
+                    profileImagView.setImageBitmap(bmp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // addPictureCard.setVisibility(View.GONE);
+            } else if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
+                String[] projection = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getActivity().getContentResolver().query(data.getData(), projection, null, null, null);
+                cursor.moveToFirst();
+                int index = cursor.getColumnIndex(projection[0]);
+                profilePath = cursor.getString(index);
+                Log.e(TAG, "onActivityResultgalary: " + profilePath);
+                profileFile = new File(profilePath);
+                Uri fileUri = Uri.fromFile(profileFile);
+                try {
+                    Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
+                    profileImagView.setImageBitmap(bmp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //addPictureCard.setVisibility(View.GONE);
+
             }
 
-            // addPictureCard.setVisibility(View.GONE);
-        } else if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
-            String[] projection = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getActivity().getContentResolver().query(data.getData(), projection, null, null, null);
-            cursor.moveToFirst();
-            int index = cursor.getColumnIndex(projection[0]);
-            currentPhotoPath = cursor.getString(index);
-            Log.e(TAG, "onActivityResultgalary: " + currentPhotoPath);
-            file = new File(currentPhotoPath);
-            Uri fileUri = Uri.fromFile(file);
-            try {
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
-                picImageBtn.setImageBitmap(bmp);
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            if (requestCode == REQUEST_CAMERA_CODE_COVER &&
+                    resultCode == RESULT_OK) {
+                Log.e(TAG, "onActivityResult: " + coverPath);
+                coverFile = new File(coverPath);
+                Uri fileUri = Uri.fromFile(coverFile);
+                try {
+                    Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
+                    coverImageView.setImageBitmap(bmp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // addPictureCard.setVisibility(View.GONE);
+            } else if (requestCode == GALLERY_REQUEST_CODE_COVER && resultCode == RESULT_OK) {
+                String[] projection = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getActivity().getContentResolver().query(data.getData(), projection, null, null, null);
+                cursor.moveToFirst();
+                int index = cursor.getColumnIndex(projection[0]);
+                coverPath = cursor.getString(index);
+                Log.e(TAG, "onActivityResultgalary: " + coverPath);
+                coverFile = new File(coverPath);
+                Uri fileUri = Uri.fromFile(coverFile);
+                try {
+                    Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
+                    coverImageView.setImageBitmap(bmp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //addPictureCard.setVisibility(View.GONE);
+
             }
 
-            //addPictureCard.setVisibility(View.GONE);
 
-        }
+
     }
 }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -24,6 +25,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class AuthViewModel extends ViewModel {
     private AuthRepos authRepos;
@@ -78,13 +81,14 @@ public class AuthViewModel extends ViewModel {
         stateLiveData.postValue(AuthenticationState.UNAUTHENTICATED);
     }
 
-    public void setUserInfo(Context context, File file, final UserInformationPojo authPojo) {
+    public void setUserInfo(Context context, File profile,File coverFile, final UserInformationPojo authPojo) {
         final ProgressDialog pd = new ProgressDialog(context);
         pd.setMessage("Wait a moment...");
         pd.show();
 
+
         StorageReference rootRef = FirebaseStorage.getInstance().getReference();
-        Uri fileUri = Uri.fromFile(file);
+        Uri fileUri = Uri.fromFile(profile);
         final StorageReference imageRef = rootRef.child("ChatImages/" + fileUri.getLastPathSegment());
 
         ///For image Compress
@@ -103,7 +107,6 @@ public class AuthViewModel extends ViewModel {
 
 
         //For get URI Link of Image
-
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -122,14 +125,70 @@ public class AuthViewModel extends ViewModel {
                    // Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
                     pd.dismiss();
                     Uri downloadUri = task.getResult();
-                    authPojo.setImage(downloadUri.toString());
-                    authRepos.addAuthUserInfo(authPojo);
+                     authPojo.setprofileImage(downloadUri.toString());
+                     //Now store Cover Image
+                     getCoverFileURL(context,coverFile, authPojo);
+
                 } else {
                     // Handle failures
                     // ...
                 }
             }
         });
+
+    }
+
+    private void getCoverFileURL(Context context,File coverFile, UserInformationPojo authPojo) {
+        final ProgressDialog pd = new ProgressDialog(context);
+        pd.setMessage("Wait a moment...");
+        pd.show();
+
+        StorageReference rootRef = FirebaseStorage.getInstance().getReference();
+        Uri fileUri = Uri.fromFile(coverFile);
+        final StorageReference imageRef = rootRef.child("ChatImages/" + fileUri.getLastPathSegment());
+        Bitmap bmp = null;
+        try {
+            bmp = MediaStore.Images.Media.getBitmap(context.getContentResolver(),fileUri);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = imageRef.putBytes(data);
+
+
+        //For get URI Link of Image
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+
+                return imageRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    // Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
+                    pd.dismiss();
+                    Uri downloadUri = task.getResult();
+                    authPojo.setCoverImage(downloadUri.toString()); ;
+                    authRepos.addAuthUserInfo(authPojo);
+
+                } else {
+                    // Handle failures
+                    // ...
+                }
+            }
+        });
+
 
     }
 }

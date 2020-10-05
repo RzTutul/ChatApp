@@ -5,49 +5,29 @@ public class UserInformationPojo {
     String name;
     String email;
     String phone;
-    String about;
+    String hobby;
     String country;
-    String image;
+    String profileImage;
+    String coverImage;
     String status;
+    String time;
     boolean isSelected = false;
 
     public UserInformationPojo() {
     }
 
-    public UserInformationPojo(String u_ID, String name, String email, String phone, String about, String country, String image, String status) {
 
+    public UserInformationPojo(String u_ID, String name, String email, String phone, String hobby, String country, String profileImage, String coverImage, String status, String time) {
         this.u_ID = u_ID;
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.about = about;
+        this.hobby = hobby;
         this.country = country;
-        this.image = image;
+        this.profileImage = profileImage;
+        this.coverImage = coverImage;
         this.status = status;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+        this.time = time;
     }
 
     public String getU_ID() {
@@ -82,19 +62,59 @@ public class UserInformationPojo {
         this.phone = phone;
     }
 
-    public String getAbout() {
-        return about;
+    public String gethobby() {
+        return hobby;
     }
 
-    public void setAbout(String about) {
-        this.about = about;
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
     }
 
-    public String getImage() {
-        return image;
+    public String getCountry() {
+        return country;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getprofileImage() {
+        return profileImage;
+    }
+
+    public void setprofileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

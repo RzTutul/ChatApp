@@ -45,16 +45,16 @@ public class GrpParticipantAdaper extends RecyclerView.Adapter<GrpParticipantAda
             holder.adminStatus.setVisibility(View.VISIBLE);
             if ((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(list.get(position).getU_ID())) {
                 holder.nameTV.setText("You");
-                holder.aboutTV.setText(list.get(position).getAbout());
+                holder.StatusTV.setText(list.get(position).getStatus());
                 Glide.with(context)
-                        .load(list.get(position).getImage())
+                        .load(list.get(position).getprofileImage())
                         .placeholder(R.drawable.ic_perm_)
                         .into(holder.imageView);
             } else {
                 holder.nameTV.setText(list.get(position).getName());
-                holder.aboutTV.setText(list.get(position).getAbout());
+                holder.StatusTV.setText(list.get(position).getStatus());
                 Glide.with(context)
-                        .load(list.get(position).getImage())
+                        .load(list.get(position).getprofileImage())
                         .placeholder(R.drawable.ic_perm_)
                         .into(holder.imageView);
             }
@@ -62,9 +62,9 @@ public class GrpParticipantAdaper extends RecyclerView.Adapter<GrpParticipantAda
         } else {
             holder.adminStatus.setVisibility(View.GONE);
             holder.nameTV.setText(list.get(position).getName());
-            holder.aboutTV.setText(list.get(position).getAbout());
+            holder.StatusTV.setText(list.get(position).getStatus());
             Glide.with(context)
-                    .load(list.get(position).getImage())
+                    .load(list.get(position).getprofileImage())
                     .placeholder(R.drawable.ic_perm_)
                     .into(holder.imageView);
         }
@@ -78,7 +78,7 @@ public class GrpParticipantAdaper extends RecyclerView.Adapter<GrpParticipantAda
 
                 } else {
                     SendMessageFragment.reciverID = list.get(position).getU_ID();
-                    SendMessageFragment.reciverImage = list.get(position).getImage();
+                    SendMessageFragment.reciverImage = list.get(position).getprofileImage();
                     SendMessageFragment.reciverName = list.get(position).getName();
                     Navigation.findNavController(holder.itemView).navigate(R.id.sendMessageFragment);
                 }
@@ -97,14 +97,14 @@ public class GrpParticipantAdaper extends RecyclerView.Adapter<GrpParticipantAda
     class ContractViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
-        TextView nameTV, aboutTV, adminStatus;
+        TextView nameTV, StatusTV, adminStatus;
 
         public ContractViewHolder(@NonNull View itemView) {
             super(itemView);
 
             nameTV = itemView.findViewById(R.id.nameTV);
             adminStatus = itemView.findViewById(R.id.adminStatus);
-            aboutTV = itemView.findViewById(R.id.aboutTV);
+            StatusTV = itemView.findViewById(R.id.aboutTV);
             imageView = itemView.findViewById(R.id.profile_image);
         }
     }

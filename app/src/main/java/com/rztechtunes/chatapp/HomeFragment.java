@@ -98,11 +98,11 @@ public class HomeFragment extends Fragment {
             public void onChanged(UserInformationPojo authPojo) {
 
                 Glide.with(getActivity())
-                        .load(authPojo.getImage())
+                        .load(authPojo.getprofileImage())
                         .centerInside()
                         .placeholder(R.drawable.ic_perm_)
                         .into(profile_image);
-                Log.i(TAG, "onChanged: "+authPojo.getImage());
+
             }
         });
 

@@ -44,10 +44,10 @@ public class MyFriendListAdaper extends RecyclerView.Adapter<MyFriendListAdaper.
 
 
             holder.nameTV.setText(list.get(position).getName());
-            holder.aboutTV.setText(list.get(position).getAbout());
+            holder.StatusTV.setText(list.get(position).getStatus());
 
             Glide.with(context)
-                    .load(list.get(position).getImage())
+                    .load(list.get(position).getprofileImage())
                     .placeholder(R.drawable.ic_perm_)
                     .into(holder.imageView);
 
@@ -102,13 +102,13 @@ public class MyFriendListAdaper extends RecyclerView.Adapter<MyFriendListAdaper.
     class ContractViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView;
-        TextView nameTV,aboutTV;
+        TextView nameTV,StatusTV;
 
         public ContractViewHolder(@NonNull View itemView) {
             super(itemView);
 
             nameTV = itemView.findViewById(R.id.nameTV);
-            aboutTV = itemView.findViewById(R.id.aboutTV);
+            StatusTV = itemView.findViewById(R.id.aboutTV);
             imageView = itemView.findViewById(R.id.profile_image);
         }
     }

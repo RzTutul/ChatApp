@@ -38,6 +38,7 @@ public class MessageRespos {
     DatabaseReference reciverChatList;
     MutableLiveData<List<SenderReciverPojo>> frndLD = new MutableLiveData<>();
     MutableLiveData<List<SenderReciverPojo>> msgLD = new MutableLiveData<>();
+    MutableLiveData<List<SenderReciverPojo>> mediaLD = new MutableLiveData<>();
     MutableLiveData<SenderReciverPojo> lastMsgLD = new MutableLiveData<>();
     MutableLiveData<String> blockStatus = new MutableLiveData<>();
     MutableLiveData<List<BlockPojo>> blockListLD = new MutableLiveData<>();
@@ -284,6 +285,40 @@ public class MessageRespos {
 
 
 
+    public LiveData<List<SenderReciverPojo>> getSharedMedia(String frndID) {
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        userID = rootRef.child(firebaseUser.getUid());
+        chatList = userID.child("ChatList");
+
+        chatList.child(frndID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<SenderReciverPojo> contractPojoList = new ArrayList<>();
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    SenderReciverPojo media = data.getValue(SenderReciverPojo.class);
+                    assert media != null;
+                    if (media.getImage() != null)
+                    {
+                        contractPojoList.add(data.getValue(SenderReciverPojo.class));
+                    }
+
+
+
+                }
+                mediaLD.postValue(contractPojoList);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return mediaLD;
+    }
+
+
     public MutableLiveData<SenderReciverPojo> geLastmsg(String reciverID) {
         rootRef = FirebaseDatabase.getInstance().getReference();
         userID = rootRef.child(firebaseUser.getUid());
@@ -471,6 +506,13 @@ public class MessageRespos {
     }
 
 
+    public void deleteRecivingStatus()
+    {
+        userID = rootRef.child(firebaseUser.getUid()).child("Receiving");
+        userID.removeValue();
+    }
+
+
     public void CallCanel(String reciverID) {
         userID = rootRef.child(reciverID).child("Calling");
         userID.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -497,5 +539,7 @@ public class MessageRespos {
         return insertRecivingLD;
 
     }
+
+
 }
 

@@ -85,7 +85,7 @@ public class SendMessageFragment extends Fragment {
     public static String reciverName;
 
     ImageButton sendMsgBtn, imageButn;
-    ImageView callBtn;
+    ImageView callBtn, videoCallBtn;
     EditText msgET;
     RecyclerView msgRV;
     MessageViewModel messageViewModel;
@@ -98,15 +98,14 @@ public class SendMessageFragment extends Fragment {
     private File file;
 
     public static int position = -1;
-
     APIService apiService;
 
     boolean notify = false;
     String reciverOnlineStatus;
     String message;
-  Toolbar toolbar;
+    Toolbar toolbar;
 
-  CallingPojo callingPojo ;
+    CallingPojo callingPojo;
 
 
     public SendMessageFragment() {
@@ -139,6 +138,7 @@ public class SendMessageFragment extends Fragment {
         statusTV = view.findViewById(R.id.statusTV);
         imageButn = view.findViewById(R.id.imageButn);
         callBtn = view.findViewById(R.id.callBtn);
+        videoCallBtn = view.findViewById(R.id.videoCallBtn);
         toolbar = view.findViewById(R.id.toolbar);
 
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -171,17 +171,41 @@ public class SendMessageFragment extends Fragment {
 
         }
 
+        videoCallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //First clear old receiving status
+                messageViewModel.deleteRecivingStatus();
+
+                String rooomName = CurrentauthPojo.getName() + reciverName;
+                //set the room name at uID
+                callingPojo = new CallingPojo(CurrentauthPojo.getU_ID(), rooomName, CurrentauthPojo.getName(), CurrentauthPojo.getprofileImage(), CurrentauthPojo.getStatus(), "Video");
+
+                CurrentauthPojo.setU_ID(rooomName);
+                messageViewModel.CallToFriend(reciverID, callingPojo);
+                VideoCallingFrag.reciverID = reciverID;
+                VideoCallingFrag.name = reciverName;
+                VideoCallingFrag.image = reciverImage;
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.videoCallingFrag);
+            }
+        });
+
         callBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               String rooomName = CurrentauthPojo.getName()+reciverName;
-                //set the room name at uID
-                callingPojo = new CallingPojo(CurrentauthPojo.getU_ID(),rooomName,CurrentauthPojo.getName(),CurrentauthPojo.getImage(),CurrentauthPojo.getStatus());
+                //First clear old receiving status
+                messageViewModel.deleteRecivingStatus();
 
+
+                String rooomName = CurrentauthPojo.getName() + reciverName;
+                //set the room name at uID
+                callingPojo = new CallingPojo(CurrentauthPojo.getU_ID(), rooomName, CurrentauthPojo.getName(), CurrentauthPojo.getprofileImage(), CurrentauthPojo.getStatus(), "Audio");
                 CurrentauthPojo.setU_ID(rooomName);
-                messageViewModel.CallToFriend(reciverID,callingPojo);
+                messageViewModel.CallToFriend(reciverID, callingPojo);
                 VideoCallingFrag.reciverID = reciverID;
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.videoCallingFrag);
+                VideoCallingFrag.name = reciverName;
+                VideoCallingFrag.image = reciverImage;
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.videoCallingFrag);
             }
         });
 
@@ -210,7 +234,7 @@ public class SendMessageFragment extends Fragment {
                     msgET.setError("Write something");
                 } else {
                     notify = true;
-                    SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", message, "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getImage(), HelperUtils.getDateWithTime(), 0);
+                    SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", message, "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getprofileImage(), HelperUtils.getDateWithTime(), 0);
                     messageViewModel.sendMessage(senderReciverPojo).observe(getActivity(), new Observer<String>() {
                         @Override
                         public void onChanged(String s) {
@@ -218,10 +242,8 @@ public class SendMessageFragment extends Fragment {
                             try {
                                 Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
 
-                            }
-                            catch (Exception e)
-                            {
-                                Log.i(TAG, "exception: "+e.getLocalizedMessage());
+                            } catch (Exception e) {
+                                Log.i(TAG, "exception: " + e.getLocalizedMessage());
                             }
 
 
@@ -238,7 +260,7 @@ public class SendMessageFragment extends Fragment {
             public void onChanged(List<UserInformationPojo> userInformationPojos) {
                 for (UserInformationPojo contractPojo : userInformationPojos) {
                     if (reciverID.equals(contractPojo.getU_ID())) {
-                        statusTV.setText(contractPojo.getStatus());
+                        statusTV.setText(contractPojo.getTime());
                         reciverOnlineStatus = contractPojo.getStatus();
                     }
                 }
@@ -313,8 +335,6 @@ public class SendMessageFragment extends Fragment {
             });
 
         }
-
-
 
 
         //set msg is read
@@ -405,7 +425,14 @@ public class SendMessageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (checkStoragePermission()) {
-                    dispatchCameraIntent();
+                    try {
+                        dispatchCameraIntent();
+                    }
+                    catch (Exception e)
+                    {
+                        Log.i(TAG, "ex: "+e.getLocalizedMessage());
+                    }
+
                 }
                 bottomSheetDialog.dismiss();
             }
@@ -461,6 +488,7 @@ public class SendMessageFragment extends Fragment {
 
 
     private void dispatchCameraIntent() {
+
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             File photoFile = null;
@@ -508,7 +536,7 @@ public class SendMessageFragment extends Fragment {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 //  picImageBtn.setImageBitmap(bmp);
-                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", "[] Image", "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getImage(), HelperUtils.getDateWithTime(), 0);
+                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", "[] Image", "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getprofileImage(), HelperUtils.getDateWithTime(), 0);
                 messageViewModel.sendImage(senderReciverPojo, file, getActivity());
                 notify = true;
                 message = "send image";
@@ -529,7 +557,7 @@ public class SendMessageFragment extends Fragment {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 // picImageBtn.setImageBitmap(bmp);
-                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", "[] Image", "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getImage(), HelperUtils.getDateWithTime(), 0);
+                SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", "[] Image", "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getprofileImage(), HelperUtils.getDateWithTime(), 0);
                 messageViewModel.sendImage(senderReciverPojo, file, getActivity());
                 notify = true;
                 message = "send image";

@@ -97,16 +97,16 @@ public class UserProfileFrag extends Fragment {
             @Override
             public void onChanged(UserInformationPojo authPojo) {
                 userName = authPojo.getName();
-                userImage = authPojo.getImage();
+                userImage = authPojo.getprofileImage();
                 Glide.with(getActivity())
-                        .load(authPojo.getImage())
+                        .load(authPojo.getprofileImage())
                         .centerCrop()
                         .placeholder(R.drawable.ic_perm_)
                         .into(profileImage);
                 nameTV.setText(authPojo.getName());
                 emailTV.setText(authPojo.getEmail());
                 phoneTV.setText(authPojo.getPhone());
-                aboutTV.setText(authPojo.getAbout());
+                aboutTV.setText(authPojo.getStatus());
 
                 String county = authPojo.getCountry();
                 String [] splitCounty = county.split("-"); //split county code & name

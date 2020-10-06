@@ -146,7 +146,7 @@ public class AuthRepos {
     public void setUserSatus(String dateWithTime) {
         rootRef = FirebaseDatabase.getInstance().getReference();
         alluserRef = rootRef.child("AlluserInfo");
-        alluserRef.child(firebaseUser.getUid()).child("status").setValue(dateWithTime).addOnSuccessListener(new OnSuccessListener<Void>() {
+        alluserRef.child(firebaseUser.getUid()).child("time").setValue(dateWithTime).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
 

@@ -89,15 +89,15 @@ public class HomeFragment extends Fragment {
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.profileFragment);
+                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.profileFragment);
             }
         });
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
+        authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
             @Override
             public void onChanged(UserInformationPojo authPojo) {
 
-                Glide.with(getActivity())
+                Glide.with(requireActivity())
                         .load(authPojo.getprofileImage())
                         .centerInside()
                         .placeholder(R.drawable.ic_perm_)
@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
                 break;
             case R.id.friendFragment:
                 authViewModel.getLogoutUser();
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.loginFragment);
+                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.loginFragment);
                 break;
 
         }

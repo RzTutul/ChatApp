@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,12 +49,12 @@ import static android.content.ContentValues.TAG;
 
 
 public class UserProfileFrag extends Fragment {
-    RelativeLayout msgRL,sendReqRL;
+    RelativeLayout msgRL,sendReqRL,unFriendRL;
     public  static String userID;
     String userName;
     String userImage;
     TextView nameTV,emailTV,phoneTV,aboutTV,countyTV;
-    ImageView profileImage,fragImage;
+    ImageView profileImage,fragImage,coverImageView;
     AuthViewModel authViewModel;
     FirendViewModel firendViewModel;
     UserInformationPojo myCurrentInfo;
@@ -82,7 +83,9 @@ public class UserProfileFrag extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         msgRL = view.findViewById(R.id.messageRL);
         sendReqRL = view.findViewById(R.id.sendReqRL);
+        unFriendRL = view.findViewById(R.id.unfriendRL);
         profileImage = view.findViewById(R.id.profile_image);
+        coverImageView = view.findViewById(R.id.coverImageView);
         fragImage = view.findViewById(R.id.fragImage);
         nameTV = view.findViewById(R.id.nameTV);
         emailTV = view.findViewById(R.id.gmailTV);
@@ -93,16 +96,23 @@ public class UserProfileFrag extends Fragment {
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
 
-        authViewModel.getFriendInformaiton(userID).observe(getActivity(), new Observer<UserInformationPojo>() {
+        authViewModel.getFriendInformaiton(userID).observe(requireActivity(), new Observer<UserInformationPojo>() {
             @Override
             public void onChanged(UserInformationPojo authPojo) {
                 userName = authPojo.getName();
                 userImage = authPojo.getprofileImage();
-                Glide.with(getActivity())
+                Glide.with(requireActivity())
                         .load(authPojo.getprofileImage())
                         .centerCrop()
                         .placeholder(R.drawable.ic_perm_)
                         .into(profileImage);
+                  Glide.with(requireActivity())
+                        .load(authPojo.getCoverImage())
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_perm_)
+                        .into(coverImageView);
+
+
                 nameTV.setText(authPojo.getName());
                 emailTV.setText(authPojo.getEmail());
                 phoneTV.setText(authPojo.getPhone());
@@ -115,6 +125,30 @@ public class UserProfileFrag extends Fragment {
             }
         });
 
+        firendViewModel.getMyFirendList().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
+            @Override
+            public void onChanged(List<UserInformationPojo> userInformationPojos) {
+                for (UserInformationPojo informationPojo: userInformationPojos)
+                {
+                    if ((informationPojo.getU_ID()).equals(userID))
+                    {
+                        unFriendRL.setVisibility(View.VISIBLE);
+                        sendReqRL.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+
+
+        unFriendRL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firendViewModel.unFirend(userID);
+                Toast.makeText(requireActivity(), "Unfriend!", Toast.LENGTH_SHORT).show();
+                unFriendRL.setVisibility(View.GONE);
+                sendReqRL.setVisibility(View.VISIBLE);
+            }
+        });
 
 
         msgRL.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +157,7 @@ public class UserProfileFrag extends Fragment {
                 SendMessageFragment.reciverID = userID;
                 SendMessageFragment.reciverImage = userImage;
                 SendMessageFragment.reciverName = userName;
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.sendMessageFragment);
+                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.sendMessageFragment);
             }
         });
 
@@ -134,12 +168,14 @@ public class UserProfileFrag extends Fragment {
                 {
                     firendViewModel.sendFriendRequest(userID,myCurrentInfo);
                     sendNotifiaction(userID,myCurrentInfo.getName(),"Send Friend Request");
+                    unFriendRL.setVisibility(View.VISIBLE);
+                    sendReqRL.setVisibility(View.GONE);
                 }
             }
         });
 
 
-        firendViewModel.getUserStories(userID).observe(getActivity(), new Observer<List<StoriesPojo>>() {
+        firendViewModel.getUserStories(userID).observe(requireActivity(), new Observer<List<StoriesPojo>>() {
             @Override
             public void onChanged(List<StoriesPojo> storiesPojos) {
                 MyStoriesAdapter myStoriesAdapter = new MyStoriesAdapter(storiesPojos,getContext());
@@ -151,7 +187,7 @@ public class UserProfileFrag extends Fragment {
         });
 
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
+        authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
             @Override
             public void onChanged(UserInformationPojo authPojo) {
                myCurrentInfo = authPojo;

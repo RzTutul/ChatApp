@@ -29,6 +29,7 @@ public class GroupRepos {
     FirebaseUser firebaseUser;
     DatabaseReference rootRef;
     DatabaseReference groupRef;
+    DatabaseReference userRef;
 
     MutableLiveData<String> createGrpLD = new MutableLiveData<>();
     MutableLiveData<List<GroupPojo>> myGrpLD = new MutableLiveData<>();
@@ -211,5 +212,29 @@ public class GroupRepos {
         });
 
         return GrpInfoLD;
+    }
+
+    public void addMorePaticipant(GroupPojo groupPojo, List<UserInformationPojo> selectedContractList) {
+        groupRef = rootRef.child("Group").child(groupPojo.getGroupID()).child("Users");
+
+        for (UserInformationPojo userInformationPojo: selectedContractList)
+        {
+            groupRef.child(userInformationPojo.getU_ID()).setValue(userInformationPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+
+                    userRef = rootRef.child(userInformationPojo.getU_ID()).child("Group");
+                    userRef.child(groupPojo.getGroupID()).setValue(groupPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                        }
+                    });
+
+                }
+            });
+        }
+
+
     }
 }

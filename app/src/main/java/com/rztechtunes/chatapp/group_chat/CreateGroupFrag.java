@@ -114,8 +114,6 @@ public class CreateGroupFrag extends Fragment {
 
                 GroupPojo groupPojo = new GroupPojo("","",grpName,grpDesrption,HelperUtils.getDateWithTime(), FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-
-                Log.i(TAG, "onClick: "+selectedContractList.size());
                 if (file != null)
                 {
                     if (grpName.equals(""))

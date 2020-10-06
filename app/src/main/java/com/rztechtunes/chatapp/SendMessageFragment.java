@@ -186,7 +186,7 @@ public class SendMessageFragment extends Fragment {
                 VideoCallingFrag.reciverID = reciverID;
                 VideoCallingFrag.name = reciverName;
                 VideoCallingFrag.image = reciverImage;
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.videoCallingFrag);
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.videoCallingFrag);
             }
         });
 
@@ -205,20 +205,20 @@ public class SendMessageFragment extends Fragment {
                 VideoCallingFrag.reciverID = reciverID;
                 VideoCallingFrag.name = reciverName;
                 VideoCallingFrag.image = reciverImage;
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.videoCallingFrag);
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.videoCallingFrag);
             }
         });
 
 
         nameTV.setText(reciverName);
         //Picasso.get().load(reciverImage).into(prfileImage);
-        Glide.with(getActivity())
+        Glide.with(requireActivity())
                 .load(reciverImage)
                 .placeholder(R.drawable.ic_perm_)
                 .into(prfileImage);
 
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
+        authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
             @Override
             public void onChanged(UserInformationPojo authPojo) {
                 CurrentauthPojo = authPojo;
@@ -235,7 +235,7 @@ public class SendMessageFragment extends Fragment {
                 } else {
                     notify = true;
                     SenderReciverPojo senderReciverPojo = new SenderReciverPojo("", message, "", reciverID, reciverName, reciverImage, CurrentauthPojo.getName(), CurrentauthPojo.getprofileImage(), HelperUtils.getDateWithTime(), 0);
-                    messageViewModel.sendMessage(senderReciverPojo).observe(getActivity(), new Observer<String>() {
+                    messageViewModel.sendMessage(senderReciverPojo).observe(requireActivity(), new Observer<String>() {
                         @Override
                         public void onChanged(String s) {
 
@@ -255,13 +255,13 @@ public class SendMessageFragment extends Fragment {
             }
         });
 
-        authViewModel.getAllUser().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+        authViewModel.getAllUser().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> userInformationPojos) {
                 for (UserInformationPojo contractPojo : userInformationPojos) {
                     if (reciverID.equals(contractPojo.getU_ID())) {
                         statusTV.setText(contractPojo.getTime());
-                        reciverOnlineStatus = contractPojo.getStatus();
+                        reciverOnlineStatus = contractPojo.getTime();
                     }
                 }
 
@@ -277,7 +277,7 @@ public class SendMessageFragment extends Fragment {
 
 
         if (position == -1) {
-            messageViewModel.getAllMessage(reciverID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
+            messageViewModel.getAllMessage(reciverID).observe(requireActivity(), new Observer<List<SenderReciverPojo>>() {
                 @Override
                 public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
                     MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos, getActivity());
@@ -306,7 +306,7 @@ public class SendMessageFragment extends Fragment {
             });
 
         } else {
-            messageViewModel.getAllMessage(reciverID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
+            messageViewModel.getAllMessage(reciverID).observe(requireActivity(), new Observer<List<SenderReciverPojo>>() {
                 @Override
                 public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
 
@@ -401,7 +401,7 @@ public class SendMessageFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        authViewModel.stateLiveData.observe(this, new Observer<AuthViewModel.AuthenticationState>() {
+        authViewModel.stateLiveData.observe(requireActivity(), new Observer<AuthViewModel.AuthenticationState>() {
             @Override
             public void onChanged(AuthViewModel.AuthenticationState authenticationState) {
                 switch (authenticationState) {
@@ -419,7 +419,7 @@ public class SendMessageFragment extends Fragment {
     private void pictureSelected() {
 
 
-        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BottomSheetDialogTheme);
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity(), R.style.BottomSheetDialogTheme);
         View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, (LinearLayout) getActivity().findViewById(R.id.bottomSheetContainer));
         bottomSheetView.findViewById(R.id.cameraLL).setOnClickListener(new View.OnClickListener() {
             @Override

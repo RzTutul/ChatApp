@@ -1,5 +1,6 @@
 package com.rztechtunes.chatapp;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -49,6 +50,7 @@ public class FriendProfileFrag extends Fragment {
     AuthViewModel authViewModel;
     MessageViewModel messageViewModel;
     FirendViewModel firendViewModel;
+    Context mcontext;
     public FriendProfileFrag() {
         // Required empty public constructor
     }
@@ -87,7 +89,7 @@ public class FriendProfileFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.sendMessageFragment);
+                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.sendMessageFragment);
             }
         });
 
@@ -95,7 +97,7 @@ public class FriendProfileFrag extends Fragment {
         deleteCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                new SweetAlertDialog(requireActivity(), SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Are you sure?")
                         .setContentText("Won't be able to recover message!")
                         .setConfirmText("Yes,delete it!")
@@ -103,7 +105,7 @@ public class FriendProfileFrag extends Fragment {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
                                 messageViewModel.deleteMessage(frndID);
-                                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
                                 sDialog
                                         .setTitleText("Deleted!")
                                         .setContentText("Message has been deleted!")
@@ -131,7 +133,7 @@ public class FriendProfileFrag extends Fragment {
                                 BlockPojo blockPojo = new BlockPojo(frndID,"name");
                                 messageViewModel.blockFriend(blockPojo);
 
-                                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
                                 sDialog
                                         .setTitleText("Blocked!")
                                         .setContentText("Message has been Blocked!")
@@ -145,7 +147,7 @@ public class FriendProfileFrag extends Fragment {
             }
         });
 
-        messageViewModel.getBlockList().observe(getActivity(), new Observer<List<BlockPojo>>() {
+        messageViewModel.getBlockList().observe(requireActivity(), new Observer<List<BlockPojo>>() {
             @Override
             public void onChanged(List<BlockPojo> blockPojos) {
                 for (BlockPojo blockPojo: blockPojos)
@@ -174,15 +176,23 @@ public class FriendProfileFrag extends Fragment {
             @Override
             public void onChanged(UserInformationPojo authPojo) {
 
-                friendNameTV.setTitle(authPojo.getName());
-                gmailTV.setText(authPojo.getEmail());
-                phoneTV.setText(authPojo.getPhone());
-                StatusTV.setText(authPojo.getStatus());
+                try {
 
-                Glide.with(getActivity())
-                        .load(authPojo.getprofileImage())
-                        .placeholder(R.drawable.ic_image_black_24dp)
-                        .into(frndImageView);
+                    friendNameTV.setTitle(authPojo.getName());
+                    gmailTV.setText(authPojo.getEmail());
+                    phoneTV.setText(authPojo.getPhone());
+                    StatusTV.setText(authPojo.getStatus());
+
+                    Glide.with(requireActivity())
+                            .load(authPojo.getprofileImage())
+                            .placeholder(R.drawable.ic_image_black_24dp)
+                            .into(frndImageView);
+                }
+                catch (Exception e)
+                {
+
+                }
+
             }
         });
 
@@ -200,4 +210,6 @@ public class FriendProfileFrag extends Fragment {
 
 
     }
+
+
 }

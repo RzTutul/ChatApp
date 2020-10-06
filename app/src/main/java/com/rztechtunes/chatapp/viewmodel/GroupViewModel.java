@@ -178,4 +178,9 @@ public class GroupViewModel extends ViewModel {
 
         return groupRepos.getGroupInfo(grpID);
     }
+
+    public void addMorePaticipant(GroupPojo groupPojo,List<UserInformationPojo> selectedContractList) {
+
+        groupRepos.addMorePaticipant(groupPojo,selectedContractList);
+    }
 }

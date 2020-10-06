@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.adapter.Add_GrpMore_ParticipantAdapter;
+import com.rztechtunes.chatapp.pojo.GroupPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
@@ -40,6 +42,8 @@ public class AddMoreParticipentFrag extends Fragment {
     AuthViewModel authViewModel;
     GroupViewModel groupViewModel;
     List<UserInformationPojo> contractPojoList = new ArrayList<>();
+    List<UserInformationPojo> selectedContractList = new ArrayList<>();
+    GroupPojo CgrpPojo;
 
 
     public AddMoreParticipentFrag() {
@@ -66,13 +70,34 @@ public class AddMoreParticipentFrag extends Fragment {
         addMorePersonBtn = view.findViewById(R.id.addMorePersonBtn);
 
 
+        groupViewModel.getGroupInfo(grpID).observe(requireActivity(), new Observer<GroupPojo>() {
+            @Override
+            public void onChanged(GroupPojo groupPojo) {
+                CgrpPojo= groupPojo;
+            }
+        });
+
+        addMorePersonBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CgrpPojo!= null)
+                {
+                    selectedContractList =  add_grpMore_participantAdaper.getSelectedContract();
+                    groupViewModel.addMorePaticipant( CgrpPojo,selectedContractList);
+                    Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                }
 
 
-        firendViewModel.getMyFirendList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+            }
+        });
+
+
+
+        firendViewModel.getMyFirendList().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> friendRequestPojos) {
 
-                groupViewModel.getGroupUser(grpID).observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+                groupViewModel.getGroupUser(grpID).observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
                     @Override
                     public void onChanged(List<UserInformationPojo> groupUserPojos) {
 

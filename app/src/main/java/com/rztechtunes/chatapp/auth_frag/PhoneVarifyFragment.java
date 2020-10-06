@@ -81,7 +81,6 @@ public class PhoneVarifyFragment extends Fragment {
 
         sendVerificationCode(phoneNumber);
 
-        Log.i(TAG, "onViewCreated: "+phoneNumber);
 
         try {
             new CountDownTimer(60000, 1000) {
@@ -199,7 +198,7 @@ public class PhoneVarifyFragment extends Fragment {
 
                     Toast.makeText(getContext(), "Successful Verified! ", Toast.LENGTH_SHORT).show();
 
-                    Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.signupFragment);
+                    Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.signupFragment);
                 }
                 else
                 {

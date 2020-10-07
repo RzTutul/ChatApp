@@ -237,4 +237,17 @@ public class GroupRepos {
 
 
     }
+
+    public void kickOutFromGroup(String u_id, String groupID) {
+
+        groupRef = rootRef.child("Group").child(groupID).child("Users");
+        groupRef.child(u_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                userRef = rootRef.child(u_id).child("Group").child(groupID).child("groupID");
+                userRef.setValue("Removed");
+            }
+        });
+
+    }
 }

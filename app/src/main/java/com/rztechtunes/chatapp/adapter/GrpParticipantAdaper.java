@@ -1,11 +1,14 @@
 package com.rztechtunes.chatapp.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
@@ -16,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
+import com.rztechtunes.chatapp.viewmodel.GroupViewModel;
 
 import java.util.List;
 
@@ -23,11 +27,14 @@ public class GrpParticipantAdaper extends RecyclerView.Adapter<GrpParticipantAda
     List<UserInformationPojo> list;
     Context context;
     String adminID;
+    String groupID;
+    GroupViewModel groupViewModel = new GroupViewModel();
 
-    public GrpParticipantAdaper(List<UserInformationPojo> list, Context context, String adminID) {
+    public GrpParticipantAdaper(List<UserInformationPojo> list, Context context, String adminID,String groupID) {
         this.list = list;
         this.context = context;
         this.adminID = adminID;
+        this.groupID = groupID;
     }
 
     @NonNull
@@ -84,6 +91,44 @@ public class GrpParticipantAdaper extends RecyclerView.Adapter<GrpParticipantAda
                 }
 
 
+            }
+        });
+
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if ((FirebaseAuth.getInstance().getUid()).equals(adminID))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(list.get(position).getName());
+                    builder.setIcon(R.drawable.ic_baseline_person_add_24);
+                    CharSequence [] dialogIte={"kick out","Make admin","Message"};
+
+                    builder.setItems(dialogIte, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (i)
+                            {
+                                case 0:
+                                    groupViewModel.kickOutFromGroup(list.get(position).getU_ID(),groupID);
+                                    notifyDataSetChanged();
+                                    break;
+
+                                case 1:
+
+                                    break;
+                                case 2:
+
+
+                            }
+
+                        }
+                    });
+                    builder.create().show();
+                }
+
+                return false;
             }
         });
 

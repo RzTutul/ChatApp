@@ -1,9 +1,12 @@
 package com.rztechtunes.chatapp;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -15,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +39,7 @@ import static android.content.ContentValues.TAG;
 public class AddMoreParticipentFrag extends Fragment {
 
     RecyclerView addMoreParticipentRV;
+    CardView noticeCardview;
     FloatingActionButton addMorePersonBtn;
     public static String grpID;
     Add_GrpMore_ParticipantAdapter add_grpMore_participantAdaper;
@@ -44,7 +49,9 @@ public class AddMoreParticipentFrag extends Fragment {
     List<UserInformationPojo> contractPojoList = new ArrayList<>();
     List<UserInformationPojo> selectedContractList = new ArrayList<>();
     GroupPojo CgrpPojo;
+    int index =0;
 
+    Toolbar toolbar;
 
     public AddMoreParticipentFrag() {
         // Required empty public constructor
@@ -66,8 +73,19 @@ public class AddMoreParticipentFrag extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
         addMoreParticipentRV = view.findViewById(R.id.addMoreParticipentRV);
+        noticeCardview = view.findViewById(R.id.noticeCardview);
         addMorePersonBtn = view.findViewById(R.id.addMorePersonBtn);
+        toolbar = view.findViewById(R.id.toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).popBackStack();
+            }
+        });
 
 
         groupViewModel.getGroupInfo(grpID).observe(requireActivity(), new Observer<GroupPojo>() {
@@ -95,38 +113,52 @@ public class AddMoreParticipentFrag extends Fragment {
 
         firendViewModel.getMyFirendList().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
-            public void onChanged(List<UserInformationPojo> friendRequestPojos) {
-
+            public void onChanged(List<UserInformationPojo> friendList) {
+                contractPojoList = friendList;
+                index =0;
                 groupViewModel.getGroupUser(grpID).observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
                     @Override
                     public void onChanged(List<UserInformationPojo> groupUserPojos) {
-
-                        for (UserInformationPojo user: friendRequestPojos)
-                        {
-                            for (UserInformationPojo grpUser: groupUserPojos)
+                        try {
+                            for (int i =0; i<friendList.size();i++)
                             {
-
-                                if ((grpUser.getU_ID()).equalsIgnoreCase(user.getU_ID()) || (grpUser.getU_ID()).equalsIgnoreCase(FirebaseAuth.getInstance().getUid())  )
+                                UserInformationPojo user = friendList.get(i);
+                                for (int j =0; j<groupUserPojos.size();j++)
                                 {
-                                    Log.i(TAG, "name23: "+user.getName());
-                                }
-                                else
-                                {
-                                    contractPojoList.add(user);
+                                    UserInformationPojo grpUser = groupUserPojos.get(j);
+
+                                    if ((user.getU_ID()).equals(grpUser.getU_ID()))
+                                    {
+                                        contractPojoList.remove(index);
+
+                                    }
 
                                 }
-
+                                index++;
 
                             }
-
+                        }
+                        catch (Exception e)
+                        {
 
                         }
 
-                        add_grpMore_participantAdaper = new Add_GrpMore_ParticipantAdapter(contractPojoList, getActivity());
-                        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                        addMoreParticipentRV.setLayoutManager(llm);
-                        addMoreParticipentRV.setAdapter(add_grpMore_participantAdaper);
 
+
+                        if (contractPojoList.size() == 0)
+                        {
+                            noticeCardview.setVisibility(View.VISIBLE);
+                            addMorePersonBtn.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            addMorePersonBtn.setVisibility(View.VISIBLE);
+                            noticeCardview.setVisibility(View.GONE);
+                            add_grpMore_participantAdaper = new Add_GrpMore_ParticipantAdapter(contractPojoList, getActivity());
+                            LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                            addMoreParticipentRV.setLayoutManager(llm);
+                            addMoreParticipentRV.setAdapter(add_grpMore_participantAdaper);
+                        }
 
                     }
                 });

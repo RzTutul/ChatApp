@@ -1,6 +1,8 @@
 package com.rztechtunes.chatapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -42,15 +45,16 @@ public class FriendProfileFrag extends Fragment {
 
     CollapsingToolbarLayout friendNameTV;
     public  static String frndID;
-    CardView deleteCard,blockCard,unBlockCard;
+    CardView deleteCard,blockCard,unBlockCard,sendMailCard,callCard;
 
-    TextView phoneTV,gmailTV,StatusTV;
+    TextView phoneTV,gmailTV,StatusTV,noticeTV;
     RecyclerView mediaRV;
     ImageView frndImageView;
     AuthViewModel authViewModel;
     MessageViewModel messageViewModel;
     FirendViewModel firendViewModel;
     Context mcontext;
+    String gmail,phone;
     public FriendProfileFrag() {
         // Required empty public constructor
     }
@@ -76,10 +80,13 @@ public class FriendProfileFrag extends Fragment {
         gmailTV = view.findViewById(R.id.gmailTV);
         mediaRV = view.findViewById(R.id.mediaRV);
         StatusTV = view.findViewById(R.id.aboutTV);
+        noticeTV = view.findViewById(R.id.noticeTV);
         frndImageView = view.findViewById(R.id.frndImageView);
         deleteCard = view.findViewById(R.id.deletCard);
         blockCard = view.findViewById(R.id.blockCard);
         unBlockCard = view.findViewById(R.id.unBlockCard);
+        sendMailCard = view.findViewById(R.id.sendmailCard);
+        callCard = view.findViewById(R.id.callCard);
         friendNameTV.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         friendNameTV.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
 
@@ -90,6 +97,26 @@ public class FriendProfileFrag extends Fragment {
             public void onClick(View v) {
                 // back button pressed
                 Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.sendMessageFragment);
+            }
+        });
+
+        sendMailCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                composeEmail(gmail,"");
+            }
+        });
+
+        callCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri phoneUri = Uri.parse("tel:"+phone);
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL, phoneUri);
+                if (dialIntent.resolveActivity(getActivity().getPackageManager()) != null){
+                    startActivity(dialIntent);
+                }else{
+                    Toast.makeText(getContext(), "no component found", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -172,15 +199,18 @@ public class FriendProfileFrag extends Fragment {
         });
 
 
-        authViewModel.getFriendInformaiton(frndID).observe(getActivity(), new Observer<UserInformationPojo>() {
+        authViewModel.getFriendInformaiton(frndID).observe(requireActivity(), new Observer<UserInformationPojo>() {
             @Override
             public void onChanged(UserInformationPojo authPojo) {
 
                 try {
 
+                    gmail  = authPojo.getEmail();
+                    phone = authPojo.getPhone();
+
                     friendNameTV.setTitle(authPojo.getName());
-                    gmailTV.setText(authPojo.getEmail());
-                    phoneTV.setText(authPojo.getPhone());
+                    gmailTV.setText(gmail);
+                    phoneTV.setText(phone);
                     StatusTV.setText(authPojo.getStatus());
 
                     Glide.with(requireActivity())
@@ -199,16 +229,39 @@ public class FriendProfileFrag extends Fragment {
        messageViewModel.getAllSharedMedia(frndID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
            @Override
            public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
-               Collections.reverse(senderReciverPojos);
-               FriendMediaImageAdaper friendMediaImageAdaper = new FriendMediaImageAdaper(senderReciverPojos, getContext());
-               LinearLayoutManager llm = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-               mediaRV.setLayoutManager(llm);
-               mediaRV.setAdapter(friendMediaImageAdaper);
+
+               if (senderReciverPojos.size()==0)
+               {
+                   noticeTV.setVisibility(View.VISIBLE);
+               }
+               else
+               {
+                   noticeTV.setVisibility(View.GONE);
+                   Collections.reverse(senderReciverPojos);
+                   FriendMediaImageAdaper friendMediaImageAdaper = new FriendMediaImageAdaper(senderReciverPojos, getContext());
+                   LinearLayoutManager llm = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+                   mediaRV.setLayoutManager(llm);
+                   mediaRV.setAdapter(friendMediaImageAdaper);
+               }
+
            }
        });
 
 
 
+    }
+
+    public void composeEmail(String addresses, String subject) {
+        try{
+            Intent intent = new Intent (Intent.ACTION_VIEW , Uri.parse("mailto:" + addresses));
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            intent.putExtra(Intent.EXTRA_TEXT, "");
+            getActivity().startActivity(intent);
+        }
+        catch (Exception e)
+        {
+
+        }
     }
 
 

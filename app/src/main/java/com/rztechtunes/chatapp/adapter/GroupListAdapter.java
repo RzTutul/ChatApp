@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
@@ -39,7 +40,18 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Cont
     public void onBindViewHolder(@NonNull final ContractViewHolder holder, final int position) {
 
         holder.nameTV.setText(list.get(position).getName());
-        holder.aboutTV.setText(list.get(position).getDescription());
+
+        if ((list.get(position).getGroupID()).equals("Removed"))
+        {
+            holder.aboutTV.setText("You are removed from this group!");
+
+        }
+        else
+        {
+            holder.aboutTV.setText(list.get(position).getDescription());
+
+        }
+
 
         Glide.with(context)
                 .load(list.get(position).getImages())
@@ -51,10 +63,20 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Cont
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GroupSendMessage.groupName = list.get(position).getName();
-                GroupSendMessage.groupID = list.get(position).getGroupID();
-                GroupSendMessage.groupImage = list.get(position).getImages();
-                Navigation.findNavController(holder.itemView).navigate(R.id.groupSendMessage);
+
+                if ((list.get(position).getGroupID()).equals("Removed"))
+                {
+                    Toast.makeText(context, "You are removed from this group!", Toast.LENGTH_SHORT).show();
+
+                }
+                else
+                {
+                    GroupSendMessage.groupName = list.get(position).getName();
+                    GroupSendMessage.groupID = list.get(position).getGroupID();
+                    GroupSendMessage.groupImage = list.get(position).getImages();
+                    Navigation.findNavController(holder.itemView).navigate(R.id.groupSendMessage);
+                }
+
             }
         });
 

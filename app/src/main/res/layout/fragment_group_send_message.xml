@@ -15,10 +15,16 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
+            app:navigationIcon="?homeAsUpIndicator"
+            app:contentInsetStartWithNavigation="0dp"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
                 android:layout_width="40dp"
@@ -26,19 +32,22 @@
                 android:src="@drawable/myimage" />
 
             <LinearLayout
+                android:layout_toRightOf="@+id/profile_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
+                    android:textColor="@color/colorWhite"
                     android:id="@+id/nameTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="Rz Tutul"
+                    android:text="Friend Adda"
                     android:textSize="20sp" />
 
                 <TextView
+                    android:textColor="@color/colorWhite"
                     android:id="@+id/statusTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,6 +57,21 @@
                     android:text="Online" />
 
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/joinImageview"
+                android:padding="4dp"
+                android:layout_marginRight="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_baseline_videocam_24"
+                />
+
+
+
+        </RelativeLayout>
+
 
 
         </androidx.appcompat.widget.Toolbar>

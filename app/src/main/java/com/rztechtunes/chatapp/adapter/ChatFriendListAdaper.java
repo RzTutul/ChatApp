@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
+import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
+import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
 
@@ -33,6 +37,7 @@ public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAda
     MessageViewModel messageViewModel = new MessageViewModel();
     Context context;
     String friendID;
+    AuthViewModel authViewModel = new AuthViewModel();
 
     public ChatFriendListAdaper(List<SenderReciverPojo> list, Context context) {
         this.list = list;

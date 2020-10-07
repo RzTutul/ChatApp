@@ -72,11 +72,12 @@ public class GroupSendMessage extends Fragment {
     AuthViewModel authViewModel;
     UserInformationPojo CurrentauthPojo;
 
-    ImageView prfileImage;
+    ImageView prfileImage,joinImageview;
     TextView nameTV,statusTV;
     private String currentPhotoPath;
     private File file;
     String usersName ="you,";
+
 
     public GroupSendMessage() {
         // Required empty public constructor
@@ -108,6 +109,7 @@ public class GroupSendMessage extends Fragment {
         statusTV = view.findViewById(R.id.statusTV);
         imageButn = view.findViewById(R.id.imageButn);
         toolbar = view.findViewById(R.id.toolbar);
+        joinImageview = view.findViewById(R.id.joinImageview);
 
 
         nameTV.setText(groupName);
@@ -118,6 +120,13 @@ public class GroupSendMessage extends Fragment {
                 .into(prfileImage);
 
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).popBackStack();
+            }
+        });
+
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,6 +134,13 @@ public class GroupSendMessage extends Fragment {
                 GroupProfileFrag.grpName = groupName;
                 GroupProfileFrag.grpImage = groupImage;
                 Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.groupProfileFrag);
+            }
+        });
+
+        joinImageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.joinRoomFrag);
             }
         });
 

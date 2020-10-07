@@ -133,5 +133,10 @@
         android:name="com.rztechtunes.chatapp.IncomingCallFrag"
         android:label="fragment_incoming_call"
         tools:layout="@layout/fragment_incoming_call" />
+    <fragment
+        android:id="@+id/joinRoomFrag"
+        android:name="com.rztechtunes.chatapp.JoinRoomFrag"
+        android:label="fragment_join_room"
+        tools:layout="@layout/fragment_join_room" />
 
 </navigation>

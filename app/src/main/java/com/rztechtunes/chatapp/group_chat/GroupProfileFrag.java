@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.rztechtunes.chatapp.AddMoreParticipentFrag;
+import com.rztechtunes.chatapp.JoinRoomFrag;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.GrpParticipantAdaper;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
@@ -41,6 +42,7 @@ public class GroupProfileFrag extends Fragment {
     public  static String grpID;
     public  static String grpName;
     public  static String grpImage;
+    LinearLayout joinRoomLL;
     Toolbar toolbar;
     GroupViewModel groupViewModel;
     String adminID;
@@ -69,13 +71,14 @@ public class GroupProfileFrag extends Fragment {
         createTimeTV = view.findViewById(R.id.createTimeTV);
         participantRV = view.findViewById(R.id.participantRV);
         addPrticipentLL = view.findViewById(R.id.addPrticipentLL);
+        joinRoomLL = view.findViewById(R.id.joinRoomLL);
         Toolbar toolbar =view.findViewById(R.id.toolbar);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.groupSendMessage);
+                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.groupSendMessage);
             }
         });
 
@@ -84,12 +87,20 @@ public class GroupProfileFrag extends Fragment {
         groupNameTV.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
 
 
-        Glide.with(getActivity())
+        Glide.with(requireActivity())
                 .load(grpImage)
                 .placeholder(R.drawable.ic_image_black_24dp)
                 .into(groupImageView);
 
 
+        joinRoomLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JoinRoomFrag.groupName = grpName;
+                JoinRoomFrag.groupID = grpID;
+                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.joinRoomFrag);
+            }
+        });
 
         groupViewModel.getGroupInfo(grpID).observe(getActivity(), new Observer<GroupPojo>() {
             @Override
@@ -101,11 +112,11 @@ public class GroupProfileFrag extends Fragment {
 
 
                 //When get who is admin then call bellow code for show admin status
-               groupViewModel.getGroupUser(grpID).observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+               groupViewModel.getGroupUser(grpID).observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
                     @Override
                     public void onChanged(List<UserInformationPojo> userInformationPojos) {
 
-                        GrpParticipantAdaper grpParticipantAdaper = new GrpParticipantAdaper(userInformationPojos,getContext(),adminID);
+                        GrpParticipantAdaper grpParticipantAdaper = new GrpParticipantAdaper(userInformationPojos,getContext(),adminID,grpID);
                         LinearLayoutManager llm = new LinearLayoutManager(getContext());
                         participantRV.setLayoutManager(llm);
                         participantRV.setAdapter(grpParticipantAdaper);
@@ -121,7 +132,7 @@ public class GroupProfileFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 AddMoreParticipentFrag.grpID = grpID;
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.addMoreParticipentFrag);
+                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.addMoreParticipentFrag);
             }
         });
 

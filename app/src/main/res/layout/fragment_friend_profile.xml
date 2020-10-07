@@ -72,6 +72,7 @@
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/callCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
@@ -80,24 +81,40 @@
                 app:cardCornerRadius="2dp"
                 app:cardElevation="5dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="7dp">
+
 
                     <LinearLayout
+                        android:padding="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:fontFamily="sans-serif-smallcaps"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Phone"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="18sp" />
+                            >
+                            <TextView
+                                android:layout_weight="1"
+                                android:fontFamily="sans-serif-smallcaps"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="Phone"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp" />
+
+                            <TextView
+
+                                android:paddingRight="30dp"
+                                android:layout_gravity="end"
+                                android:gravity="end"
+                                android:layout_weight="1"
+                                android:drawableRight="@drawable/ic_baseline_call_24_color"
+                                android:fontFamily="sans-serif-smallcaps"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:layout_marginLeft="15dp"
@@ -110,35 +127,70 @@
 
                     </LinearLayout>
 
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/sendmailCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="5dp">
+                <LinearLayout
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
                     <LinearLayout
-                        android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
+                        >
                         <TextView
+                            android:layout_weight="1"
                             android:fontFamily="sans-serif-smallcaps"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="Gmail"
                             android:textColor="@color/colorPrimary"
                             android:textSize="18sp" />
 
                         <TextView
-                            android:layout_marginLeft="15dp"
-                            android:fontFamily="sans-serif"
-                            android:id="@+id/gmailTV"
-                            android:layout_width="wrap_content"
+                            android:paddingRight="30dp"
+                            android:layout_gravity="end"
+                            android:gravity="end"
+                            android:layout_weight="1"
+                            android:drawableRight="@drawable/ic_baseline_email_24"
+                            android:fontFamily="sans-serif-smallcaps"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="rz.tutul@gmail.com" />
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp" />
 
                     </LinearLayout>
 
 
+                    <TextView
+                        android:layout_marginLeft="15dp"
+                        android:fontFamily="sans-serif"
+                        android:id="@+id/gmailTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="rz.tutul@gmail.com" />
+
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+
+
+
+
+
+
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -167,6 +219,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
 
+                        />
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/noticeTV"
+                        android:layout_marginTop="20sp"
+                        android:fontFamily="sans-serif-condensed-medium"
+                        android:textSize="30sp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No Photos Found !"
                         />
 
                     <androidx.recyclerview.widget.RecyclerView

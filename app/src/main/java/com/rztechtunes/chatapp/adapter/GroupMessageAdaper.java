@@ -8,11 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.rztechtunes.chatapp.FullScreenImageView;
 import com.rztechtunes.chatapp.R;
+import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.SendGroupMsgPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 
@@ -89,6 +92,17 @@ public class GroupMessageAdaper extends RecyclerView.Adapter<GroupMessageAdaper.
                     .into(holder.imageView);
         }
 
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FullScreenImageView.image = list.get(position).getImage();
+                FullScreenImageView.senderName = list.get(position).getSenderName();
+                FullScreenImageView.sendTime = list.get(position).getDateTime();
+                //Set position so that backpress go to the recylerview item postion
+                SendMessageFragment.position = position;
+                Navigation.findNavController(holder.itemView).navigate(R.id.fullScreenImageView);
+            }
+        });
 
     }
 

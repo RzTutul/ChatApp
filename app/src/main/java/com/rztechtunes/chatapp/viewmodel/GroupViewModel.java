@@ -183,4 +183,8 @@ public class GroupViewModel extends ViewModel {
 
         groupRepos.addMorePaticipant(groupPojo,selectedContractList);
     }
+
+    public void kickOutFromGroup(String u_id, String groupID) {
+        groupRepos.kickOutFromGroup(u_id,groupID);
+    }
 }

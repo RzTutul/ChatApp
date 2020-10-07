@@ -260,7 +260,32 @@ public class SendMessageFragment extends Fragment {
             public void onChanged(List<UserInformationPojo> userInformationPojos) {
                 for (UserInformationPojo contractPojo : userInformationPojos) {
                     if (reciverID.equals(contractPojo.getU_ID())) {
-                        statusTV.setText(contractPojo.getTime());
+
+                        if (contractPojo.getTime().equals("Online"))
+                        {
+                            statusTV.setText(contractPojo.getTime());
+                        }
+                        else
+                        {
+                            String currentdate = HelperUtils.getDateWithTime();
+                            String dateTime[] = (contractPojo.getTime()).split("\\s+");
+                            String finaldate = dateTime[2]+" "+dateTime[3]+" "+dateTime[4]+" "+dateTime[5];
+                            long different = HelperUtils.getDefferentBetweenTwoDate(currentdate, finaldate);
+
+                            if (different == 0) {
+                                statusTV.setText("Today " + dateTime[4] +" "+ dateTime[5]);
+                            } else if (different == 1) {
+
+                                statusTV.setText("Yesterday " + dateTime[4] +" "+ dateTime[5]);
+                            }
+                            else
+                            {
+                                statusTV.setText(contractPojo.getTime());
+                            }
+                        }
+
+
+
                         reciverOnlineStatus = contractPojo.getTime();
                     }
                 }

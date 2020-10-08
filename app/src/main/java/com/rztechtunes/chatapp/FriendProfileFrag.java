@@ -16,7 +16,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,15 +30,13 @@ import com.rztechtunes.chatapp.pojo.BlockPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
-import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
+import com.rztechtunes.chatapp.viewmodel.FriendViewModel;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
 import java.util.Collections;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-
-import static android.content.ContentValues.TAG;
 
 public class FriendProfileFrag extends Fragment {
 
@@ -52,7 +49,7 @@ public class FriendProfileFrag extends Fragment {
     ImageView frndImageView;
     AuthViewModel authViewModel;
     MessageViewModel messageViewModel;
-    FirendViewModel firendViewModel;
+    FriendViewModel friendViewModel;
     Context mcontext;
     String gmail,phone;
     public FriendProfileFrag() {
@@ -67,7 +64,7 @@ public class FriendProfileFrag extends Fragment {
 
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
         messageViewModel = ViewModelProviders.of(this).get(MessageViewModel.class);
-        firendViewModel = ViewModelProviders.of(this).get(FirendViewModel.class);
+        friendViewModel = ViewModelProviders.of(this).get(FriendViewModel.class);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_friend_profile, container, false);
     }

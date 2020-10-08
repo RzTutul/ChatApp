@@ -1,6 +1,7 @@
 package com.rztechtunes.chatapp.pojo;
 
 public class SendGroupMsgPojo {
+    String id;
     String groupID;
     String msg;
     String image;
@@ -13,7 +14,8 @@ public class SendGroupMsgPojo {
     public SendGroupMsgPojo() {
     }
 
-    public SendGroupMsgPojo(String groupID, String msg, String image, String senderID, String senderName, String senderImage, String dateTime) {
+    public SendGroupMsgPojo(String id,String groupID, String msg, String image, String senderID, String senderName, String senderImage, String dateTime) {
+       this.id = id;
         this.groupID = groupID;
         this.msg = msg;
         this.image = image;
@@ -21,6 +23,14 @@ public class SendGroupMsgPojo {
         this.senderName = senderName;
         this.senderImage = senderImage;
         this.dateTime = dateTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getGroupID() {

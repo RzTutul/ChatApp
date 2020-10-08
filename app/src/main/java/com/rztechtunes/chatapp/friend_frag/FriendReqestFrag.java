@@ -17,13 +17,13 @@ import android.view.ViewGroup;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.FriendRequestAdaper;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
-import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
+import com.rztechtunes.chatapp.viewmodel.FriendViewModel;
 
 import java.util.List;
 
 public class FriendReqestFrag extends Fragment {
     RecyclerView friendReqRV;
-    FirendViewModel firendViewModel;
+    FriendViewModel friendViewModel;
     public FriendReqestFrag() {
         // Required empty public constructor
     }
@@ -32,7 +32,7 @@ public class FriendReqestFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        firendViewModel = ViewModelProviders.of(this).get(FirendViewModel.class);
+        friendViewModel = ViewModelProviders.of(this).get(FriendViewModel.class);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_friend_reqest, container, false);
     }
@@ -43,7 +43,7 @@ public class FriendReqestFrag extends Fragment {
 
         friendReqRV = view.findViewById(R.id.frinedReqRV);
 
-        firendViewModel.getRequestList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+        friendViewModel.getRequestList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> friendRequestPojos) {
                 FriendRequestAdaper friendRequestAdaper = new FriendRequestAdaper(friendRequestPojos,getContext());

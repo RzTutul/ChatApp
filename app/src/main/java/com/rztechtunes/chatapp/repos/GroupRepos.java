@@ -121,6 +121,7 @@ public class GroupRepos {
     public void sendGroupMsg(SendGroupMsgPojo sendGroupMsgPojo) {
         groupRef = rootRef.child("Group").child(sendGroupMsgPojo.getGroupID()).child("Msg");
         String keyValue = groupRef.push().getKey();
+        sendGroupMsgPojo.setId(keyValue);
         groupRef.child(keyValue).setValue(sendGroupMsgPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -159,6 +160,7 @@ public class GroupRepos {
     public void sendImages(SendGroupMsgPojo sendGroupMsgPojo) {
         groupRef = rootRef.child("Group").child(sendGroupMsgPojo.getGroupID()).child("Msg");
         String keyValue = groupRef.push().getKey();
+        sendGroupMsgPojo.setId(keyValue);
         groupRef.child(keyValue).setValue(sendGroupMsgPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -249,5 +251,10 @@ public class GroupRepos {
             }
         });
 
+    }
+
+    public void removeMessage(String msgID, String grpID) {
+        groupRef = rootRef.child("Group").child(grpID).child("Msg");
+        groupRef.child(msgID).removeValue();
     }
 }

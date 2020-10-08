@@ -1,12 +1,16 @@
 package com.rztechtunes.chatapp.adapter;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
@@ -21,6 +25,7 @@ import com.rztechtunes.chatapp.ImageDownloadManager.DownloadImageService;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.SendMessageFragment;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
+import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
 
 import java.util.List;
@@ -32,6 +37,7 @@ public class MessageAdaper extends RecyclerView.Adapter<MessageAdaper.ContractVi
     public  static  final int MSG_TYPE_RIGHT = 1;
     boolean isImageFitToScreen=false;
     String firebaseUser;
+
     public MessageAdaper(List<SenderReciverPojo> list, Context context) {
         this.list = list;
         this.context = context;
@@ -106,7 +112,99 @@ public class MessageAdaper extends RecyclerView.Adapter<MessageAdaper.ContractVi
                 SendMessageFragment.position = position;
                 Navigation.findNavController(holder.itemView).navigate(R.id.action_sendMessageFragment_to_fullScreenImageView);
 
+            }
+        });
 
+        holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Image");
+                builder.setIcon(R.drawable.ic_image_black_24dp);
+                CharSequence [] dialogIte={"Remove"};
+
+                builder.setItems(dialogIte, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i)
+                        {
+
+
+                            case 0:
+                                if ((FirebaseAuth.getInstance().getUid()).equals(list.get(position).getSenderID()))
+                                {
+                                    MessageViewModel messageViewModel = new MessageViewModel();
+
+                                    messageViewModel.removeMessage(list.get(position).getId(),list.get(position).getSenderID(),list.get(position).getReciverID());
+                                    notifyDataSetChanged();
+
+                                }
+                                else
+                                {
+                                    Toast.makeText(context, "You can't remove this message!", Toast.LENGTH_SHORT).show();
+                                }
+
+                                break;
+
+
+                        }
+
+                    }
+                });
+                builder.create().show();
+
+
+                return false;
+            }
+        });
+
+
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Text");
+                builder.setIcon(R.drawable.ic_baseline_message_24);
+                CharSequence [] dialogIte={"Copy","Remove"};
+
+                builder.setItems(dialogIte, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i)
+                        {
+                            case 0:
+                                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText("", list.get(position).getMsg());
+                                clipboard.setPrimaryClip(clip);
+                                Toast.makeText(context, "Copied!", Toast.LENGTH_SHORT).show();
+
+                                break;
+
+                            case 1:
+                                if ((FirebaseAuth.getInstance().getUid()).equals(list.get(position).getSenderID()))
+                                {
+                                    MessageViewModel messageViewModel = new MessageViewModel();
+
+                                    messageViewModel.removeMessage(list.get(position).getId(),list.get(position).getSenderID(),list.get(position).getReciverID());
+                                    notifyDataSetChanged();
+
+                                }
+                                else
+                                {
+                                    Toast.makeText(context, "You can't remove this message!", Toast.LENGTH_SHORT).show();
+                                }
+
+                                break;
+
+
+                        }
+
+                    }
+                });
+                builder.create().show();
+
+                return false;
             }
         });
 

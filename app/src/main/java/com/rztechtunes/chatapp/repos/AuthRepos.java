@@ -177,6 +177,22 @@ public class AuthRepos {
 
         return friendInfoLD;
     }
+
+    public void changeCoverPhoto(String imageUrl) {
+       userInfo = rootRef.child(firebaseUser.getUid()).child("Loginfo");
+       userInfo.child("coverImage").setValue(imageUrl);
+
+       alluserRef = rootRef.child("AlluserInfo").child(firebaseUser.getUid());
+       alluserRef.child("coverImage").setValue(imageUrl);
+    }
+
+    public void changeProfile(String imageUrl) {
+        userInfo = rootRef.child(firebaseUser.getUid()).child("Loginfo");
+        userInfo.child("profileImage").setValue(imageUrl);
+
+        alluserRef = rootRef.child("AlluserInfo").child(firebaseUser.getUid());
+        alluserRef.child("profileImage").setValue(imageUrl);
+    }
 }
 
 

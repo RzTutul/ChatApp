@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.UserProfileFrag;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
-import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
+import com.rztechtunes.chatapp.viewmodel.FriendViewModel;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class MyFriendListAdaper extends RecyclerView.Adapter<MyFriendListAdaper.ContractViewHolder> {
     List<UserInformationPojo> list;
     Context context;
-    FirendViewModel firendViewModel = new FirendViewModel();
+    FriendViewModel friendViewModel = new FriendViewModel();
 
     public MyFriendListAdaper(List<UserInformationPojo> list, Context context) {
         this.list = list;
@@ -62,7 +62,7 @@ public class MyFriendListAdaper extends RecyclerView.Adapter<MyFriendListAdaper.
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sDialog) {
-                                    firendViewModel.unFirend(list.get(position).getU_ID());
+                                    friendViewModel.unFirend(list.get(position).getU_ID());
                                     notifyDataSetChanged();
                                     sDialog
                                             .setTitleText("Unfriend!")

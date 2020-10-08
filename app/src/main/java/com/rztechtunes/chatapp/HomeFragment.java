@@ -112,7 +112,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
-        inflater.inflate(R.menu.menu_item, menu);
+        inflater.inflate(R.menu.setting_item, menu);
     }
 
     @Override
@@ -120,12 +120,8 @@ public class HomeFragment extends Fragment {
 
         switch (item.getItemId())
         {
-            case R.id.profile_menu:
+            case R.id.setting_menu:
                 Toast.makeText(getActivity(), "OK", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.friendFragment:
-                authViewModel.getLogoutUser();
-                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.loginFragment);
                 break;
 
         }

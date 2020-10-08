@@ -26,11 +26,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class FirendViewModel extends ViewModel {
+public class FriendViewModel extends ViewModel {
     FriendRepos friendRepos;
    public MutableLiveData<String> addStoriesSuccefulLD = new MutableLiveData<>();
 
-    public FirendViewModel() {
+    public FriendViewModel() {
         friendRepos = new FriendRepos();
     }
 

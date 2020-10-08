@@ -16,14 +16,14 @@ import com.google.android.material.button.MaterialButton;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.UserProfileFrag;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
-import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
+import com.rztechtunes.chatapp.viewmodel.FriendViewModel;
 
 import java.util.List;
 
 public class FriendRequestAdaper extends RecyclerView.Adapter<FriendRequestAdaper.ContractViewHolder> {
     List<UserInformationPojo> list;
     Context context;
-    FirendViewModel firendViewModel= new FirendViewModel();
+    FriendViewModel friendViewModel = new FriendViewModel();
     public FriendRequestAdaper(List<UserInformationPojo> list, Context context) {
         this.list = list;
         this.context = context;
@@ -54,7 +54,7 @@ public class FriendRequestAdaper extends RecyclerView.Adapter<FriendRequestAdape
                 @Override
                 public void onClick(View v) {
                     UserInformationPojo friendRequestPojo = list.get(position);
-                    firendViewModel.acceptedRequest(friendRequestPojo);
+                    friendViewModel.acceptedRequest(friendRequestPojo);
                 }
             });
 

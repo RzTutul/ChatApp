@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.rztechtunes.chatapp.JoinRoomFrag;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.GroupMessageAdaper;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
@@ -112,12 +113,16 @@ public class GroupSendMessage extends Fragment {
         joinImageview = view.findViewById(R.id.joinImageview);
 
 
-        nameTV.setText(groupName);
-        //Picasso.get().load(reciverImage).into(prfileImage);
-        Glide.with(getActivity())
-                .load(groupImage)
-                .placeholder(R.drawable.ic_perm_)
-                .into(prfileImage);
+        try {
+            nameTV.setText(groupName);
+            //Picasso.get().load(reciverImage).into(prfileImage);
+            Glide.with(getActivity())
+                    .load(groupImage)
+                    .placeholder(R.drawable.ic_perm_)
+                    .into(prfileImage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -140,17 +145,24 @@ public class GroupSendMessage extends Fragment {
         joinImageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                JoinRoomFrag.groupID = groupID;
+                JoinRoomFrag.groupName = groupName;
                 Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.joinRoomFrag);
             }
         });
 
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
-            @Override
-            public void onChanged(UserInformationPojo authPojo) {
-                CurrentauthPojo =authPojo;
-            }
-        });
+        try {
+            authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
+                @Override
+                public void onChanged(UserInformationPojo authPojo) {
+                    CurrentauthPojo =authPojo;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         sendMsgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +175,7 @@ public class GroupSendMessage extends Fragment {
                 }
                 else
                 {
-                    SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,message,"",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getprofileImage(), HelperUtils.getDateWithTime());
+                    SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo("",groupID,message,"",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getprofileImage(), HelperUtils.getDateWithTime());
                     groupViewModel.sendGroupMsg(sendGroupMsgPojo);
                     msgET.setText("");
                 }
@@ -173,18 +185,22 @@ public class GroupSendMessage extends Fragment {
         });
 
 
-        groupViewModel.getGroupUser(groupID).observe(getActivity(), new Observer<List<UserInformationPojo>>() {
-            @Override
-            public void onChanged(List<UserInformationPojo> userInformationPojos) {
+        try {
+            groupViewModel.getGroupUser(groupID).observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+                @Override
+                public void onChanged(List<UserInformationPojo> userInformationPojos) {
 
-                for (UserInformationPojo contractPojo: userInformationPojos)
-                {
-                    usersName = usersName+contractPojo.getName()+", ";
+                    for (UserInformationPojo contractPojo: userInformationPojos)
+                    {
+                        usersName = usersName+contractPojo.getName()+", ";
+                    }
+                    statusTV.setText(usersName);
+                    usersName ="";
                 }
-                statusTV.setText(usersName);
-                usersName ="";
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
    /*     authViewModel.getAllUser().observe(getActivity(), new Observer<List<AlluserContractPojo>>() {
             @Override
@@ -200,6 +216,8 @@ public class GroupSendMessage extends Fragment {
             }
         });*/
 
+
+
         imageButn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,22 +225,26 @@ public class GroupSendMessage extends Fragment {
             }
         });
 
-        groupViewModel.getAllGroupMessage(groupID).observe(getActivity(), new Observer<List<SendGroupMsgPojo>>() {
-            @Override
-            public void onChanged(List<SendGroupMsgPojo> sendGroupMsgPojos) {
+        try {
+            groupViewModel.getAllGroupMessage(groupID).observe(getActivity(), new Observer<List<SendGroupMsgPojo>>() {
+                @Override
+                public void onChanged(List<SendGroupMsgPojo> sendGroupMsgPojos) {
 
 
-                GroupMessageAdaper messageAdaper = new GroupMessageAdaper(sendGroupMsgPojos,getActivity());
-                LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                llm.setStackFromEnd(true);
-                llm.setOrientation(LinearLayoutManager.VERTICAL);
-                msgRV.setLayoutManager(llm);
-                msgRV.setAdapter(messageAdaper);
+                    GroupMessageAdaper messageAdaper = new GroupMessageAdaper(sendGroupMsgPojos,getActivity());
+                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                    llm.setStackFromEnd(true);
+                    llm.setOrientation(LinearLayoutManager.VERTICAL);
+                    msgRV.setLayoutManager(llm);
+                    msgRV.setAdapter(messageAdaper);
 
 
-            }
+                }
 
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -343,7 +365,7 @@ public class GroupSendMessage extends Fragment {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
                 //  picImageBtn.setImageBitmap(bmp);
-                SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,"","",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getprofileImage(),HelperUtils.getDateWithTime());
+                SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo("",groupID,"","",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getprofileImage(),HelperUtils.getDateWithTime());
                 groupViewModel.sendImage(sendGroupMsgPojo,file,getActivity());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -364,7 +386,7 @@ public class GroupSendMessage extends Fragment {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
                 // picImageBtn.setImageBitmap(bmp);
-                SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo(groupID,"","",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getprofileImage(),HelperUtils.getDateWithTime());
+                SendGroupMsgPojo sendGroupMsgPojo = new SendGroupMsgPojo("",groupID,"","",CurrentauthPojo.getU_ID(),CurrentauthPojo.getName(),CurrentauthPojo.getprofileImage(),HelperUtils.getDateWithTime());
                 groupViewModel.sendImage(sendGroupMsgPojo,file,getActivity());
             } catch (IOException e) {
                 e.printStackTrace();

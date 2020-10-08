@@ -1,6 +1,5 @@
 package com.rztechtunes.chatapp;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,26 +13,21 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.adapter.Add_GrpMore_ParticipantAdapter;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
-import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
+import com.rztechtunes.chatapp.viewmodel.FriendViewModel;
 import com.rztechtunes.chatapp.viewmodel.GroupViewModel;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 
 public class AddMoreParticipentFrag extends Fragment {
@@ -43,7 +37,7 @@ public class AddMoreParticipentFrag extends Fragment {
     FloatingActionButton addMorePersonBtn;
     public static String grpID;
     Add_GrpMore_ParticipantAdapter add_grpMore_participantAdaper;
-    FirendViewModel firendViewModel;
+    FriendViewModel friendViewModel;
     AuthViewModel authViewModel;
     GroupViewModel groupViewModel;
     List<UserInformationPojo> contractPojoList = new ArrayList<>();
@@ -62,7 +56,7 @@ public class AddMoreParticipentFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        firendViewModel = ViewModelProviders.of(this).get(FirendViewModel.class);
+        friendViewModel = ViewModelProviders.of(this).get(FriendViewModel.class);
         groupViewModel = ViewModelProviders.of(this).get(GroupViewModel.class);
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
         // Inflate the layout for this fragment
@@ -111,7 +105,7 @@ public class AddMoreParticipentFrag extends Fragment {
 
 
 
-        firendViewModel.getMyFirendList().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
+        friendViewModel.getMyFirendList().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> friendList) {
                 contractPojoList = friendList;

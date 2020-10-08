@@ -60,6 +60,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/nameTV">
 
                 <TextView
+                    android:id="@+id/statusTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -283,7 +284,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="About"
+                    android:text="Hobby"
                     android:textColor="@color/headings"
                     android:textSize="13sp" />
 

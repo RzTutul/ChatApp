@@ -123,7 +123,7 @@ public class JoinRoomFrag extends Fragment {
                 SendGroupMsgPojo groupMsgPojo;
                 if (currentUserInfo!=null)
                 {
-                     groupMsgPojo = new SendGroupMsgPojo(groupID,msg,"",currentUserInfo.getU_ID(),currentUserInfo.getName(),currentUserInfo.getprofileImage(), HelperUtils.getDateWithTime());
+                     groupMsgPojo = new SendGroupMsgPojo("",groupID,msg,"",currentUserInfo.getU_ID(),currentUserInfo.getName(),currentUserInfo.getprofileImage(), HelperUtils.getDateWithTime());
                     groupViewModel.sendGroupMsg(groupMsgPojo);
 
                     String secretCode = group.toLowerCase();

@@ -187,4 +187,8 @@ public class GroupViewModel extends ViewModel {
     public void kickOutFromGroup(String u_id, String groupID) {
         groupRepos.kickOutFromGroup(u_id,groupID);
     }
+
+    public void removeMessage(String msgID, String grpID) {
+        groupRepos.removeMessage(msgID,grpID);
+    }
 }

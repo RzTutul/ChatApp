@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.MyFriendListAdaper;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
-import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
+import com.rztechtunes.chatapp.viewmodel.FriendViewModel;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import java.util.List;
 public class MyFriendFragment extends Fragment {
 
     RecyclerView myFriendRV;
-    FirendViewModel firendViewModel;
+    FriendViewModel friendViewModel;
     public MyFriendFragment() {
         // Required empty public constructor
     }
@@ -35,7 +35,7 @@ public class MyFriendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        firendViewModel = ViewModelProviders.of(this).get(FirendViewModel.class);
+        friendViewModel = ViewModelProviders.of(this).get(FriendViewModel.class);
         return inflater.inflate(R.layout.fragment_my_friend, container, false);
     }
 
@@ -45,7 +45,7 @@ public class MyFriendFragment extends Fragment {
 
         myFriendRV = view.findViewById(R.id.myFriendRV);
 
-        firendViewModel.getMyFirendList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+        friendViewModel.getMyFirendList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> friendRequestPojos) {
 

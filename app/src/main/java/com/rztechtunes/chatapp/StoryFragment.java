@@ -33,7 +33,7 @@ import com.rztechtunes.chatapp.pojo.StoriesPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
-import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
+import com.rztechtunes.chatapp.viewmodel.FriendViewModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class StoryFragment extends Fragment {
     private static final int REQUEST_CAMERA_CODE = 000;
     private static final int REQUEST_STORAGE_CODE = 456;
 
-    FirendViewModel firendViewModel;
+    FriendViewModel friendViewModel;
     AuthViewModel authViewModel;
     UserInformationPojo myInfo;
     public StoryFragment() {
@@ -65,7 +65,7 @@ public class StoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        firendViewModel = ViewModelProviders.of(this).get(FirendViewModel.class);
+        friendViewModel = ViewModelProviders.of(this).get(FriendViewModel.class);
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_story, container, false);
@@ -92,7 +92,7 @@ public class StoryFragment extends Fragment {
             }
         });
 
-        firendViewModel.addStoriesSuccefulLD.observe(getActivity(), new Observer<String>() {
+        friendViewModel.addStoriesSuccefulLD.observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 if (s.equals("1"))
@@ -113,7 +113,7 @@ public class StoryFragment extends Fragment {
 
 
     public void getFriendStories() {
-        firendViewModel.getStories().observe(getActivity(), new Observer<List<StoriesPojo>>() {
+        friendViewModel.getStories().observe(getActivity(), new Observer<List<StoriesPojo>>() {
             @Override
             public void onChanged(List<StoriesPojo> storiesPojos) {
 
@@ -236,7 +236,7 @@ public class StoryFragment extends Fragment {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 //  picImageBtn.setImageBitmap(bmp);
                 StoriesPojo storiesPojo = new StoriesPojo(myInfo.getU_ID(),myInfo.getName(),myInfo.getprofileImage(),"",HelperUtils.getDateWithTime());
-                firendViewModel.addStories(storiesPojo, file, getActivity());
+                friendViewModel.addStories(storiesPojo, file, getActivity());
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -256,7 +256,7 @@ public class StoryFragment extends Fragment {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 // picImageBtn.setImageBitmap(bmp);
                 StoriesPojo storiesPojo = new StoriesPojo(myInfo.getU_ID(),myInfo.getName(),myInfo.getprofileImage(),"",HelperUtils.getDateWithTime());
-                firendViewModel.addStories(storiesPojo, file, getActivity());
+                friendViewModel.addStories(storiesPojo, file, getActivity());
 
             } catch (IOException e) {
                 e.printStackTrace();

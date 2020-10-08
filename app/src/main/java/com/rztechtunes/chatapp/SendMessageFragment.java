@@ -210,20 +210,24 @@ public class SendMessageFragment extends Fragment {
         });
 
 
-        nameTV.setText(reciverName);
-        //Picasso.get().load(reciverImage).into(prfileImage);
-        Glide.with(requireActivity())
-                .load(reciverImage)
-                .placeholder(R.drawable.ic_perm_)
-                .into(prfileImage);
+        try {
+            nameTV.setText(reciverName);
+            //Picasso.get().load(reciverImage).into(prfileImage);
+            Glide.with(requireActivity())
+                    .load(reciverImage)
+                    .placeholder(R.drawable.ic_perm_)
+                    .into(prfileImage);
 
 
-        authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
-            @Override
-            public void onChanged(UserInformationPojo authPojo) {
-                CurrentauthPojo = authPojo;
-            }
-        });
+            authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
+                @Override
+                public void onChanged(UserInformationPojo authPojo) {
+                    CurrentauthPojo = authPojo;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         sendMsgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,43 +259,47 @@ public class SendMessageFragment extends Fragment {
             }
         });
 
-        authViewModel.getAllUser().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
-            @Override
-            public void onChanged(List<UserInformationPojo> userInformationPojos) {
-                for (UserInformationPojo contractPojo : userInformationPojos) {
-                    if (reciverID.equals(contractPojo.getU_ID())) {
+        try {
+            authViewModel.getAllUser().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
+                @Override
+                public void onChanged(List<UserInformationPojo> userInformationPojos) {
+                    for (UserInformationPojo contractPojo : userInformationPojos) {
+                        if (reciverID.equals(contractPojo.getU_ID())) {
 
-                        if (contractPojo.getTime().equals("Online"))
-                        {
-                            statusTV.setText(contractPojo.getTime());
-                        }
-                        else
-                        {
-                            String currentdate = HelperUtils.getDateWithTime();
-                            String dateTime[] = (contractPojo.getTime()).split("\\s+");
-                            String finaldate = dateTime[2]+" "+dateTime[3]+" "+dateTime[4]+" "+dateTime[5];
-                            long different = HelperUtils.getDefferentBetweenTwoDate(currentdate, finaldate);
-
-                            if (different == 0) {
-                                statusTV.setText("Today " + dateTime[4] +" "+ dateTime[5]);
-                            } else if (different == 1) {
-
-                                statusTV.setText("Yesterday " + dateTime[4] +" "+ dateTime[5]);
-                            }
-                            else
+                            if (contractPojo.getTime().equals("Online"))
                             {
                                 statusTV.setText(contractPojo.getTime());
                             }
+                            else
+                            {
+                                String currentdate = HelperUtils.getDateWithTime();
+                                String dateTime[] = (contractPojo.getTime()).split("\\s+");
+                                String finaldate = dateTime[2]+" "+dateTime[3]+" "+dateTime[4]+" "+dateTime[5];
+                                long different = HelperUtils.getDefferentBetweenTwoDate(currentdate, finaldate);
+
+                                if (different == 0) {
+                                    statusTV.setText("Today " + dateTime[4] +" "+ dateTime[5]);
+                                } else if (different == 1) {
+
+                                    statusTV.setText("Yesterday " + dateTime[4] +" "+ dateTime[5]);
+                                }
+                                else
+                                {
+                                    statusTV.setText(contractPojo.getTime());
+                                }
+                            }
+
+
+
+                            reciverOnlineStatus = contractPojo.getTime();
                         }
-
-
-
-                        reciverOnlineStatus = contractPojo.getTime();
                     }
-                }
 
-            }
-        });
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         imageButn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -301,64 +309,68 @@ public class SendMessageFragment extends Fragment {
         });
 
 
-        if (position == -1) {
-            messageViewModel.getAllMessage(reciverID).observe(requireActivity(), new Observer<List<SenderReciverPojo>>() {
-                @Override
-                public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
-                    MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos, getActivity());
-                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                    llm.setStackFromEnd(true);
-                    llm.setOrientation(LinearLayoutManager.VERTICAL);
+        try {
+            if (position == -1) {
+                messageViewModel.getAllMessage(reciverID).observe(requireActivity(), new Observer<List<SenderReciverPojo>>() {
+                    @Override
+                    public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
+                        MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos, getActivity());
+                        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                        llm.setStackFromEnd(true);
+                        llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-                    msgRV.setLayoutManager(llm);
-                    msgRV.setAdapter(messageAdaper);
+                        msgRV.setLayoutManager(llm);
+                        msgRV.setAdapter(messageAdaper);
 
 
-                    if (notify) {
+                        if (notify) {
 
-                        //If user status isn't online then send msg with notification
-                        if (reciverOnlineStatus.equals("Online")) {
+                            //If user status isn't online then send msg with notification
+                            if (reciverOnlineStatus.equals("Online")) {
 
-                        } else {
-                            sendNotifiaction(reciverID, CurrentauthPojo.getName(), message);
+                            } else {
+                                sendNotifiaction(reciverID, CurrentauthPojo.getName(), message);
+                            }
                         }
+                        notify = false;
+
+
                     }
-                    notify = false;
 
+                });
 
-                }
+            } else {
+                messageViewModel.getAllMessage(reciverID).observe(requireActivity(), new Observer<List<SenderReciverPojo>>() {
+                    @Override
+                    public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
 
-            });
+                        MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos, getActivity());
 
-        } else {
-            messageViewModel.getAllMessage(reciverID).observe(requireActivity(), new Observer<List<SenderReciverPojo>>() {
-                @Override
-                public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
+                        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                        llm.setStackFromEnd(true);
+                        llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-                    MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos, getActivity());
+                        //goto that positon before image selected
+                        llm.scrollToPositionWithOffset(position, 10);
+                        msgRV.setLayoutManager(llm);
+                        msgRV.setAdapter(messageAdaper);
 
-                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                    llm.setStackFromEnd(true);
-                    llm.setOrientation(LinearLayoutManager.VERTICAL);
+                        if (notify) {
 
-                    //goto that positon before image selected
-                    llm.scrollToPositionWithOffset(position, 10);
-                    msgRV.setLayoutManager(llm);
-                    msgRV.setAdapter(messageAdaper);
+                            //If user status isn't online then send msg with notification
+                            if (reciverOnlineStatus.equals("Online")) {
 
-                    if (notify) {
-
-                        //If user status isn't online then send msg with notification
-                        if (reciverOnlineStatus.equals("Online")) {
-
-                        } else {
-                            sendNotifiaction(reciverID, CurrentauthPojo.getName(), message);
+                            } else {
+                                sendNotifiaction(reciverID, CurrentauthPojo.getName(), message);
+                            }
                         }
+                        notify = false;
                     }
-                    notify = false;
-                }
-            });
+                });
 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
@@ -426,18 +438,22 @@ public class SendMessageFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        authViewModel.stateLiveData.observe(requireActivity(), new Observer<AuthViewModel.AuthenticationState>() {
-            @Override
-            public void onChanged(AuthViewModel.AuthenticationState authenticationState) {
-                switch (authenticationState) {
-                    case AUTHENTICATED:
-                        authViewModel.setUserSatus("Online");
-                        break;
-                    case UNAUTHENTICATED:
-                        break;
+        try {
+            authViewModel.stateLiveData.observe(requireActivity(), new Observer<AuthViewModel.AuthenticationState>() {
+                @Override
+                public void onChanged(AuthViewModel.AuthenticationState authenticationState) {
+                    switch (authenticationState) {
+                        case AUTHENTICATED:
+                            authViewModel.setUserSatus("Online");
+                            break;
+                        case UNAUTHENTICATED:
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

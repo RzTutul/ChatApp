@@ -541,5 +541,20 @@ public class MessageRespos {
     }
 
 
+    public void removeMessage(String msgID, String senderID, String receiverID) {
+
+        userID = rootRef.child(senderID).child("ChatList").child(receiverID);
+
+        userID.child(msgID).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                recevierID = rootRef.child(receiverID).child("ChatList").child(senderID);
+
+                recevierID.child(msgID).removeValue();
+            }
+        });
+
+
+    }
 }
 

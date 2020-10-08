@@ -37,7 +37,7 @@ import com.rztechtunes.chatapp.adapter.MyStoriesAdapter;
 import com.rztechtunes.chatapp.pojo.StoriesPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
-import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
+import com.rztechtunes.chatapp.viewmodel.FriendViewModel;
 
 import java.util.List;
 
@@ -53,10 +53,10 @@ public class UserProfileFrag extends Fragment {
     public  static String userID;
     String userName;
     String userImage;
-    TextView nameTV,emailTV,phoneTV,aboutTV,countyTV;
+    TextView nameTV,emailTV,phoneTV,aboutTV,countyTV,statusTV;
     ImageView profileImage,fragImage,coverImageView;
     AuthViewModel authViewModel;
-    FirendViewModel firendViewModel;
+    FriendViewModel friendViewModel;
     UserInformationPojo myCurrentInfo;
     APIService apiService;
     RecyclerView mediaRV;
@@ -73,7 +73,7 @@ public class UserProfileFrag extends Fragment {
                              Bundle savedInstanceState) {
 
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
-        firendViewModel = ViewModelProviders.of(this).get(FirendViewModel.class);
+        friendViewModel = ViewModelProviders.of(this).get(FriendViewModel.class);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_user_profile, container, false);
     }
@@ -92,58 +92,69 @@ public class UserProfileFrag extends Fragment {
         phoneTV = view.findViewById(R.id.phoneTV);
         aboutTV = view.findViewById(R.id.aboutTV);
         countyTV = view.findViewById(R.id.countyTV);
+        statusTV = view.findViewById(R.id.statusTV);
         mediaRV = view.findViewById(R.id.mediaRV);
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
 
-        authViewModel.getFriendInformaiton(userID).observe(requireActivity(), new Observer<UserInformationPojo>() {
-            @Override
-            public void onChanged(UserInformationPojo authPojo) {
-                userName = authPojo.getName();
-                userImage = authPojo.getprofileImage();
-                Glide.with(requireActivity())
-                        .load(authPojo.getprofileImage())
-                        .centerCrop()
-                        .placeholder(R.drawable.ic_perm_)
-                        .into(profileImage);
-                  Glide.with(requireActivity())
-                        .load(authPojo.getCoverImage())
-                        .centerCrop()
-                        .placeholder(R.drawable.ic_perm_)
-                        .into(coverImageView);
+        try {
+            authViewModel.getFriendInformaiton(userID).observe(requireActivity(), new Observer<UserInformationPojo>() {
+                @Override
+                public void onChanged(UserInformationPojo authPojo) {
+                    userName = authPojo.getName();
+                    userImage = authPojo.getprofileImage();
+
+                    Glide.with(requireActivity())
+                            .load(authPojo.getprofileImage())
+                            .centerCrop()
+                            .placeholder(R.drawable.ic_perm_)
+                            .into(profileImage);
+                      Glide.with(requireActivity())
+                            .load(authPojo.getCoverImage())
+                            .centerCrop()
+                            .placeholder(R.drawable.ic_perm_)
+                            .into(coverImageView);
 
 
-                nameTV.setText(authPojo.getName());
-                emailTV.setText(authPojo.getEmail());
-                phoneTV.setText(authPojo.getPhone());
-                aboutTV.setText(authPojo.getStatus());
+                    nameTV.setText(authPojo.getName());
+                    emailTV.setText(authPojo.getEmail());
+                    phoneTV.setText(authPojo.getPhone());
+                    aboutTV.setText(authPojo.gethobby());
+                    statusTV.setText(authPojo.getStatus());
 
-                String county = authPojo.getCountry();
-                String [] splitCounty = county.split("-"); //split county code & name
-                countyTV.setText(splitCounty[1]);
-                fragImage.setImageResource(Integer.parseInt(splitCounty[0])); //get county code
-            }
-        });
+                    String county = authPojo.getCountry();
+                    String [] splitCounty = county.split("-"); //split county code & name
+                    countyTV.setText(splitCounty[1]);
+                    fragImage.setImageResource(Integer.parseInt(splitCounty[0])); //get county code
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        firendViewModel.getMyFirendList().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
-            @Override
-            public void onChanged(List<UserInformationPojo> userInformationPojos) {
-                for (UserInformationPojo informationPojo: userInformationPojos)
-                {
-                    if ((informationPojo.getU_ID()).equals(userID))
+        try {
+            friendViewModel.getMyFirendList().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
+                @Override
+                public void onChanged(List<UserInformationPojo> userInformationPojos) {
+                    for (UserInformationPojo informationPojo: userInformationPojos)
                     {
-                        unFriendRL.setVisibility(View.VISIBLE);
-                        sendReqRL.setVisibility(View.GONE);
+                        if ((informationPojo.getU_ID()).equals(userID))
+                        {
+                            unFriendRL.setVisibility(View.VISIBLE);
+                            sendReqRL.setVisibility(View.GONE);
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         unFriendRL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firendViewModel.unFirend(userID);
+                friendViewModel.unFirend(userID);
                 Toast.makeText(requireActivity(), "Unfriend!", Toast.LENGTH_SHORT).show();
                 unFriendRL.setVisibility(View.GONE);
                 sendReqRL.setVisibility(View.VISIBLE);
@@ -166,7 +177,7 @@ public class UserProfileFrag extends Fragment {
             public void onClick(View v) {
                 if (myCurrentInfo!=null)
                 {
-                    firendViewModel.sendFriendRequest(userID,myCurrentInfo);
+                    friendViewModel.sendFriendRequest(userID,myCurrentInfo);
                     sendNotifiaction(userID,myCurrentInfo.getName(),"Send Friend Request");
                     unFriendRL.setVisibility(View.VISIBLE);
                     sendReqRL.setVisibility(View.GONE);
@@ -175,24 +186,28 @@ public class UserProfileFrag extends Fragment {
         });
 
 
-        firendViewModel.getUserStories(userID).observe(requireActivity(), new Observer<List<StoriesPojo>>() {
-            @Override
-            public void onChanged(List<StoriesPojo> storiesPojos) {
-                MyStoriesAdapter myStoriesAdapter = new MyStoriesAdapter(storiesPojos,getContext());
-                GridLayoutManager gll = new GridLayoutManager(getContext(),2);
-                mediaRV.setLayoutManager(gll);
-                mediaRV.setAdapter(myStoriesAdapter);
+        try {
+            friendViewModel.getUserStories(userID).observe(requireActivity(), new Observer<List<StoriesPojo>>() {
+                @Override
+                public void onChanged(List<StoriesPojo> storiesPojos) {
+                    MyStoriesAdapter myStoriesAdapter = new MyStoriesAdapter(storiesPojos,getContext());
+                    GridLayoutManager gll = new GridLayoutManager(getContext(),2);
+                    mediaRV.setLayoutManager(gll);
+                    mediaRV.setAdapter(myStoriesAdapter);
 
-            }
-        });
+                }
+            });
 
 
-        authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
-            @Override
-            public void onChanged(UserInformationPojo authPojo) {
-               myCurrentInfo = authPojo;
-            }
-        });
+            authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
+                @Override
+                public void onChanged(UserInformationPojo authPojo) {
+                   myCurrentInfo = authPojo;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

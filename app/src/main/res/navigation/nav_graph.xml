@@ -138,5 +138,10 @@
         android:name="com.rztechtunes.chatapp.JoinRoomFrag"
         android:label="fragment_join_room"
         tools:layout="@layout/fragment_join_room" />
+    <fragment
+        android:id="@+id/updateProfileFrag"
+        android:name="com.rztechtunes.chatapp.UpdateProfileFrag"
+        android:label="fragment_update_profile"
+        tools:layout="@layout/fragment_update_profile" />
 
 </navigation>

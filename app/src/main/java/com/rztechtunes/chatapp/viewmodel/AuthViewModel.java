@@ -68,6 +68,72 @@ public class AuthViewModel extends ViewModel {
         authRepos.setUserSatus(dateWithTime);
     }
 
+    public void changePhoto(Context context, File coverFile,int imagetype) {
+        final ProgressDialog pd = new ProgressDialog(context);
+        pd.setMessage("Wait a moment...");
+        pd.show();
+
+
+        StorageReference rootRef = FirebaseStorage.getInstance().getReference();
+        Uri fileUri = Uri.fromFile(coverFile);
+        final StorageReference imageRef = rootRef.child("ChatImages/" + fileUri.getLastPathSegment());
+
+        ///For image Compress
+        Bitmap bmp = null;
+        try {
+            bmp = MediaStore.Images.Media.getBitmap(context.getContentResolver(),fileUri);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = imageRef.putBytes(data);
+
+
+        //For get URI Link of Image
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+
+                return imageRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    // Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
+                    pd.dismiss();
+                    Uri downloadUri = task.getResult();
+                    String imageUrl = (downloadUri.toString());
+                    //Now store Cover Image
+                    if (imagetype==0)
+                    {
+
+                        authRepos.changeProfile(imageUrl);
+                    }
+                    else
+                    {
+                        authRepos.changeCoverPhoto(imageUrl);
+                    }
+
+
+                } else {
+                    // Handle failures
+                    // ...
+                }
+            }
+        });
+
+    }
+
 
     public enum AuthenticationState
     {

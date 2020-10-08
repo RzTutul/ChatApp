@@ -39,7 +39,7 @@ import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
-import com.rztechtunes.chatapp.viewmodel.FirendViewModel;
+import com.rztechtunes.chatapp.viewmodel.FriendViewModel;
 import com.rztechtunes.chatapp.viewmodel.GroupViewModel;
 
 import java.io.File;
@@ -57,7 +57,7 @@ public class CreateGroupFrag extends Fragment {
     RecyclerView contractRV;
     AuthViewModel authViewModel;
     GroupViewModel groupViewModel;
-    FirendViewModel firendViewModel;
+    FriendViewModel friendViewModel;
     FloatingActionButton createBtn;
 
     List<UserInformationPojo> contractPojoList = new ArrayList<>();
@@ -81,7 +81,7 @@ public class CreateGroupFrag extends Fragment {
 
         authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
         groupViewModel = ViewModelProviders.of(this).get(GroupViewModel.class);
-        firendViewModel = ViewModelProviders.of(this).get(FirendViewModel.class);
+        friendViewModel = ViewModelProviders.of(this).get(FriendViewModel.class);
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_create_group, container, false);
@@ -163,7 +163,7 @@ public class CreateGroupFrag extends Fragment {
 
 
 
-        firendViewModel.getMyFirendList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+        friendViewModel.getMyFirendList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> userInformationPojos) {
                 //for add my contract to addmin in this group

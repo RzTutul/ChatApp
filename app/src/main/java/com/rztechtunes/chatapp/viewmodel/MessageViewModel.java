@@ -168,4 +168,8 @@ public class MessageViewModel extends ViewModel {
     public LiveData<List<SenderReciverPojo>> getAllSharedMedia(String frndID) {
         return messageRespos.getSharedMedia(frndID);
     }
+
+    public void removeMessage(String msgID,String senderID,String receiverID) {
+        messageRespos.removeMessage(msgID,senderID,receiverID);
+    }
 }

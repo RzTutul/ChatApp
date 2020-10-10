@@ -56,9 +56,39 @@ public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAda
     public void onBindViewHolder(@NonNull final ContractViewHolder holder, final int position) {
 
 
+ /*       authViewModel.getAllUser().observe((LifecycleOwner) context, new Observer<List<UserInformationPojo>>() {
+            @Override
+            public void onChanged(List<UserInformationPojo> userInformationPojos) {
+                for (UserInformationPojo user: userInformationPojos)
+                {
+                    if ((FirebaseAuth.getInstance().getUid()).equals(list.get(position).getSenderID())) {
+                        if (user.getU_ID().equals(list.get(position).getReciverID()))
+                        {
+                            if ((user.getTime()).equals("Online")){
+
+                             holder.activeImageView.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
+                    else if ((FirebaseAuth.getInstance().getUid()).equals(list.get(position).getReciverID())) {
+                        if (user.getU_ID().equals(list.get(position).getSenderID()))
+                        {
+                            if ((user.getTime()).equals("Online")){
+
+                                holder.activeImageView.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                    }
+
+
+                }
+            }
+        });*/
+
+
         String currentdate = HelperUtils.getDateWithTime();
         long different = HelperUtils.getDefferentBetweenTwoDate(currentdate, list.get(position).getStatus());
-
         if (different == 0) {
             String[] time = (list.get(position).getStatus()).split("\\s+");
             holder.dateTV.setText("Today " + time[2] + time[3]);
@@ -156,7 +186,7 @@ public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAda
 
     class ContractViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
+        ImageView imageView,activeImageView;
         TextView nameTV, msgTV, dateTV;
 
         public ContractViewHolder(@NonNull View itemView) {
@@ -166,6 +196,7 @@ public class ChatFriendListAdaper extends RecyclerView.Adapter<ChatFriendListAda
             msgTV = itemView.findViewById(R.id.msgTV);
             dateTV = itemView.findViewById(R.id.dateTV);
             imageView = itemView.findViewById(R.id.profile_image);
+            activeImageView = itemView.findViewById(R.id.activeImageView);
         }
     }
 }

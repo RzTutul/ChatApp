@@ -25,9 +25,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -62,6 +64,7 @@ public class ProfileFragment extends Fragment {
     AuthViewModel authViewModel;
     RecyclerView medidaRV;
     FriendViewModel friendViewModel;
+    TextView editStatus,editNameTV,editHobbyTV;
 
     private CountryCodePicker ccp;
 
@@ -87,10 +90,13 @@ public class ProfileFragment extends Fragment {
         profileImage = view.findViewById(R.id.profile_image);
         coverImageView = view.findViewById(R.id.coverImageView);
         nameTV = view.findViewById(R.id.nameTV);
+        editNameTV = view.findViewById(R.id.editNameTV);
         emailTV = view.findViewById(R.id.gmailTV);
         phoneTV = view.findViewById(R.id.phoneTV);
         hobbyTV = view.findViewById(R.id.aboutTV);
+        editHobbyTV = view.findViewById(R.id.editHobby);
         statusTV = view.findViewById(R.id.statusTV);
+        editStatus = view.findViewById(R.id.editStatus);
         countyTV = view.findViewById(R.id.countyTV);
         medidaRV = view.findViewById(R.id.mediaRV);
         changeProfile = view.findViewById(R.id.changeProfileImage);
@@ -114,6 +120,142 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
+        editNameTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity(), R.style.BottomSheetDialogTheme);
+                View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_update_name, (LinearLayout) getActivity().findViewById(R.id.bottomSheetContainer));
+
+                EditText nameET =  bottomSheetView.findViewById(R.id.nameET);
+
+                bottomSheetView.findViewById(R.id.saveNameBtn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String newName = nameET.getText().toString();
+
+                        try {
+                            if (newName.equals(""))
+                            {
+                                nameET.setError("Enter name");
+                            }
+                            else
+                            {
+                                authViewModel.updateName(newName);
+                                Toast.makeText(requireActivity(), "Name Updated!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+                            Log.i(TAG, "ex: "+e.getLocalizedMessage());
+                        }
+
+
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+
+
+
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+
+            }
+        });
+
+        editStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity(), R.style.BottomSheetDialogTheme);
+                View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_update_status, (LinearLayout) getActivity().findViewById(R.id.bottomSheetContainer));
+
+                EditText statusET =  bottomSheetView.findViewById(R.id.statusET);
+
+                bottomSheetView.findViewById(R.id.saveSatusBtn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String newStatus = statusET.getText().toString();
+
+                            try {
+                                if (newStatus.equals(""))
+                                {
+                                    statusET.setError("Enter new status");
+                                }
+                                else
+                                {
+                                    authViewModel.updateStatus(newStatus);
+                                    Toast.makeText(requireActivity(), "Status Updated!", Toast.LENGTH_SHORT).show();
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+                                Log.i(TAG, "ex: "+e.getLocalizedMessage());
+                            }
+
+
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+
+
+
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+
+            }
+        });
+
+
+        editHobbyTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity(), R.style.BottomSheetDialogTheme);
+                View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_update_hobby, (LinearLayout) getActivity().findViewById(R.id.bottomSheetContainer));
+
+                EditText hobbyET =  bottomSheetView.findViewById(R.id.hobbyET);
+
+                bottomSheetView.findViewById(R.id.saveHobbyBtn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String newHobby = hobbyET.getText().toString();
+
+                        try {
+                            if (newHobby.equals(""))
+                            {
+                                hobbyET.setError("Enter new Hobby");
+                            }
+                            else
+                            {
+                                authViewModel.updateHobby(newHobby);
+                                Toast.makeText(requireActivity(), "Hobby Updated!", Toast.LENGTH_SHORT).show();
+
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+                            Log.i(TAG, "ex: "+e.getLocalizedMessage());
+                        }
+
+
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+
+
+
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+
+
+
+            }
+        });
 
 
         try {

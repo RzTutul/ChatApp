@@ -86,7 +86,7 @@ public class ContractFragment extends Fragment {
                 contractPojoList.clear();
                 for (UserInformationPojo contractPojo: userInformationPojos)
                 {
-                    if ((contractPojo.getU_ID()).equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                    if ((contractPojo.getU_ID()).equals(FirebaseAuth.getInstance().getUid()))
                     {
 
                     }

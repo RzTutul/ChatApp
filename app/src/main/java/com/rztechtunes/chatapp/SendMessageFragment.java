@@ -206,6 +206,7 @@ public class SendMessageFragment extends Fragment {
                 VideoCallingFrag.name = reciverName;
                 VideoCallingFrag.image = reciverImage;
                 Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.videoCallingFrag);
+
             }
         });
 
@@ -242,7 +243,6 @@ public class SendMessageFragment extends Fragment {
                     messageViewModel.sendMessage(senderReciverPojo).observe(requireActivity(), new Observer<String>() {
                         @Override
                         public void onChanged(String s) {
-
                             try {
                                 Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
 
@@ -275,12 +275,13 @@ public class SendMessageFragment extends Fragment {
                                 String currentdate = HelperUtils.getDateWithTime();
                                 String dateTime[] = (contractPojo.getTime()).split("\\s+");
                                 String finaldate = dateTime[2]+" "+dateTime[3]+" "+dateTime[4]+" "+dateTime[5];
-                                long different = HelperUtils.getDefferentBetweenTwoDate(currentdate, finaldate);
-
+                                Log.i(TAG, "date: "+finaldate);
+                                Log.i(TAG, "date: "+currentdate);
+                                long different = HelperUtils.getDefferentBetweenTwoDate(finaldate, currentdate);
+                                Log.i(TAG, "date: "+different);
                                 if (different == 0) {
                                     statusTV.setText("Today " + dateTime[4] +" "+ dateTime[5]);
                                 } else if (different == 1) {
-
                                     statusTV.setText("Yesterday " + dateTime[4] +" "+ dateTime[5]);
                                 }
                                 else

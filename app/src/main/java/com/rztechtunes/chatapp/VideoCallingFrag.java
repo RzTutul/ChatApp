@@ -107,10 +107,14 @@ public class VideoCallingFrag extends Fragment {
 
                 @Override
                 public void onFinish() {
-                    mp.stop();
-                    messageViewModel.CallCancel(reciverID);
-                    Toast.makeText(mContext, "No Response!", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                    try {
+                        mp.stop();
+                        messageViewModel.CallCancel(reciverID);
+                        Toast.makeText(mContext, "No Response!", Toast.LENGTH_SHORT).show();
+                        Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    }
 
                 }
             };

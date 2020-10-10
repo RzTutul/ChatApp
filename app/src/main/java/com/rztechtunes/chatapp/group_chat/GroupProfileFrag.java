@@ -32,6 +32,8 @@ import com.rztechtunes.chatapp.viewmodel.GroupViewModel;
 
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 public class GroupProfileFrag extends Fragment {
 
@@ -39,6 +41,7 @@ public class GroupProfileFrag extends Fragment {
     ImageView groupImageView;
     TextView createTimeTV,descriptionTV;
     RecyclerView participantRV;
+    CardView exitCardView;
     public  static String grpID;
     public  static String grpName;
     public  static String grpImage;
@@ -72,6 +75,7 @@ public class GroupProfileFrag extends Fragment {
         participantRV = view.findViewById(R.id.participantRV);
         addPrticipentLL = view.findViewById(R.id.addPrticipentLL);
         joinRoomLL = view.findViewById(R.id.joinRoomLL);
+        exitCardView = view.findViewById(R.id.exitCardView);
         Toolbar toolbar =view.findViewById(R.id.toolbar);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -101,6 +105,32 @@ public class GroupProfileFrag extends Fragment {
                 Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.joinRoomFrag);
             }
         });
+
+        exitCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SweetAlertDialog(requireActivity(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Are you sure?")
+                        .setContentText("Want to delete group!")
+                        .setConfirmText("Yes,delete it!")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                groupViewModel.deleteGroup(grpID);
+                                sDialog
+                                        .setTitleText("Deleted!")
+                                        .setContentText("Group has been deleted!")
+                                        .setConfirmText("OK")
+                                        .setConfirmClickListener(null)
+                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+
+                            }
+                        })
+                        .show();
+            }
+        });
+
 
         groupViewModel.getGroupInfo(grpID).observe(getActivity(), new Observer<GroupPojo>() {
             @Override

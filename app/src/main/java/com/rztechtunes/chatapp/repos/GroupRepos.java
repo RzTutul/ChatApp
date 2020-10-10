@@ -257,4 +257,9 @@ public class GroupRepos {
         groupRef = rootRef.child("Group").child(grpID).child("Msg");
         groupRef.child(msgID).removeValue();
     }
+
+    public void deleteGroup(String groupID) {
+        groupRef  = rootRef.child(firebaseUser.getUid()).child("Group");
+        groupRef.child(groupID).removeValue();
+    }
 }

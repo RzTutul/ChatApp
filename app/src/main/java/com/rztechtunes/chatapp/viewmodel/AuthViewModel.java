@@ -36,7 +36,7 @@ public class AuthViewModel extends ViewModel {
         authRepos = new AuthRepos(stateLiveData);
 
        // errMsg = firebaseLoginRepository.getErrMsg();
-        if (authRepos.getFirebaseUser() != null)
+        if (authRepos.getFirebaseUser() != null && authRepos.getUserInfo() != null)
         {
             stateLiveData.postValue(AuthenticationState.AUTHENTICATED);
 
@@ -132,6 +132,18 @@ public class AuthViewModel extends ViewModel {
             }
         });
 
+    }
+
+    public void updateStatus(String newStatus) {
+        authRepos.updateStatus(newStatus);
+    }
+
+    public void updateName(String newName) {
+        authRepos.updateName(newName);
+    }
+
+    public void updateHobby(String newHobby) {
+        authRepos.updateHobby(newHobby);
     }
 
 

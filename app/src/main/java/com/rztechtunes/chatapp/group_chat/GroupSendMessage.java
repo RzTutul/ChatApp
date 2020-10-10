@@ -258,8 +258,14 @@ public class GroupSendMessage extends Fragment {
             @Override
             public void onClick(View v) {
                 if (checkStoragePermission()) {
-                    dispatchCameraIntent();
+
+                    try {
+                        dispatchCameraIntent();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
+
                 bottomSheetDialog.dismiss();
             }
         });

@@ -111,9 +111,6 @@ public class AuthRepos {
         });
 
 
-
-
-
         return userInfoLD;
     }
 
@@ -192,6 +189,31 @@ public class AuthRepos {
 
         alluserRef = rootRef.child("AlluserInfo").child(firebaseUser.getUid());
         alluserRef.child("profileImage").setValue(imageUrl);
+    }
+
+    public void updateStatus(String newStatus) {
+        userInfo = rootRef.child(firebaseUser.getUid()).child("Loginfo");
+        userInfo.child("status").setValue(newStatus);
+
+        alluserRef = rootRef.child("AlluserInfo").child(firebaseUser.getUid());
+        alluserRef.child("status").setValue(newStatus);
+
+    }
+
+    public void updateName(String newName) {
+        userInfo = rootRef.child(firebaseUser.getUid()).child("Loginfo");
+        userInfo.child("name").setValue(newName);
+
+        alluserRef = rootRef.child("AlluserInfo").child(firebaseUser.getUid());
+        alluserRef.child("name").setValue(newName);
+    }
+
+    public void updateHobby(String newHobby) {
+        userInfo = rootRef.child(firebaseUser.getUid()).child("Loginfo");
+        userInfo.child("hobby").setValue(newHobby);
+
+        alluserRef = rootRef.child("AlluserInfo").child(firebaseUser.getUid());
+        alluserRef.child("hobby").setValue(newHobby);
     }
 }
 

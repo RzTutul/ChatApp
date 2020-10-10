@@ -191,4 +191,8 @@ public class GroupViewModel extends ViewModel {
     public void removeMessage(String msgID, String grpID) {
         groupRepos.removeMessage(msgID,grpID);
     }
+
+    public void deleteGroup(String groupID) {
+        groupRepos.deleteGroup(groupID);
+    }
 }

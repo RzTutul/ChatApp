@@ -99,7 +99,11 @@ public class SignupFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                pictureSelected();
+                try {
+                    pictureSelected();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -146,7 +150,6 @@ public class SignupFragment extends Fragment {
                     hobbyET.setError("Set your Hobby!");
                 } else {
                     authPojo = new UserInformationPojo("", name, email, phone, hobby, country, "","",status, "Online");
-
                     authViewModel.setUserInfo(getActivity(), profileFile,coverFile, authPojo);
                 }
 

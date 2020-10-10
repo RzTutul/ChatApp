@@ -13,15 +13,20 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.rztechtunes.chatapp.group_chat.GroupSendMessage;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
+import com.rztechtunes.chatapp.viewmodel.GroupViewModel;
 
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.ContractViewHolder> {
     List<GroupPojo> list;
     Context context;
+    GroupViewModel groupViewModel = new GroupViewModel();
 
     public GroupListAdapter(List<GroupPojo> list, Context context) {
         this.list = list;
@@ -57,6 +62,35 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Cont
                 .load(list.get(position).getImages())
                 .placeholder(R.drawable.ic_perm_)
                 .into(holder.imageView);
+
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Are you sure?")
+                        .setContentText("Want to delete group!")
+                        .setConfirmText("Yes,delete it!")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                groupViewModel.deleteGroup(list.get(position).getGroupID());
+                                notifyDataSetChanged();
+                                sDialog
+                                        .setTitleText("Deleted!")
+                                        .setContentText("Group has been deleted!")
+                                        .setConfirmText("OK")
+                                        .setConfirmClickListener(null)
+                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+
+                            }
+                        })
+                        .show();
+
+                return false;
+            }
+        });
 
 
 

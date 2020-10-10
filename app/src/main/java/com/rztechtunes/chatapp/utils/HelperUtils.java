@@ -26,7 +26,7 @@ public class HelperUtils {
         String dateStop = selectDate;//"02/03/2013";
 
         //HH converts hour in 24 hours format (0-23), day calculation
-        SimpleDateFormat format = new SimpleDateFormat("dd MMM hh:mm aa");
+        SimpleDateFormat format = new SimpleDateFormat("dd MMM ");
 
         Date d1 = null;
         Date d2 = null;

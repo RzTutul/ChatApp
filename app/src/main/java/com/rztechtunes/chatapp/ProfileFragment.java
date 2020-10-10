@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.hbb20.CountryCodePicker;
+import com.rztechtunes.chatapp.adapter.MyProfileStoriesAdapter;
 import com.rztechtunes.chatapp.adapter.MyStoriesAdapter;
 import com.rztechtunes.chatapp.pojo.StoriesPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
@@ -297,7 +298,7 @@ public class ProfileFragment extends Fragment {
             friendViewModel.getMyStories().observe(getActivity(), new Observer<List<StoriesPojo>>() {
                 @Override
                 public void onChanged(List<StoriesPojo> storiesPojos) {
-                    MyStoriesAdapter myStoriesAdapter = new MyStoriesAdapter(storiesPojos, getContext());
+                    MyProfileStoriesAdapter myStoriesAdapter = new MyProfileStoriesAdapter(storiesPojos, getContext());
                     GridLayoutManager gll = new GridLayoutManager(getContext(), 2);
                     medidaRV.setLayoutManager(gll);
                     medidaRV.setAdapter(myStoriesAdapter);

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".ChatFragment">
 
@@ -11,8 +11,19 @@
         android:id="@+id/messageRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="65dp"
-        />
+        android:layout_marginBottom="65dp" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/noticeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="Empty ChatList"
+        android:textSize="30sp" />
+
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomBar"
@@ -39,11 +50,10 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/cameraFB"
-        android:src="@drawable/ic_baseline_camera_alt_24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_camera_alt_24"
         app:layout_anchor="@id/bottomBar" />
-
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

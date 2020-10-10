@@ -235,7 +235,7 @@ public class StoryFragment extends Fragment {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 //  picImageBtn.setImageBitmap(bmp);
-                StoriesPojo storiesPojo = new StoriesPojo(myInfo.getU_ID(),myInfo.getName(),myInfo.getprofileImage(),"",HelperUtils.getDateWithTime());
+                StoriesPojo storiesPojo = new StoriesPojo("",myInfo.getU_ID(),myInfo.getName(),myInfo.getprofileImage(),"",HelperUtils.getDateWithTime());
                 friendViewModel.addStories(storiesPojo, file, getActivity());
 
             } catch (IOException e) {
@@ -255,7 +255,7 @@ public class StoryFragment extends Fragment {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 // picImageBtn.setImageBitmap(bmp);
-                StoriesPojo storiesPojo = new StoriesPojo(myInfo.getU_ID(),myInfo.getName(),myInfo.getprofileImage(),"",HelperUtils.getDateWithTime());
+                StoriesPojo storiesPojo = new StoriesPojo("",myInfo.getU_ID(),myInfo.getName(),myInfo.getprofileImage(),"",HelperUtils.getDateWithTime());
                 friendViewModel.addStories(storiesPojo, file, getActivity());
 
             } catch (IOException e) {

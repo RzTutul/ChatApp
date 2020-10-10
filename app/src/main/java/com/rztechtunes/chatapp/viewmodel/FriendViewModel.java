@@ -127,4 +127,7 @@ public class FriendViewModel extends ViewModel {
     }
 
 
+    public void deleteMyStories(String id) {
+        friendRepos.deleteStories(id);
+    }
 }

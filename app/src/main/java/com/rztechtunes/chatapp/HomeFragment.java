@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(),1);
         viewPagerAdapter.addFragment(chatFragment,"Chats");
         viewPagerAdapter.addFragment(groupFragment,"Groups");
-        viewPagerAdapter.addFragment(contractFragment,"Contracts");
+        viewPagerAdapter.addFragment(contractFragment,"People");
         viewPager.setAdapter(viewPagerAdapter);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);

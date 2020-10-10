@@ -5,7 +5,23 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".friend_frag.FriendReqestFrag">
-
+ <TextView
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintTop_toTopOf="parent"
+     app:layout_constraintBottom_toBottomOf="parent"
+     android:visibility="gone"
+     android:id="@+id/noticeTV"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_gravity="center"
+     android:fontFamily="sans-serif-condensed"
+     android:gravity="center"
+     android:text="You have no Request!"
+     android:textSize="30sp"
+     android:layout_centerInParent="true"
+     android:layout_centerVertical="true"
+     />
  <androidx.recyclerview.widget.RecyclerView
      android:id="@+id/frinedReqRV"
      app:layout_constraintTop_toTopOf="parent"

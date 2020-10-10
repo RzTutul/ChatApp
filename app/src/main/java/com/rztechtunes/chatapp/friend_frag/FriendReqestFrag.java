@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.FriendRequestAdaper;
@@ -24,6 +25,7 @@ import java.util.List;
 public class FriendReqestFrag extends Fragment {
     RecyclerView friendReqRV;
     FriendViewModel friendViewModel;
+    TextView noticeTV;
     public FriendReqestFrag() {
         // Required empty public constructor
     }
@@ -42,14 +44,20 @@ public class FriendReqestFrag extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         friendReqRV = view.findViewById(R.id.frinedReqRV);
+        noticeTV = view.findViewById(R.id.noticeTV);
 
         friendViewModel.getRequestList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> friendRequestPojos) {
-                FriendRequestAdaper friendRequestAdaper = new FriendRequestAdaper(friendRequestPojos,getContext());
-                LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                friendReqRV.setLayoutManager(llm);
-                friendReqRV.setAdapter(friendRequestAdaper);
+                if (friendRequestPojos.size()>0) {
+                    noticeTV.setVisibility(View.GONE);
+                    FriendRequestAdaper friendRequestAdaper = new FriendRequestAdaper(friendRequestPojos,getContext());
+                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                    friendReqRV.setLayoutManager(llm);
+                    friendReqRV.setAdapter(friendRequestAdaper);
+                } else {
+                    noticeTV.setVisibility(View.VISIBLE);
+                }
             }
         });
     }

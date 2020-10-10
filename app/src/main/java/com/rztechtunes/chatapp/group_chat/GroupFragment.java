@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rztechtunes.chatapp.R;
@@ -32,7 +33,7 @@ public class GroupFragment extends Fragment {
     RecyclerView contractRV;
     GroupViewModel groupViewModel;
     FloatingActionButton createBtn;
-
+    TextView noticeTV;
 
 
     public GroupFragment() {
@@ -53,6 +54,7 @@ public class GroupFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         contractRV = view.findViewById(R.id.contractRV);
         createBtn = view.findViewById(R.id.createGroupBtn);
+        noticeTV = view.findViewById(R.id.noticeTV);
 
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,10 +70,15 @@ public class GroupFragment extends Fragment {
             @Override
             public void onChanged(List<GroupPojo> groupPojos) {
                 Log.i(TAG, "grp: "+groupPojos.size());
-                GroupListAdapter groupContractListAdaper = new GroupListAdapter(groupPojos,getActivity());
-                LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                contractRV.setLayoutManager(llm);
-                contractRV.setAdapter(groupContractListAdaper);
+                if (groupPojos.size()>0) {
+                    noticeTV.setVisibility(View.VISIBLE);
+                    GroupListAdapter groupContractListAdaper = new GroupListAdapter(groupPojos,getActivity());
+                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                    contractRV.setLayoutManager(llm);
+                    contractRV.setAdapter(groupContractListAdaper);
+                } else {
+                    noticeTV.setVisibility(View.VISIBLE);
+                }
 
             }
         });

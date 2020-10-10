@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -59,18 +60,19 @@ public class CreateGroupFrag extends Fragment {
     GroupViewModel groupViewModel;
     FriendViewModel friendViewModel;
     FloatingActionButton createBtn;
-
+    TextView noticeTV;
     List<UserInformationPojo> contractPojoList = new ArrayList<>();
     List<UserInformationPojo> selectedContractList = new ArrayList<>();
     SelectGroupContractListAdaper selectGroupContractListAdaper;
-    UserInformationPojo myContractInfo ;
+    UserInformationPojo myContractInfo;
     ImageView groupImage;
-    EditText groupNameET,descriptionET;
+    EditText groupNameET, descriptionET;
     private static final int GALLERY_REQUEST_CODE = 123;
     private static final int REQUEST_CAMERA_CODE = 321;
     private static final int REQUEST_STORAGE_CODE = 456;
     private String currentPhotoPath;
     private File file;
+
     public CreateGroupFrag() {
         // Required empty public constructor
     }
@@ -95,6 +97,7 @@ public class CreateGroupFrag extends Fragment {
         groupNameET = view.findViewById(R.id.groupNameET);
         descriptionET = view.findViewById(R.id.groupDiscription);
         groupImage = view.findViewById(R.id.imageView);
+        noticeTV = view.findViewById(R.id.noticeTV);
         myContractInfo = new UserInformationPojo();
 
         groupImage.setOnClickListener(new View.OnClickListener() {
@@ -107,38 +110,29 @@ public class CreateGroupFrag extends Fragment {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                selectedContractList = selectGroupContractListAdaper.getSelectedContract();
                 String grpName = groupNameET.getText().toString().trim();
                 String grpDesrption = descriptionET.getText().toString().trim();
 
-                GroupPojo groupPojo = new GroupPojo("","",grpName,grpDesrption,HelperUtils.getDateWithTime(), FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-                if (file != null)
-                {
-                    if (grpName.equals(""))
-                    {
+                if (file != null) {
+                    if (grpName.equals("")) {
                         groupNameET.setError("Give Group Name");
 
-                    }
-                    else if (grpDesrption.equals(""))
-                    {
+                    } else if (grpDesrption.equals("")) {
                         descriptionET.setError("Give a Description");
-                    }
-                    else if (selectedContractList.size()<=0)
-                    {
-                        Toast.makeText(getActivity(),"Select at list one participant", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
+                    } else if (selectedContractList.size() <= 0) {
+                        Toast.makeText(getActivity(), "Select at list one participant", Toast.LENGTH_SHORT).show();
+                    } else {
+                        selectedContractList = selectGroupContractListAdaper.getSelectedContract();
+
+
+                        GroupPojo groupPojo = new GroupPojo("", "", grpName, grpDesrption, HelperUtils.getDateWithTime(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+
                         selectedContractList.add(myContractInfo);
-                        groupViewModel.createNewGroup(selectedContractList,groupPojo,file,getContext());
+                        groupViewModel.createNewGroup(selectedContractList, groupPojo, file, getContext());
                     }
 
-                }
-                else
-                {
-                    Toast.makeText(getActivity(),"Select group Image", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Select group Image", Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -146,21 +140,18 @@ public class CreateGroupFrag extends Fragment {
 
             }
         });
+
 
         groupViewModel.getCreateGrpStatus().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if (s.equals("Successful"))
-                {
-                    Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
-                }
-                else
-                {
+                if (s.equals("Successful")) {
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                } else {
 
                 }
             }
         });
-
 
 
         friendViewModel.getMyFirendList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
@@ -170,18 +161,22 @@ public class CreateGroupFrag extends Fragment {
                 authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
                     @Override
                     public void onChanged(UserInformationPojo authPojo) {
-                        myContractInfo = authPojo;
-                        myContractInfo.setSelected(true);
 
-                        selectGroupContractListAdaper = new SelectGroupContractListAdaper(userInformationPojos,getActivity());
-                        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                        contractRV.setLayoutManager(llm);
-                        contractRV.setAdapter(selectGroupContractListAdaper);
+
+                        if (userInformationPojos.size()>0) {
+                            noticeTV.setVisibility(View.GONE);
+                            myContractInfo = authPojo;
+                            myContractInfo.setSelected(true);
+
+                            selectGroupContractListAdaper = new SelectGroupContractListAdaper(userInformationPojos, getActivity());
+                            LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                            contractRV.setLayoutManager(llm);
+                            contractRV.setAdapter(selectGroupContractListAdaper);
+                        } else {
+                            noticeTV.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
-
-
-
 
 
             }
@@ -191,11 +186,10 @@ public class CreateGroupFrag extends Fragment {
     }
 
 
-
     private void pictureSelected() {
 
-        final BottomSheetDialog bottomSheetDialog =new BottomSheetDialog(getActivity(),R.style.BottomSheetDialogTheme);
-        View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout,(LinearLayout)getActivity().findViewById(R.id.bottomSheetContainer));
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, (LinearLayout) getActivity().findViewById(R.id.bottomSheetContainer));
         bottomSheetView.findViewById(R.id.cameraLL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,10 +215,6 @@ public class CreateGroupFrag extends Fragment {
 
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
-
-
-
-
 
 
     }
@@ -300,32 +290,30 @@ public class CreateGroupFrag extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE &&
-                resultCode == RESULT_OK){
-            Log.e(TAG, "onActivityResult: "+currentPhotoPath);
+                resultCode == RESULT_OK) {
+            Log.e(TAG, "onActivityResult: " + currentPhotoPath);
             file = new File(currentPhotoPath);
             Uri fileUri = Uri.fromFile(file);
             try {
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
-                 groupImage.setImageBitmap(bmp);
+                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
+                groupImage.setImageBitmap(bmp);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             // addPictureCard.setVisibility(View.GONE);
-        }
-
-        else if  (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
+        } else if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             String[] projection = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(data.getData(), projection, null, null, null);
             cursor.moveToFirst();
             int index = cursor.getColumnIndex(projection[0]);
             currentPhotoPath = cursor.getString(index);
-            Log.e(TAG, "onActivityResultgalary: "+currentPhotoPath);
+            Log.e(TAG, "onActivityResultgalary: " + currentPhotoPath);
             file = new File(currentPhotoPath);
             Uri fileUri = Uri.fromFile(file);
             try {
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),fileUri);
+                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), fileUri);
                 groupImage.setImageBitmap(bmp);
 
             } catch (IOException e) {

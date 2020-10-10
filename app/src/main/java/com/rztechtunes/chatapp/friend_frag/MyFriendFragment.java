@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.MyFriendListAdaper;
@@ -25,6 +26,7 @@ import java.util.List;
 public class MyFriendFragment extends Fragment {
 
     RecyclerView myFriendRV;
+    TextView noticeTV;
     FriendViewModel friendViewModel;
     public MyFriendFragment() {
         // Required empty public constructor
@@ -44,15 +46,21 @@ public class MyFriendFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         myFriendRV = view.findViewById(R.id.myFriendRV);
+        noticeTV = view.findViewById(R.id.noticeTV);
 
         friendViewModel.getMyFirendList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> friendRequestPojos) {
 
-                MyFriendListAdaper myFriendListAdaper = new MyFriendListAdaper(friendRequestPojos,getContext());
-                LinearLayoutManager llm = new LinearLayoutManager(getContext());
-                myFriendRV.setLayoutManager(llm);
-                myFriendRV.setAdapter(myFriendListAdaper);
+                if (friendRequestPojos.size()>0) {
+                    noticeTV.setVisibility(View.GONE);
+                    MyFriendListAdaper myFriendListAdaper = new MyFriendListAdaper(friendRequestPojos,getContext());
+                    LinearLayoutManager llm = new LinearLayoutManager(getContext());
+                    myFriendRV.setLayoutManager(llm);
+                    myFriendRV.setAdapter(myFriendListAdaper);
+                } else {
+                    noticeTV.setVisibility(View.VISIBLE);
+                }
 
             }
         });

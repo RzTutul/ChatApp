@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -41,6 +42,7 @@ public class ChatFragment extends Fragment {
     AuthViewModel authViewModel;
     BottomNavigationView bottomNav;
     FloatingActionButton cameraFB;
+    TextView noticeTV;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -64,6 +66,7 @@ public class ChatFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         msgRV = view.findViewById(R.id.messageRV);
         cameraFB = view.findViewById(R.id.cameraFB);
+        noticeTV = view.findViewById(R.id.noticeTV);
 
         //For Bottom Nevigation
         bottomNav = view.findViewById(R.id.bottomNavigation);
@@ -82,15 +85,20 @@ public class ChatFragment extends Fragment {
             @Override
             public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
 
-                //new message list come first in row
-                Collections.sort(senderReciverPojos, new Comparator<SenderReciverPojo>() {
-                    public int compare(SenderReciverPojo s1, SenderReciverPojo s2) {
-                        return s1.getStatus().compareToIgnoreCase(s2.getStatus());
-                    }
-                });
-                //reverse the sort by day time
-                Collections.reverse(senderReciverPojos);
-                BuildRV(senderReciverPojos);
+                if (senderReciverPojos.size()>0) {
+                    noticeTV.setVisibility(View.GONE);
+                    //new message list come first in row
+                    Collections.sort(senderReciverPojos, new Comparator<SenderReciverPojo>() {
+                        public int compare(SenderReciverPojo s1, SenderReciverPojo s2) {
+                            return s1.getStatus().compareToIgnoreCase(s2.getStatus());
+                        }
+                    });
+                    //reverse the sort by day time
+                    Collections.reverse(senderReciverPojos);
+                    BuildRV(senderReciverPojos);
+                } else {
+                    noticeTV.setVisibility(View.VISIBLE);
+                }
             }
 
 

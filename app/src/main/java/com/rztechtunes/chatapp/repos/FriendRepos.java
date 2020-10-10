@@ -173,6 +173,7 @@ public class FriendRepos {
         myRef = rootRef.child(firebaseUser.getUid()).child("Stories");
 
         String key = myRef.push().getKey();
+        storiesPojo.setId(key);
         myRef.child(key).setValue(storiesPojo).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -310,4 +311,8 @@ public class FriendRepos {
     }
 
 
+    public void deleteStories(String id) {
+        userRef = rootRef.child(firebaseUser.getUid()).child("Stories").child(id);
+        userRef.removeValue();
+    }
 }

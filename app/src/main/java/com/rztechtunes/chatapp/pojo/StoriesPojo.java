@@ -1,6 +1,7 @@
 package com.rztechtunes.chatapp.pojo;
 
 public class StoriesPojo {
+    String id;
     String uid;
     String name;
     String profile;
@@ -10,7 +11,8 @@ public class StoriesPojo {
     public StoriesPojo() {
     }
 
-    public StoriesPojo(String uid, String name,String profile, String image, String time) {
+    public StoriesPojo(String id, String uid, String name, String profile, String image, String time) {
+        this.id = id;
         this.uid = uid;
         this.name = name;
         this.profile = profile;
@@ -18,6 +20,13 @@ public class StoriesPojo {
         this.time = time;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getProfile() {
         return profile;

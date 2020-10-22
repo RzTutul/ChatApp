@@ -1,4 +1,4 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.Notification;
 
 
 import com.rztechtunes.chatapp.Notification.MyResponse;

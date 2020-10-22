@@ -1,4 +1,4 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.video_calling;
 
 import android.os.Bundle;
 
@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.pojo.SendGroupMsgPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
@@ -79,11 +80,11 @@ public class JoinRoomFrag extends Fragment {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).popBackStack();
+                Navigation.findNavController(v).popBackStack();
             }
         });
 
-        authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
+        authViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<UserInformationPojo>() {
             @Override
             public void onChanged(UserInformationPojo userInformationPojo) {
                 currentUserInfo = userInformationPojo;

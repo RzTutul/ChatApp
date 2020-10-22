@@ -48,7 +48,7 @@ public class MyFriendFragment extends Fragment {
         myFriendRV = view.findViewById(R.id.myFriendRV);
         noticeTV = view.findViewById(R.id.noticeTV);
 
-        friendViewModel.getMyFirendList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+        friendViewModel.getMyFirendList().observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> friendRequestPojos) {
 

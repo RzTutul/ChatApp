@@ -46,12 +46,13 @@ public class FriendReqestFrag extends Fragment {
         friendReqRV = view.findViewById(R.id.frinedReqRV);
         noticeTV = view.findViewById(R.id.noticeTV);
 
-        friendViewModel.getRequestList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+        friendViewModel.getRequestList().observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> friendRequestPojos) {
                 if (friendRequestPojos.size()>0) {
                     noticeTV.setVisibility(View.GONE);
                     FriendRequestAdaper friendRequestAdaper = new FriendRequestAdaper(friendRequestPojos,getContext());
+                    friendRequestAdaper.notifyDataSetChanged();
                     LinearLayoutManager llm = new LinearLayoutManager(getActivity());
                     friendReqRV.setLayoutManager(llm);
                     friendReqRV.setAdapter(friendRequestAdaper);

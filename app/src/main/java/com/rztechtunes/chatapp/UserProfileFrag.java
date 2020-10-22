@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.rztechtunes.chatapp.Notification.APIService;
 import com.rztechtunes.chatapp.Notification.Client;
 import com.rztechtunes.chatapp.Notification.Data;
 import com.rztechtunes.chatapp.Notification.MyResponse;
@@ -98,7 +99,7 @@ public class UserProfileFrag extends Fragment {
 
 
         try {
-            authViewModel.getFriendInformaiton(userID).observe(requireActivity(), new Observer<UserInformationPojo>() {
+            authViewModel.getFriendInformaiton(userID).observe(getViewLifecycleOwner(), new Observer<UserInformationPojo>() {
                 @Override
                 public void onChanged(UserInformationPojo authPojo) {
                     userName = authPojo.getName();
@@ -133,7 +134,7 @@ public class UserProfileFrag extends Fragment {
         }
 
         try {
-            friendViewModel.getMyFirendList().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
+            friendViewModel.getMyFirendList().observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
                 @Override
                 public void onChanged(List<UserInformationPojo> userInformationPojos) {
                     for (UserInformationPojo informationPojo: userInformationPojos)
@@ -187,7 +188,7 @@ public class UserProfileFrag extends Fragment {
 
 
         try {
-            friendViewModel.getUserStories(userID).observe(requireActivity(), new Observer<List<StoriesPojo>>() {
+            friendViewModel.getUserStories(userID).observe(getViewLifecycleOwner(), new Observer<List<StoriesPojo>>() {
                 @Override
                 public void onChanged(List<StoriesPojo> storiesPojos) {
                     MyStoriesAdapter myStoriesAdapter = new MyStoriesAdapter(storiesPojos,getContext());
@@ -199,7 +200,7 @@ public class UserProfileFrag extends Fragment {
             });
 
 
-            authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
+            authViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<UserInformationPojo>() {
                 @Override
                 public void onChanged(UserInformationPojo authPojo) {
                    myCurrentInfo = authPojo;

@@ -93,7 +93,7 @@ public class FriendProfileFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.sendMessageFragment);
+                Navigation.findNavController(v).navigate(R.id.sendMessageFragment);
             }
         });
 
@@ -157,7 +157,7 @@ public class FriendProfileFrag extends Fragment {
                                 BlockPojo blockPojo = new BlockPojo(frndID,"name");
                                 messageViewModel.blockFriend(blockPojo);
 
-                                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                                Navigation.findNavController(v).navigate(R.id.homeFragment);
                                 sDialog
                                         .setTitleText("Blocked!")
                                         .setContentText("Message has been Blocked!")
@@ -171,7 +171,7 @@ public class FriendProfileFrag extends Fragment {
             }
         });
 
-        messageViewModel.getBlockList().observe(requireActivity(), new Observer<List<BlockPojo>>() {
+        messageViewModel.getBlockList().observe(getViewLifecycleOwner(), new Observer<List<BlockPojo>>() {
             @Override
             public void onChanged(List<BlockPojo> blockPojos) {
                 for (BlockPojo blockPojo: blockPojos)
@@ -196,7 +196,7 @@ public class FriendProfileFrag extends Fragment {
         });
 
 
-        authViewModel.getFriendInformaiton(frndID).observe(requireActivity(), new Observer<UserInformationPojo>() {
+        authViewModel.getFriendInformaiton(frndID).observe(getViewLifecycleOwner(), new Observer<UserInformationPojo>() {
             @Override
             public void onChanged(UserInformationPojo authPojo) {
 
@@ -223,7 +223,7 @@ public class FriendProfileFrag extends Fragment {
             }
         });
 
-       messageViewModel.getAllSharedMedia(frndID).observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
+       messageViewModel.getAllSharedMedia(frndID).observe(getViewLifecycleOwner(), new Observer<List<SenderReciverPojo>>() {
            @Override
            public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
 

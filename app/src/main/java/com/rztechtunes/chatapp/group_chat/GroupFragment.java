@@ -60,18 +60,18 @@ public class GroupFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.createGroupFrag);
+                Navigation.findNavController(v).navigate(R.id.createGroupFrag);
 
             }
         });
 
 
-        groupViewModel.getMyGroupList().observe(getActivity(), new Observer<List<GroupPojo>>() {
+        groupViewModel.getMyGroupList().observe(getViewLifecycleOwner(), new Observer<List<GroupPojo>>() {
             @Override
             public void onChanged(List<GroupPojo> groupPojos) {
                 Log.i(TAG, "grp: "+groupPojos.size());
                 if (groupPojos.size()>0) {
-                    noticeTV.setVisibility(View.VISIBLE);
+                    noticeTV.setVisibility(View.GONE);
                     GroupListAdapter groupContractListAdaper = new GroupListAdapter(groupPojos,getActivity());
                     LinearLayoutManager llm = new LinearLayoutManager(getActivity());
                     contractRV.setLayoutManager(llm);

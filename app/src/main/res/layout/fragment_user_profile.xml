@@ -80,6 +80,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/cardview">
 
                 <LinearLayout
+
                     android:id="@+id/linlay1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

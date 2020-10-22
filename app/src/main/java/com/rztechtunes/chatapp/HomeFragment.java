@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -89,11 +89,11 @@ public class HomeFragment extends Fragment {
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.profileFragment);
+                Navigation.findNavController(v).navigate(R.id.profileFragment);
             }
         });
 
-        authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
+        authViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<UserInformationPojo>() {
             @Override
             public void onChanged(UserInformationPojo authPojo) {
 
@@ -109,7 +109,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    @Override
+/*    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
         inflater.inflate(R.menu.setting_item, menu);
@@ -127,5 +127,5 @@ public class HomeFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }

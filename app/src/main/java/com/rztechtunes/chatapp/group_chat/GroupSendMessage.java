@@ -35,7 +35,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.rztechtunes.chatapp.JoinRoomFrag;
+import com.rztechtunes.chatapp.video_calling.JoinRoomFrag;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.GroupMessageAdaper;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
@@ -128,7 +128,7 @@ public class GroupSendMessage extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).popBackStack();
+                Navigation.findNavController(v).popBackStack();
             }
         });
 
@@ -138,7 +138,7 @@ public class GroupSendMessage extends Fragment {
                 GroupProfileFrag.grpID = groupID;
                 GroupProfileFrag.grpName = groupName;
                 GroupProfileFrag.grpImage = groupImage;
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.groupProfileFrag);
+                Navigation.findNavController(v).navigate(R.id.groupProfileFrag);
             }
         });
 
@@ -148,13 +148,13 @@ public class GroupSendMessage extends Fragment {
 
                 JoinRoomFrag.groupID = groupID;
                 JoinRoomFrag.groupName = groupName;
-                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.joinRoomFrag);
+                Navigation.findNavController(v).navigate(R.id.joinRoomFrag);
             }
         });
 
 
         try {
-            authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
+            authViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<UserInformationPojo>() {
                 @Override
                 public void onChanged(UserInformationPojo authPojo) {
                     CurrentauthPojo =authPojo;
@@ -186,7 +186,7 @@ public class GroupSendMessage extends Fragment {
 
 
         try {
-            groupViewModel.getGroupUser(groupID).observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+            groupViewModel.getGroupUser(groupID).observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
                 @Override
                 public void onChanged(List<UserInformationPojo> userInformationPojos) {
 
@@ -226,7 +226,7 @@ public class GroupSendMessage extends Fragment {
         });
 
         try {
-            groupViewModel.getAllGroupMessage(groupID).observe(getActivity(), new Observer<List<SendGroupMsgPojo>>() {
+            groupViewModel.getAllGroupMessage(groupID).observe(getViewLifecycleOwner(), new Observer<List<SendGroupMsgPojo>>() {
                 @Override
                 public void onChanged(List<SendGroupMsgPojo> sendGroupMsgPojos) {
 

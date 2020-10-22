@@ -82,7 +82,7 @@ public class LoginFragment extends Fragment {
 
                     PhoneVarifyFragment.phoneNumber = code+phone;
 
-                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.phoneVarifyFragment);
+                    Navigation.findNavController(view).navigate(R.id.phoneVarifyFragment);
                 }
 
 
@@ -90,13 +90,13 @@ public class LoginFragment extends Fragment {
         });
 
 
-        authViewModel.stateLiveData.observe(requireActivity(), new Observer<AuthViewModel.AuthenticationState>() {
+        authViewModel.stateLiveData.observe(getViewLifecycleOwner(), new Observer<AuthViewModel.AuthenticationState>() {
             @Override
             public void onChanged(AuthViewModel.AuthenticationState authenticationState) {
                 switch (authenticationState)
                 {
                     case AUTHENTICATED:
-                        Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                        Navigation.findNavController(view).navigate(R.id.homeFragment);
                         break;
                     case UNAUTHENTICATED:
                         break;

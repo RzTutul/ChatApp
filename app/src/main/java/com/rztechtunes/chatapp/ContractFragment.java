@@ -79,14 +79,14 @@ public class ContractFragment extends Fragment {
             }
         });
 
-        authViewModel.getAllUser().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+        authViewModel.getAllUser().observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> userInformationPojos) {
 
                 contractPojoList.clear();
                 for (UserInformationPojo contractPojo: userInformationPojos)
                 {
-                    if ((contractPojo.getU_ID()).equals(FirebaseAuth.getInstance().getUid()))
+                    if ((FirebaseAuth.getInstance().getCurrentUser().getUid()).equals(contractPojo.getU_ID()))
                     {
 
                     }

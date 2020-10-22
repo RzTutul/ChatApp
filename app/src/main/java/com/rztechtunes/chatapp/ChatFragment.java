@@ -76,12 +76,12 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.storyFragment);
+                Navigation.findNavController(v).navigate(R.id.storyFragment);
             }
         });
 
 
-        messageViewModel.getFrndContract().observe(getActivity(), new Observer<List<SenderReciverPojo>>() {
+        messageViewModel.getFrndContract().observe(getViewLifecycleOwner(), new Observer<List<SenderReciverPojo>>() {
             @Override
             public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
 

@@ -1,4 +1,4 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.video_calling;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.pojo.CallingPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
@@ -137,18 +138,18 @@ public class VideoCallingFrag extends Fragment {
                 mp.stop();
                 count.cancel();
                 messageViewModel.CallCancel(reciverID);
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).popBackStack();
+                Navigation.findNavController(v).popBackStack();
             }
         });
 
-        messageViewModel.getRecivingStatus().observe(getActivity(), new Observer<List<CallingPojo>>() {
+        messageViewModel.getRecivingStatus().observe(getViewLifecycleOwner(), new Observer<List<CallingPojo>>() {
             @Override
             public void onChanged(List<CallingPojo> userInformationPojos) {
                 mp.stop();
                 if (userInformationPojos.size()>0)
                 {
                     CallingPojo userinfo = userInformationPojos.get(userInformationPojos.size()-1);
-                    if (userinfo.getCall_type().equals("Video"))
+                    if (("Video").equals(userinfo.getCall_type()))
                     {
 
 

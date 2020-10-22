@@ -85,14 +85,14 @@ public class StoryFragment extends Fragment {
             }
         });
 
-        authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
+        authViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<UserInformationPojo>() {
             @Override
             public void onChanged(UserInformationPojo authPojo) {
                 myInfo = authPojo;
             }
         });
 
-        friendViewModel.addStoriesSuccefulLD.observe(getActivity(), new Observer<String>() {
+        friendViewModel.addStoriesSuccefulLD.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 if (s.equals("1"))
@@ -113,7 +113,7 @@ public class StoryFragment extends Fragment {
 
 
     public void getFriendStories() {
-        friendViewModel.getStories().observe(getActivity(), new Observer<List<StoriesPojo>>() {
+        friendViewModel.getStories().observe(getViewLifecycleOwner(), new Observer<List<StoriesPojo>>() {
             @Override
             public void onChanged(List<StoriesPojo> storiesPojos) {
 

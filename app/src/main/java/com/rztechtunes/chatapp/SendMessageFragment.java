@@ -42,6 +42,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.rztechtunes.chatapp.Notification.APIService;
 import com.rztechtunes.chatapp.Notification.Client;
 import com.rztechtunes.chatapp.Notification.Data;
 import com.rztechtunes.chatapp.Notification.MyResponse;
@@ -52,6 +53,7 @@ import com.rztechtunes.chatapp.pojo.CallingPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.pojo.SenderReciverPojo;
 import com.rztechtunes.chatapp.utils.HelperUtils;
+import com.rztechtunes.chatapp.video_calling.VideoCallingFrag;
 import com.rztechtunes.chatapp.viewmodel.AuthViewModel;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
 
@@ -65,7 +67,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -220,7 +221,7 @@ public class SendMessageFragment extends Fragment {
                     .into(prfileImage);
 
 
-            authViewModel.getUserInfo().observe(requireActivity(), new Observer<UserInformationPojo>() {
+            authViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<UserInformationPojo>() {
                 @Override
                 public void onChanged(UserInformationPojo authPojo) {
                     CurrentauthPojo = authPojo;
@@ -260,11 +261,11 @@ public class SendMessageFragment extends Fragment {
         });
 
         try {
-            authViewModel.getAllUser().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
+            authViewModel.getAllUser().observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
                 @Override
                 public void onChanged(List<UserInformationPojo> userInformationPojos) {
 
-                    for (UserInformationPojo contractPojo : userInformationPojos) {
+                    for (UserInformationPojo contractPojo :  userInformationPojos) {
                         try {
                             if (reciverID.equals(contractPojo.getU_ID())) {
 
@@ -315,7 +316,7 @@ public class SendMessageFragment extends Fragment {
 
         try {
             if (position == -1) {
-                messageViewModel.getAllMessage(reciverID).observe(requireActivity(), new Observer<List<SenderReciverPojo>>() {
+                messageViewModel.getAllMessage(reciverID).observe(getViewLifecycleOwner(), new Observer<List<SenderReciverPojo>>() {
                     @Override
                     public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
                         MessageAdaper messageAdaper = new MessageAdaper(senderReciverPojos, getActivity());
@@ -330,7 +331,7 @@ public class SendMessageFragment extends Fragment {
                         if (notify) {
 
                             //If user status isn't online then send msg with notification
-                            if (reciverOnlineStatus.equals("Online")) {
+                            if (("Online").equals(reciverOnlineStatus)) {
 
                             } else {
                                 sendNotifiaction(reciverID, CurrentauthPojo.getName(), message);
@@ -344,7 +345,7 @@ public class SendMessageFragment extends Fragment {
                 });
 
             } else {
-                messageViewModel.getAllMessage(reciverID).observe(requireActivity(), new Observer<List<SenderReciverPojo>>() {
+                messageViewModel.getAllMessage(reciverID).observe(getViewLifecycleOwner(), new Observer<List<SenderReciverPojo>>() {
                     @Override
                     public void onChanged(List<SenderReciverPojo> senderReciverPojos) {
 
@@ -362,7 +363,7 @@ public class SendMessageFragment extends Fragment {
                         if (notify) {
 
                             //If user status isn't online then send msg with notification
-                            if (reciverOnlineStatus.equals("Online")) {
+                            if (("Online").equals(reciverOnlineStatus)) {
 
                             } else {
                                 sendNotifiaction(reciverID, CurrentauthPojo.getName(), message);
@@ -378,9 +379,9 @@ public class SendMessageFragment extends Fragment {
         }
 
 
-        //set msg is read
+       /* //set msg is read
 
-       /*     messageViewModel.getLastMsg(reciverID).observe(getActivity(), new Observer<SenderReciverPojo>() {
+            messageViewModel.getLastMsg(reciverID).observe(getViewLifecycleOwner(), new Observer<SenderReciverPojo>() {
                 @Override
                 public void onChanged(SenderReciverPojo senderReciverPojo) {
 
@@ -389,12 +390,8 @@ public class SendMessageFragment extends Fragment {
 
                         messageViewModel.setReadStatus(reciverID);
                     }
-
-
                 }
             });*/
-
-
     }
 
 
@@ -436,6 +433,7 @@ public class SendMessageFragment extends Fragment {
             }
         });
     }
+
 
 
     @Override

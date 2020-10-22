@@ -120,28 +120,24 @@
         tools:layout="@layout/fragment_friend_reqest" />
     <fragment
         android:id="@+id/addMoreParticipentFrag"
-        android:name="com.rztechtunes.chatapp.AddMoreParticipentFrag"
+        android:name="com.rztechtunes.chatapp.group_chat.AddMoreParticipentFrag"
         android:label="fragment_add_more_participent"
         tools:layout="@layout/fragment_add_more_participent" />
     <fragment
         android:id="@+id/videoCallingFrag"
-        android:name="com.rztechtunes.chatapp.VideoCallingFrag"
+        android:name="com.rztechtunes.chatapp.video_calling.VideoCallingFrag"
         android:label="fragment_video_calling"
         tools:layout="@layout/fragment_video_calling" />
     <fragment
         android:id="@+id/incomingCallFrag"
-        android:name="com.rztechtunes.chatapp.IncomingCallFrag"
+        android:name="com.rztechtunes.chatapp.video_calling.IncomingCallFrag"
         android:label="fragment_incoming_call"
         tools:layout="@layout/fragment_incoming_call" />
     <fragment
         android:id="@+id/joinRoomFrag"
-        android:name="com.rztechtunes.chatapp.JoinRoomFrag"
+        android:name="com.rztechtunes.chatapp.video_calling.JoinRoomFrag"
         android:label="fragment_join_room"
         tools:layout="@layout/fragment_join_room" />
-    <fragment
-        android:id="@+id/updateProfileFrag"
-        android:name="com.rztechtunes.chatapp.UpdateProfileFrag"
-        android:label="fragment_update_profile"
-        tools:layout="@layout/fragment_update_profile" />
+
 
 </navigation>

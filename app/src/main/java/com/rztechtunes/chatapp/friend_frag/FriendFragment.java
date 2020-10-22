@@ -24,6 +24,7 @@ import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.FriendViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public class FriendFragment extends Fragment {
@@ -69,8 +70,8 @@ public class FriendFragment extends Fragment {
         viewPager.setAdapter(viewPagerAdapter);
 
 
-        try {
-            friendViewModel.getRequestList().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
+
+            friendViewModel.getRequestList().observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
                 @Override
                 public void onChanged(List<UserInformationPojo> userInformationPojos) {
 
@@ -80,9 +81,7 @@ public class FriendFragment extends Fragment {
                     badgeDrawable.setNumber(size);
                 }
             });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

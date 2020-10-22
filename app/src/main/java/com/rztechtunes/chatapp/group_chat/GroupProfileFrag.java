@@ -22,8 +22,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.rztechtunes.chatapp.AddMoreParticipentFrag;
-import com.rztechtunes.chatapp.JoinRoomFrag;
+import com.rztechtunes.chatapp.video_calling.JoinRoomFrag;
 import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.GrpParticipantAdaper;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
@@ -82,7 +81,7 @@ public class GroupProfileFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.groupSendMessage);
+                Navigation.findNavController(v).navigate(R.id.groupSendMessage);
             }
         });
 
@@ -102,7 +101,7 @@ public class GroupProfileFrag extends Fragment {
             public void onClick(View v) {
                 JoinRoomFrag.groupName = grpName;
                 JoinRoomFrag.groupID = grpID;
-                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.joinRoomFrag);
+                Navigation.findNavController(v).navigate(R.id.joinRoomFrag);
             }
         });
 
@@ -123,7 +122,7 @@ public class GroupProfileFrag extends Fragment {
                                         .setConfirmText("OK")
                                         .setConfirmClickListener(null)
                                         .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                                Navigation.findNavController(v).navigate(R.id.homeFragment);
 
                             }
                         })
@@ -132,7 +131,7 @@ public class GroupProfileFrag extends Fragment {
         });
 
 
-        groupViewModel.getGroupInfo(grpID).observe(getActivity(), new Observer<GroupPojo>() {
+        groupViewModel.getGroupInfo(grpID).observe(getViewLifecycleOwner(), new Observer<GroupPojo>() {
             @Override
             public void onChanged(GroupPojo groupPojo) {
 
@@ -162,7 +161,7 @@ public class GroupProfileFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 AddMoreParticipentFrag.grpID = grpID;
-                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.addMoreParticipentFrag);
+                Navigation.findNavController(v).navigate(R.id.addMoreParticipentFrag);
             }
         });
 

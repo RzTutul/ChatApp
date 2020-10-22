@@ -63,7 +63,7 @@ public class CreateGroupFrag extends Fragment {
     TextView noticeTV;
     List<UserInformationPojo> contractPojoList = new ArrayList<>();
     List<UserInformationPojo> selectedContractList = new ArrayList<>();
-    SelectGroupContractListAdaper selectGroupContractListAdaper;
+    SelectGroupContractListAdaper selectGroupContractListAdaper = new SelectGroupContractListAdaper();
     UserInformationPojo myContractInfo;
     ImageView groupImage;
     EditText groupNameET, descriptionET;
@@ -119,16 +119,19 @@ public class CreateGroupFrag extends Fragment {
 
                     } else if (grpDesrption.equals("")) {
                         descriptionET.setError("Give a Description");
-                    } else if (selectedContractList.size() <= 0) {
-                        Toast.makeText(getActivity(), "Select at list one participant", Toast.LENGTH_SHORT).show();
                     } else {
+
                         selectedContractList = selectGroupContractListAdaper.getSelectedContract();
+                        if (selectedContractList.size() <= 0) {
+                            Toast.makeText(getActivity(), "Select at list one participant", Toast.LENGTH_SHORT).show();
+                        } else {
+                            GroupPojo groupPojo = new GroupPojo("", "", grpName, grpDesrption, HelperUtils.getDateWithTime(), FirebaseAuth.getInstance().getCurrentUser().getUid());
 
+                            selectedContractList.add(myContractInfo);
+                            groupViewModel.createNewGroup(selectedContractList, groupPojo, file, getContext());
 
-                        GroupPojo groupPojo = new GroupPojo("", "", grpName, grpDesrption, HelperUtils.getDateWithTime(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        }
 
-                        selectedContractList.add(myContractInfo);
-                        groupViewModel.createNewGroup(selectedContractList, groupPojo, file, getContext());
                     }
 
                 } else {
@@ -142,7 +145,7 @@ public class CreateGroupFrag extends Fragment {
         });
 
 
-        groupViewModel.getCreateGrpStatus().observe(getActivity(), new Observer<String>() {
+        groupViewModel.getCreateGrpStatus().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 if (s.equals("Successful")) {
@@ -154,7 +157,7 @@ public class CreateGroupFrag extends Fragment {
         });
 
 
-        friendViewModel.getMyFirendList().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+        friendViewModel.getMyFirendList().observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> userInformationPojos) {
                 //for add my contract to addmin in this group
@@ -163,7 +166,7 @@ public class CreateGroupFrag extends Fragment {
                     public void onChanged(UserInformationPojo authPojo) {
 
 
-                        if (userInformationPojos.size()>0) {
+                        if (userInformationPojos.size() > 0) {
                             noticeTV.setVisibility(View.GONE);
                             myContractInfo = authPojo;
                             myContractInfo.setSelected(true);

@@ -172,7 +172,7 @@ public class SignupFragment extends Fragment {
             }
         });*/
 
-        authViewModel.getAllUser().observe(getActivity(), new Observer<List<UserInformationPojo>>() {
+        authViewModel.getAllUser().observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> userInformationPojos) {
 
@@ -187,7 +187,7 @@ public class SignupFragment extends Fragment {
                         if (contractPojo.getU_ID() !=null)
                         {
                             if ((contractPojo.getU_ID()).equals(uui)) {
-                                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                                Navigation.findNavController(view).navigate(R.id.homeFragment);
                                 break;
                             }
                         }
@@ -275,11 +275,17 @@ public class SignupFragment extends Fragment {
 
 
     private boolean checkStoragePermission() {
-        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+
+
+
+        String[] permissions = {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                    PackageManager.PERMISSION_GRANTED) {
+            if ((getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                    PackageManager.PERMISSION_GRANTED) && ( getActivity().checkSelfPermission(Manifest.permission.CAMERA) !=
+                    PackageManager.PERMISSION_GRANTED))
+            {
                 requestPermissions(permissions, REQUEST_STORAGE_CODE);
                 return false;
             }
@@ -292,10 +298,12 @@ public class SignupFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_STORAGE_CODE && grantResults[0] ==
                 PackageManager.PERMISSION_GRANTED) {
-         /*   if (requestCode==REQUEST_CAMERA_CODE)
+
+            if (requestCode==REQUEST_CAMERA_CODE)
             {
-                dispatchCameraIntent();
-            }*/
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
+            }
 
 
         }

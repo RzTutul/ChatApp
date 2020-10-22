@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/grad"
-    tools:context=".VideoCallingFrag">
+    tools:context=".video_calling.VideoCallingFrag">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:background="@drawable/circle_border"

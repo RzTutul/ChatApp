@@ -23,6 +23,9 @@ public class SelectGroupContractListAdaper extends RecyclerView.Adapter<SelectGr
     List<UserInformationPojo> selectContractList  = new ArrayList<>();
     Context context;
 
+    public SelectGroupContractListAdaper() {
+    }
+
     public SelectGroupContractListAdaper(List<UserInformationPojo> list, Context context) {
         this.list = list;
         this.context = context;

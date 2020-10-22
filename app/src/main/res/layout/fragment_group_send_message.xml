@@ -59,6 +59,7 @@
             </LinearLayout>
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/joinImageview"
                 android:padding="4dp"
                 android:layout_marginRight="30dp"

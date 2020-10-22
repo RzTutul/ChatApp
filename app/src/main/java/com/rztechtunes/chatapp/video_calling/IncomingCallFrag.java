@@ -1,4 +1,4 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.video_calling;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.pojo.CallingPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
 import com.rztechtunes.chatapp.viewmodel.MessageViewModel;
@@ -96,7 +97,7 @@ public class IncomingCallFrag extends Fragment {
 
         }
 
-        if (callingPojo.getCall_type().equals("Video"))
+        if (("Video").equals(callingPojo.getCall_type()))
         {
             videoRecvBtn.setVisibility(View.VISIBLE);
             receiveBtn.setVisibility(View.GONE);
@@ -167,7 +168,7 @@ public class IncomingCallFrag extends Fragment {
                 messageViewModel.ReceiveCall(callingPojo).observe(getActivity(), new Observer<String>() {
                     @Override
                     public void onChanged(String s) {
-                        if (s.equals("1"))
+                        if ( ("1").equals(s))
                         {
                             Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
 
@@ -191,7 +192,7 @@ public class IncomingCallFrag extends Fragment {
             public void onClick(View v) {
                 mp.stop();
                 vib.cancel();
-                Navigation.findNavController(getActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                Navigation.findNavController(v).navigate(R.id.homeFragment);
             }
         });
 

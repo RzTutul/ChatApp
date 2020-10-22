@@ -33,6 +33,7 @@
                     android:id="@+id/profile_image"
                     android:layout_width="50dp"
                     android:layout_height="506dp"
+                    android:layout_marginRight="20dp"
                     android:layout_alignParentRight="true"
                      />
 

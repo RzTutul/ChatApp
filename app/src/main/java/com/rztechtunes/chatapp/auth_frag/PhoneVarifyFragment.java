@@ -191,7 +191,7 @@ public class PhoneVarifyFragment extends Fragment {
     }
 
     private void signInWithCredential(PhoneAuthCredential phoneAuthCredential) {
-        firebaseAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+        firebaseAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {

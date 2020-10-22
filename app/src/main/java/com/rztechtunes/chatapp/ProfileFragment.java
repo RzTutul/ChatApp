@@ -260,13 +260,13 @@ public class ProfileFragment extends Fragment {
 
 
         try {
-            authViewModel.getUserInfo().observe(getActivity(), new Observer<UserInformationPojo>() {
+            authViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<UserInformationPojo>() {
                 @Override
                 public void onChanged(UserInformationPojo authPojo) {
 
 
 
-                    //Picasso.get().load(authPojo.getImage()).into(profileImage);
+                     //Picasso.get().load(authPojo.getImage()).into(profileImage);
                     Glide.with(getActivity())
                             .load(authPojo.getprofileImage())
                             .centerCrop()
@@ -295,7 +295,7 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
-            friendViewModel.getMyStories().observe(getActivity(), new Observer<List<StoriesPojo>>() {
+            friendViewModel.getMyStories().observe(getViewLifecycleOwner(), new Observer<List<StoriesPojo>>() {
                 @Override
                 public void onChanged(List<StoriesPojo> storiesPojos) {
                     MyProfileStoriesAdapter myStoriesAdapter = new MyProfileStoriesAdapter(storiesPojos, getContext());

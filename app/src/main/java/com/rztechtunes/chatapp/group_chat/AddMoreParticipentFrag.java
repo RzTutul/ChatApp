@@ -1,4 +1,4 @@
-package com.rztechtunes.chatapp;
+package com.rztechtunes.chatapp.group_chat;
 
 import android.os.Bundle;
 
@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.rztechtunes.chatapp.R;
 import com.rztechtunes.chatapp.adapter.Add_GrpMore_ParticipantAdapter;
 import com.rztechtunes.chatapp.pojo.GroupPojo;
 import com.rztechtunes.chatapp.pojo.UserInformationPojo;
@@ -77,7 +78,7 @@ public class AddMoreParticipentFrag extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).popBackStack();
+                Navigation.findNavController(v).popBackStack();
             }
         });
 
@@ -96,7 +97,7 @@ public class AddMoreParticipentFrag extends Fragment {
                 {
                     selectedContractList =  add_grpMore_participantAdaper.getSelectedContract();
                     groupViewModel.addMorePaticipant( CgrpPojo,selectedContractList);
-                    Navigation.findNavController(requireActivity(),R.id.nav_host_fragment).navigate(R.id.homeFragment);
+                    Navigation.findNavController(v).navigate(R.id.homeFragment);
                 }
 
 
@@ -105,12 +106,12 @@ public class AddMoreParticipentFrag extends Fragment {
 
 
 
-        friendViewModel.getMyFirendList().observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
+        friendViewModel.getMyFirendList().observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
             @Override
             public void onChanged(List<UserInformationPojo> friendList) {
                 contractPojoList = friendList;
                 index =0;
-                groupViewModel.getGroupUser(grpID).observe(requireActivity(), new Observer<List<UserInformationPojo>>() {
+                groupViewModel.getGroupUser(grpID).observe(getViewLifecycleOwner(), new Observer<List<UserInformationPojo>>() {
                     @Override
                     public void onChanged(List<UserInformationPojo> groupUserPojos) {
                         try {
